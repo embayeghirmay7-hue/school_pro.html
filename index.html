@@ -6,63 +6,72 @@
     <title>HEPM Academy</title>
     <style>
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #2c3e50; }
-        
-        /* እቲ ዝፈተኻዮ ድሕረ-ባይታ (Stable Background) */
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             background-color: #f4f7f6; 
             background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; padding: 15px; display: flex; justify-content: center; align-items: center;
         }
-
         .main-card { 
             background: white; width: 100%; max-width: 500px; 
             border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
             overflow: hidden; border-top: 10px solid var(--gold); 
         }
+        h1 { color: var(--gold); margin: 25px 0 5px; font-size: 28px; letter-spacing: 2px; text-align: center; }
+        
+        /* እቲ ስም ካብቲ ሳጹን ወጻኢ ኣብዚ ክኸውን እዩ */
+        #kidNameDisplay { 
+            font-size: 30px; font-weight: 900; margin: 20px 0 10px 0; 
+            text-align: center; height: 40px; 
+        }
 
-        h1 { color: var(--gold); margin: 25px 0 5px; font-size: 30px; letter-spacing: 2px; }
-        
-        .kids-line { font-size: 14px; font-weight: bold; margin-bottom: 20px; color: #7f8c8d; }
-        
-        /* Question Box - No background change here */
-        .question-area { padding: 40px 20px; }
-        
-        /* This is where the color changes with the question */
-        #kidName { font-size: 28px; font-weight: 900; margin-bottom: 10px; transition: 0.3s; }
-        #qText { font-size: 45px; font-weight: bold; color: var(--dark); margin: 15px 0; }
-        #qTrans { font-size: 20px; color: #7f8c8d; font-style: italic; }
+        /* እቲ ናይ ሕቶ ሳጹን (ሕቶ ጥራይ ዝሕዝ) */
+        .question-box { 
+            background: var(--dark); color: white; 
+            margin: 10px 20px 20px 20px; padding: 40px 20px; 
+            border-radius: 20px; text-align: center;
+        }
+        #mainDisplay { font-size: 65px; font-weight: bold; margin-bottom: 10px; display: block; }
+        #transDisplay { font-size: 22px; color: #bdc3c7; }
 
+        .input-area { text-align: center; padding-bottom: 20px; }
         input { 
             width: 60%; padding: 15px; font-size: 24px; border-radius: 15px; 
-            border: 3px solid #eee; text-align: center; outline: none; transition: 0.3s;
+            border: 3px solid #eee; text-align: center; outline: none; 
         }
-        input:focus { border-color: var(--gold); }
-
-        .btn { 
-            background: var(--gold); color: white; padding: 15px 40px; 
+        .btn-check { 
+            background: var(--gold); color: white; padding: 15px 50px; 
             border: none; border-radius: 50px; font-size: 20px; cursor: pointer; 
-            margin: 20px 0; width: 80%; font-weight: bold;
+            width: 80%; font-weight: bold; margin-top: 15px;
         }
+        .score-box { text-align: center; font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
         
-        .score-box { font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
+        .mode-box { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+        .mode-box button { padding: 8px 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="main-card">
     <h1>✨ HEPM ACADEMY ✨</h1>
-    <div class="kids-line">HERMELA • ERKABEL • PEGGY • MARANATA</div>
+    
+    <div class="mode-box">
+        <button style="background: #ffcc00;" onclick="setMode('math')">🔢 Maths</button>
+        <button style="background: #ff6699; color:white;" onclick="setMode('abc')">🔤 ABC</button>
+        <button style="background: #66ccff;" onclick="setMode('animals')">🦁 Animals</button>
+    </div>
 
-    <div class="question-area">
-        <div id="kidName">...</div>
-        <div id="qText">...</div>
-        <div id="qTrans">...</div>
-        
-        <input type="number" id="ansInput" placeholder="?">
+    <div id="kidNameDisplay">...</div>
+
+    <div class="question-box">
+        <div id="mainDisplay">...</div>
+        <div id="transDisplay">...</div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="?">
         <br>
-        <button class="btn" onclick="check()">CHECK / መርምር</button>
+        <button class="btn-check" onclick="check()">CHECK / መርምር</button>
         <div id="feedback" style="height:30px; font-weight:bold; margin-top:10px;"></div>
     </div>
 
@@ -72,6 +81,7 @@
 <audio id="correctSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
 <script>
+    let mode = 'math';
     let currentAns, score = 0;
     const kids = [
         {name: "HERMELA", color: "#ff69b4"},
@@ -80,40 +90,57 @@
         {name: "MARANATA", color: "#ff69b4"}
     ];
 
-    function next() {
-        let kid = kids[Math.floor(Math.random() * kids.length)];
-        let n1 = Math.floor(Math.random() * 12) + 1;
-        let n2 = Math.floor(Math.random() * 10) + 1;
-        
-        currentAns = n1 + n2;
-        
-        // Only change the Name and its Color
-        let nameEl = document.getElementById('kidName');
-        nameEl.innerText = kid.name;
-        nameEl.style.color = kid.color;
+    const animals = [
+        {img: "🦁", ti: "ኣንበሳ", en: "Lion"}, {img: "🐘", ti: "ሓርማዝ", en: "Elephant"},
+        {img: "🦒", ti: "ቀጭኔ", en: "Giraffe"}, {img: "🐒", ti: "ህበይ", en: "Monkey"}
+    ];
 
-        document.getElementById('qText').innerText = `${n1} + ${n2}`;
-        document.getElementById('qTrans').innerText = `${n1} ደሚርካ ${n2}`;
-        document.getElementById('ansInput').value = "";
-        document.getElementById('ansInput').focus();
+    function setMode(m) { mode = m; nextQuestion(); }
+
+    function nextQuestion() {
+        let kid = kids[Math.floor(Math.random() * kids.length)];
+        let nameDiv = document.getElementById('kidNameDisplay');
+        nameDiv.innerText = kid.name;
+        nameDiv.style.color = kid.color;
+        
+        let main = document.getElementById('mainDisplay');
+        let trans = document.getElementById('transDisplay');
+        document.getElementById('userInput').value = "";
+        document.getElementById('userInput').focus();
+
+        if (mode === 'math') {
+            let n1 = Math.floor(Math.random() * 12) + 1;
+            let n2 = Math.floor(Math.random() * 10) + 1;
+            currentAns = (n1 + n2).toString();
+            main.innerText = `${n1} + ${n2}`;
+            trans.innerText = `${n1} ደሚርካ ${n2}`;
+        } else if (mode === 'abc') {
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            currentAns = letters[Math.floor(Math.random() * letters.length)];
+            main.innerText = currentAns;
+            trans.innerText = "Write this letter!";
+        } else if (mode === 'animals') {
+            let ani = animals[Math.floor(Math.random() * animals.length)];
+            currentAns = ani.en.toLowerCase();
+            main.innerText = ani.img;
+            trans.innerText = ani.ti;
+        }
     }
 
     function check() {
-        let u = parseInt(document.getElementById('ansInput').value);
+        let u = document.getElementById('userInput').value.trim().toLowerCase();
         let fb = document.getElementById('feedback');
-        if(u === currentAns) {
+        if(u === currentAns.toLowerCase()) {
             document.getElementById('correctSound').play();
             fb.innerText = "✅ Excellent!"; fb.style.color = "green";
             score += 10;
             document.getElementById('score').innerText = score;
-            setTimeout(() => { fb.innerText = ""; next(); }, 1500);
+            setTimeout(() => { fb.innerText = ""; nextQuestion(); }, 1200);
         } else {
             fb.innerText = "❌ Try Again!"; fb.style.color = "red";
         }
     }
-
-    next();
+    nextQuestion();
 </script>
-
 </body>
 </html>
