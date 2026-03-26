@@ -3,114 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ULTIMATE ACADEMY</title>
+    <title>HEPM Academy</title>
     <style>
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #2c3e50; }
-        body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #fdf6e3; text-align: center; padding: 10px; }
-        .container { background: white; max-width: 600px; margin: auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; border: 8px solid var(--gold); }
-        h1 { color: var(--gold); font-size: 35px; margin: 20px 0 5px; text-shadow: 2px 2px #eee; }
-        .kids-nav { margin-bottom: 20px; font-weight: bold; font-size: 18px; }
-        .erkabel { color: var(--blue); } .girls { color: var(--pink); }
         
-        /* Game Area */
-        .game-card { background: var(--dark); color: white; margin: 20px; padding: 25px; border-radius: 20px; min-height: 200px; }
-        #displayArea { font-size: 50px; margin-bottom: 15px; }
-        #translationArea { font-size: 20px; color: #bdc3c7; }
+        /* እቲ ዝፈተኻዮ ድሕረ-ባይታ (Stable Background) */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center;
+        }
 
-        input { width: 60%; padding: 15px; font-size: 24px; border-radius: 15px; border: 4px solid var(--gold); text-align: center; }
-        .btn { background: var(--gold); color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; margin-top: 20px; font-weight: bold; width: 80%; }
+        .main-card { 
+            background: white; width: 100%; max-width: 500px; 
+            border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            overflow: hidden; border-top: 10px solid var(--gold); 
+        }
+
+        h1 { color: var(--gold); margin: 25px 0 5px; font-size: 30px; letter-spacing: 2px; }
         
-        .mode-btns { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
-        .mode-btns button { padding: 10px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .kids-line { font-size: 14px; font-weight: bold; margin-bottom: 20px; color: #7f8c8d; }
+        
+        /* Question Box - No background change here */
+        .question-area { padding: 40px 20px; }
+        
+        /* This is where the color changes with the question */
+        #kidName { font-size: 28px; font-weight: 900; margin-bottom: 10px; transition: 0.3s; }
+        #qText { font-size: 45px; font-weight: bold; color: var(--dark); margin: 15px 0; }
+        #qTrans { font-size: 20px; color: #7f8c8d; font-style: italic; }
+
+        input { 
+            width: 60%; padding: 15px; font-size: 24px; border-radius: 15px; 
+            border: 3px solid #eee; text-align: center; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); }
+
+        .btn { 
+            background: var(--gold); color: white; padding: 15px 40px; 
+            border: none; border-radius: 50px; font-size: 20px; cursor: pointer; 
+            margin: 20px 0; width: 80%; font-weight: bold;
+        }
+        
+        .score-box { font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="main-card">
     <h1>✨ HEPM ACADEMY ✨</h1>
-    <div class="kids-nav">
-        <span class="girls">HERMELA</span> • <span class="erkabel">ERKABEL</span> • <span class="girls">PEGGY</span> • <span class="girls">MARANATA</span>
+    <div class="kids-line">HERMELA • ERKABEL • PEGGY • MARANATA</div>
+
+    <div class="question-area">
+        <div id="kidName">...</div>
+        <div id="qText">...</div>
+        <div id="qTrans">...</div>
+        
+        <input type="number" id="ansInput" placeholder="?">
+        <br>
+        <button class="btn" onclick="check()">CHECK / መርምር</button>
+        <div id="feedback" style="height:30px; font-weight:bold; margin-top:10px;"></div>
     </div>
 
-    <div class="mode-btns">
-        <button style="background: #ffcc00;" onclick="setMode('math')">🔢 Maths</button>
-        <button style="background: #ff6699; color:white;" onclick="setMode('abc')">🔤 ABC</button>
-        <button style="background: #66ccff;" onclick="setMode('animals')">🦁 Animals</button>
-    </div>
-
-    <div class="game-card">
-        <div id="kidName" style="font-size: 24px; margin-bottom: 10px;"></div>
-        <div id="displayArea">...</div>
-        <div id="translationArea">...</div>
-    </div>
-
-    <input type="text" id="userInput" placeholder="Answer here">
-    <br>
-    <button class="btn" onclick="check()">CHECK / መርምር 🚀</button>
-    
-    <div id="feedback" style="font-size: 24px; margin-top: 15px; height: 30px;"></div>
-    <div style="font-size: 24px; color: var(--gold); padding: 20px;">Score: <span id="score">0</span> ⭐</div>
+    <div class="score-box">⭐ Score: <span id="score">0</span></div>
 </div>
 
 <audio id="correctSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="wrongSound" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 <script>
-    let mode = 'math';
     let currentAns, score = 0;
     const kids = [
-        {n: "Hermela", c: "#ff69b4"}, {n: "Erkabel", c: "#3498db"},
-        {n: "Peggy", n: "Peggy", c: "#ff69b4"}, {n: "Maranata", c: "#ff69b4"}
+        {name: "HERMELA", color: "#ff69b4"},
+        {name: "ERKABEL", color: "#3498db"},
+        {name: "PEGGY", color: "#ff69b4"},
+        {name: "MARANATA", color: "#ff69b4"}
     ];
-
-    const animals = [
-        {img: "🦁", ti: "ኣንበሳ", en: "Lion", de: "Löwe"},
-        {img: "🐘", ti: "ሓርማዝ", en: "Elephant", de: "Elefant"},
-        {img: "🦒", ti: "ቀጭኔ", en: "Giraffe", de: "Giraffe"},
-        {img: "🐒", ti: "ህበይ", en: "Monkey", de: "Affe"}
-    ];
-
-    function setMode(m) { mode = m; score = 0; document.getElementById('score').innerText = score; next(); }
 
     function next() {
-        let kid = kids[Math.floor(Math.random()*kids.length)];
-        let kn = document.getElementById('kidName');
-        kn.innerText = kid.n; kn.style.color = kid.c;
-        document.getElementById('userInput').value = "";
+        let kid = kids[Math.floor(Math.random() * kids.length)];
+        let n1 = Math.floor(Math.random() * 12) + 1;
+        let n2 = Math.floor(Math.random() * 10) + 1;
+        
+        currentAns = n1 + n2;
+        
+        // Only change the Name and its Color
+        let nameEl = document.getElementById('kidName');
+        nameEl.innerText = kid.name;
+        nameEl.style.color = kid.color;
 
-        if(mode === 'math') {
-            let n1 = Math.floor(Math.random()*12); let n2 = Math.floor(Math.random()*10);
-            currentAns = (n1 + n2).toString();
-            document.getElementById('displayArea').innerText = `${n1} + ${n2}`;
-            document.getElementById('translationArea').innerText = `${n1} ደሚርካ ${n2}`;
-        } else if(mode === 'abc') {
-            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            currentAns = letters[Math.floor(Math.random()*letters.length)];
-            document.getElementById('displayArea').innerText = currentAns;
-            document.getElementById('translationArea').innerText = "Write this letter!";
-        } else {
-            let ani = animals[Math.floor(Math.random()*animals.length)];
-            currentAns = ani.en.toLowerCase();
-            document.getElementById('displayArea').innerText = ani.img;
-            document.getElementById('translationArea').innerText = `${ani.ti} | ${ani.de}`;
-        }
+        document.getElementById('qText').innerText = `${n1} + ${n2}`;
+        document.getElementById('qTrans').innerText = `${n1} ደሚርካ ${n2}`;
+        document.getElementById('ansInput').value = "";
+        document.getElementById('ansInput').focus();
     }
 
     function check() {
-        let val = document.getElementById('userInput').value.trim().toLowerCase();
+        let u = parseInt(document.getElementById('ansInput').value);
         let fb = document.getElementById('feedback');
-        if(val === currentAns.toLowerCase()) {
+        if(u === currentAns) {
             document.getElementById('correctSound').play();
-            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "green";
+            fb.innerText = "✅ Excellent!"; fb.style.color = "green";
             score += 10;
             document.getElementById('score').innerText = score;
-            setTimeout(next, 1500);
+            setTimeout(() => { fb.innerText = ""; next(); }, 1500);
         } else {
-            document.getElementById('wrongSound').play();
             fb.innerText = "❌ Try Again!"; fb.style.color = "red";
         }
     }
+
     next();
 </script>
+
 </body>
 </html>
