@@ -35,7 +35,7 @@
     <div class="black-box" onclick="speakCurrent()">
         <div id="qMain">...</div>
         <div id="qSub">...</div>
-        <div style="font-size: 12px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound / ድምጺ ስማዕ</div>
+        <div id="voiceHint" style="font-size: 12px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound</div>
     </div>
     <input type="text" id="ansInput" placeholder="Type here...">
     <br>
@@ -48,37 +48,27 @@
     let currentMode = 'math', currentAns, currentSpeak, score = 0;
     const kids = [{n:"HERMELA", c:"#ff69b4"}, {n:"ERKABEL", c:"#3498db"}, {n:"PEGGY", c:"#ff69b4"}, {n:"MARANATA", c:"#ff69b4"}];
 
-    // --- ትግርኛ (ሀ-ፐ) ---
     const tigrinya = [
         {q:"ሀ", a:"he"}, {q:"ሁ", a:"hu"}, {q:"ሂ", a:"hi"}, {q:"ሃ", a:"ha"}, {q:"ለ", a:"le"}, {q:"ሉ", a:"lu"}, {q:"ሊ", a:"li"}, {q:"ላ", a:"la"},
-        {q:"ሐ", a:"he"}, {q:"ሑ", a:"hu"}, {q:"ሒ", a:"hi"}, {q:"ሓ", a:"ha"}, {q:"መ", a:"me"}, {q:"ሙ", a:"mu"}, {q:"ሚ", a:"mi"}, {q:"ማ", a:"ma"},
-        {q:"ረ", a:"re"}, {q:"ሩ", a:"ru"}, {q:"ሪ", a:"ri"}, {q:"ራ", a:"ra"}, {q:"ሰ", a:"se"}, {q:"ሱ", a:"su"}, {q:"ሲ", a:"si"}, {q:"ሳ", a:"sa"},
-        {q:"ቀ", a:"qe"}, {q:"ቁ", a:"qu"}, {q:"ቂ", a:"qi"}, {q:"ቃ", a:"qa"}, {q:"በ", a:"be"}, {q:"ቡ", a:"bu"}, {q:"ቢ", a:"bi"}, {q:"ባ", a:"ba"},
-        {q:"ተ", a:"te"}, {q:"ቱ", a:"tu"}, {q:"ቲ", a:"ti"}, {q:"ታ", a:"ta"}, {q:"ነ", a:"ne"}, {q:"ኑ", a:"nu"}, {q:"ኒ", a:"ni"}, {q:"ና", a:"na"}
+        {q:"መ", a:"me"}, {q:"ሙ", a:"mu"}, {q:"ሚ", a:"mi"}, {q:"ማ", a:"ma"}, {q:"ረ", a:"re"}, {q:"ሩ", a:"ru"}, {q:"ሪ", a:"ri"}, {q:"ራ", a:"ra"},
+        {q:"ሰ", a:"se"}, {q:"ሱ", a:"su"}, {q:"ሲ", a:"si"}, {q:"ሳ", a:"sa"}, {q:"ቀ", a:"qe"}, {q:"ቁ", a:"qu"}, {q:"ቂ", a:"qi"}, {q:"ቃ", a:"qa"},
+        {q:"በ", a:"be"}, {q:"ቡ", a:"bu"}, {q:"ቢ", a:"bi"}, {q:"ባ", a:"ba"}, {q:"ተ", a:"te"}, {q:"ቱ", a:"tu"}, {q:"ቲ", a:"ti"}, {q:"ታ", a:"ta"}
     ];
 
-    // --- English (Words & ABC) ---
     const english = [
-        {q:"A", a:"a"}, {q:"B", a:"b"}, {q:"C", a:"c"}, {q:"D", a:"d"}, {q:"E", a:"e"}, 
-        {q:"🦁", a:"lion", v:"Lion"}, {q:"🐘", a:"elephant", v:"Elephant"}, {q:"🦒", a:"giraffe", v:"Giraffe"},
-        {q:"🍎", a:"apple", v:"Apple"}, {q:"🍌", a:"banana", v:"Banana"}, {q:"🍇", a:"grapes", v:"Grapes"},
-        {q:"🏠", a:"house", v:"House"}, {q:"🚗", a:"car", v:"Car"}, {q:"🚲", a:"bike", v:"Bike"},
-        {q:"🥛", a:"milk", v:"Milk"}, {q:"🥚", a:"egg", v:"Egg"}, {q:"🍦", a:"ice cream", v:"Ice cream"},
-        {q:"⚽", a:"ball", v:"Ball"}, {q:"🐱", a:"cat", v:"Cat"}, {q:"🐶", a:"dog", v:"Dog"}
+        {q:"🦁", a:"lion", v:"Lion"}, {q:"🐘", a:"elephant", v:"Elephant"}, {q:"🍎", a:"apple", v:"Apple"}, 
+        {q:"🚗", a:"car", v:"Car"}, {q:"🏠", a:"house", v:"House"}, {q:"🐶", a:"dog", v:"Dog"},
+        {q:"⚽", a:"ball", v:"Ball"}, {q:"🥛", a:"milk", v:"Milk"}, {q:"🍌", a:"banana", v:"Banana"}
     ];
 
-    // --- Deutsch (ABC & Words) ---
     const deutsch = [
         {q:"Ä", a:"ä"}, {q:"Ö", a:"ö"}, {q:"Ü", a:"ü"}, {q:"ß", a:"ss", v:"Eszett"},
         {q:"🦁", a:"löwe", v:"Löwe"}, {q:"🐘", a:"elefant", v:"Elefant"}, {q:"🍎", a:"apfel", v:"Apfel"},
-        {q:"🚗", a:"auto", v:"Auto"}, {q:"🚲", a:"fahrrad", v:"Fahrrad"}, {q:"🐱", a:"katze", v:"Katze"},
-        {q:"🐶", a:"hund", v:"Hund"}, {q:"🏠", a:"haus", v:"Haus"}, {q:"🥛", a:"milch", v:"Milch"},
-        {q:"🍞", a:"brot", v:"Brot"}, {q:"🍎", a:"apfel", v:"Apfel"}, {q:"🦒", a:"giraffe", v:"Giraffe"},
-        {q:"🍓", a:"erdbeere", v:"Erdbeere"}, {q:"🐧", a:"pinguin", v:"Pinguin"}, {q:"🦋", a:"schmetterling", v:"Schmetterling"}
+        {q:"🚗", a:"auto", v:"Auto"}, {q:"🚲", a:"fahrrad", v:"Fahrrad"}, {q:"🍞", a:"brot", v:"Brot"}
     ];
 
     function speakCurrent() {
-        if (!currentSpeak) return;
+        if (!currentSpeak || currentMode === 'ti') return; // ትግርኛ እንተኾይኑ ኣይዛረብን
         window.speechSynthesis.cancel();
         let msg = new SpeechSynthesisUtterance(currentSpeak);
         msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
@@ -90,6 +80,7 @@
         currentMode = mode;
         document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
         document.getElementById('m-' + mode).classList.add('active');
+        document.getElementById('voiceHint').style.display = (mode === 'ti') ? 'none' : 'block';
         next();
     }
 
@@ -101,7 +92,7 @@
         document.getElementById('ansInput').focus();
 
         if (currentMode === 'math') {
-            let n1 = Math.floor(Math.random() * 20) + 1, n2 = Math.floor(Math.random() * 15) + 1;
+            let n1 = Math.floor(Math.random() * 15) + 1, n2 = Math.floor(Math.random() * 10) + 1;
             currentAns = (n1 + n2).toString(); currentSpeak = n1 + " plus " + n2;
             document.getElementById('qMain').innerText = n1 + "+" + n2;
             document.getElementById('qSub').innerText = "Maths Challenge";
@@ -112,7 +103,7 @@
             document.getElementById('qMain').innerText = p.q;
             document.getElementById('qSub').innerText = (currentMode === 'ti') ? "Write: " + p.a : "Write the answer";
         }
-        speakCurrent();
+        if (currentMode !== 'ti') speakCurrent();
     }
 
     function check() {
