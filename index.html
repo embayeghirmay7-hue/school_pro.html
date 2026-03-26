@@ -3,116 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Learning is Fun!</title>
+    <title>HEPM ULTIMATE ACADEMY</title>
     <style>
-        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #e67e22; --bg: #f0f3f5; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 15px; text-align: center; }
-        .main-card { background: white; max-width: 550px; margin: 20px auto; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); overflow: hidden; border-top: 10px solid var(--secondary); }
-        .header { padding: 25px; background: white; }
-        h1 { color: var(--primary); margin: 0; font-size: 30px; letter-spacing: 3px; font-weight: 900; }
-        .kids-line { color: #95a5a6; font-size: 15px; margin-top: 8px; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #2c3e50; }
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #fdf6e3; text-align: center; padding: 10px; }
+        .container { background: white; max-width: 600px; margin: auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; border: 8px solid var(--gold); }
+        h1 { color: var(--gold); font-size: 35px; margin: 20px 0 5px; text-shadow: 2px 2px #eee; }
+        .kids-nav { margin-bottom: 20px; font-weight: bold; font-size: 18px; }
+        .erkabel { color: var(--blue); } .girls { color: var(--pink); }
         
-        .question-zone { background: var(--primary); color: white; padding: 35px 20px; margin: 20px; border-radius: 20px; }
-        #qText { font-size: 36px; font-weight: bold; display: block; margin-bottom: 10px; }
-        #qTrans { font-size: 18px; color: #bdc3c7; line-height: 1.5; }
-        
-        input { width: 70%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #dfe6e9; text-align: center; outline: none; margin-bottom: 20px; transition: 0.3s; }
-        input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(39, 174, 96, 0.2); }
-        
-        .btn-check { background: var(--secondary); color: white; padding: 18px 50px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; box-shadow: 0 5px 0 #219150; transition: 0.2s; }
-        .btn-check:active { transform: translateY(4px); box-shadow: none; }
-        
-        #feedback { height: 45px; margin-top: 20px; font-size: 22px; font-weight: bold; }
-        .score-box { font-size: 24px; color: var(--accent); margin-bottom: 20px; font-weight: bold; }
+        /* Game Area */
+        .game-card { background: var(--dark); color: white; margin: 20px; padding: 25px; border-radius: 20px; min-height: 200px; }
+        #displayArea { font-size: 50px; margin-bottom: 15px; }
+        #translationArea { font-size: 20px; color: #bdc3c7; }
 
-        /* Vocabulary Table */
-        .dict-section { background: #fdfdfd; padding: 25px; border-top: 2px solid #eee; text-align: left; }
-        .dict-section h3 { margin-top: 0; color: var(--primary); font-size: 18px; border-left: 5px solid var(--accent); padding-left: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #f8f9fa; color: #7f8c8d; text-align: left; padding: 10px; font-size: 13px; text-transform: uppercase; }
-        td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 15px; }
-        .lang-label { font-weight: bold; color: var(--primary); }
+        input { width: 60%; padding: 15px; font-size: 24px; border-radius: 15px; border: 4px solid var(--gold); text-align: center; }
+        .btn { background: var(--gold); color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; margin-top: 20px; font-weight: bold; width: 80%; }
+        
+        .mode-btns { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+        .mode-btns button { padding: 10px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="main-card">
-    <div class="header">
-        <h1>🏫 HEPM ACADEMY</h1>
-        <div class="kids-line">HERMELA • ERKABEL • PEGGY • MARANATA</div>
+<div class="container">
+    <h1>✨ HEPM ACADEMY ✨</h1>
+    <div class="kids-nav">
+        <span class="girls">HERMELA</span> • <span class="erkabel">ERKABEL</span> • <span class="girls">PEGGY</span> • <span class="girls">MARANATA</span>
     </div>
 
-    <div class="question-zone">
-        <div id="qText">...</div>
-        <div id="qTrans">...</div>
+    <div class="mode-btns">
+        <button style="background: #ffcc00;" onclick="setMode('math')">🔢 Maths</button>
+        <button style="background: #ff6699; color:white;" onclick="setMode('abc')">🔤 ABC</button>
+        <button style="background: #66ccff;" onclick="setMode('animals')">🦁 Animals</button>
     </div>
 
-    <input type="number" id="ansInput" placeholder="መልሲ / Answer">
+    <div class="game-card">
+        <div id="kidName" style="font-size: 24px; margin-bottom: 10px;"></div>
+        <div id="displayArea">...</div>
+        <div id="translationArea">...</div>
+    </div>
+
+    <input type="text" id="userInput" placeholder="Answer here">
     <br>
-    <button class="btn-check" onclick="checkAnswer()">CHECK / መርምር 🚀</button>
-
-    <div id="feedback"></div>
-    <div class="score-box">⭐ Score: <span id="scoreVal">0</span></div>
-
-    <div class="dict-section">
-        <h3>📖 Dictionary (ትግርኛ - EN - DE)</h3>
-        <table>
-            <tr><th>Tigrinya</th><th>English</th><th>German</th></tr>
-            <tr><td class="lang-label">ደሚርካ</td><td>Plus (+)</td><td>Plus</td></tr>
-            <tr><td class="lang-label">ቀኒስካ</td><td>Minus (-)</td><td>Minus</td></tr>
-            <tr><td class="lang-label">ኣባዚሕካ</td><td>Times (x)</td><td>Mal</td></tr>
-            <tr><td class="lang-label">ትኽክል</td><td>Correct</td><td>Richtig</td></tr>
-        </table>
-    </div>
+    <button class="btn" onclick="check()">CHECK / መርምር 🚀</button>
+    
+    <div id="feedback" style="font-size: 24px; margin-top: 15px; height: 30px;"></div>
+    <div style="font-size: 24px; color: var(--gold); padding: 20px;">Score: <span id="score">0</span> ⭐</div>
 </div>
 
+<audio id="correctSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="wrongSound" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
 <script>
-    let n1, n2, correctAns, score = 0;
-    const kids = ["Hermela", "Erkabel", "Peggy", "Maranata"];
+    let mode = 'math';
+    let currentAns, score = 0;
+    const kids = [
+        {n: "Hermela", c: "#ff69b4"}, {n: "Erkabel", c: "#3498db"},
+        {n: "Peggy", n: "Peggy", c: "#ff69b4"}, {n: "Maranata", c: "#ff69b4"}
+    ];
 
-    function nextQuestion() {
-        let name = kids[Math.floor(Math.random() * kids.length)];
-        n1 = Math.floor(Math.random() * 12) + 1;
-        n2 = Math.floor(Math.random() * 10) + 1;
-        let mode = Math.random();
+    const animals = [
+        {img: "🦁", ti: "ኣንበሳ", en: "Lion", de: "Löwe"},
+        {img: "🐘", ti: "ሓርማዝ", en: "Elephant", de: "Elefant"},
+        {img: "🦒", ti: "ቀጭኔ", en: "Giraffe", de: "Giraffe"},
+        {img: "🐒", ti: "ህበይ", en: "Monkey", de: "Affe"}
+    ];
 
-        if (mode < 0.4) { // Addition
-            correctAns = n1 + n2;
-            document.getElementById('qText').innerText = `${n1} + ${n2} = ?`;
-            document.getElementById('qTrans').innerText = `${name}: ${n1} ደሚርካ ${n2} ይኸውን... \n (${n1} plus ${n2})`;
-        } else if (mode < 0.7) { // Subtraction
-            let big = Math.max(n1, n2); let small = Math.min(n1, n2);
-            correctAns = big - small;
-            document.getElementById('qText').innerText = `${big} - ${small} = ?`;
-            document.getElementById('qTrans').innerText = `${name}: ካብ ${big} ተቀኒሱ ${small} ይኸውን... \n (${big} minus ${small})`;
-        } else { // Multiplication
-            correctAns = n1 * n2;
-            document.getElementById('qText').innerText = `${n1} x ${n2} = ?`;
-            document.getElementById('qTrans').innerText = `${name}: ${n1} ኣባዚሕካ ${n2} ይኸውን... \n (${n1} mal ${n2})`;
-        }
-        document.getElementById('ansInput').value = "";
-        document.getElementById('ansInput').focus();
-    }
+    function setMode(m) { mode = m; score = 0; document.getElementById('score').innerText = score; next(); }
 
-    function checkAnswer() {
-        let userAns = parseInt(document.getElementById('ansInput').value);
-        let fb = document.getElementById('feedback');
-        
-        if (userAns === correctAns) {
-            fb.innerText = "🌟 Excellent! / ብርትዕ! / Sehr gut!";
-            fb.style.color = "#27ae60";
-            score += 10;
-            document.getElementById('scoreVal').innerText = score;
-            setTimeout(nextQuestion, 1500);
+    function next() {
+        let kid = kids[Math.floor(Math.random()*kids.length)];
+        let kn = document.getElementById('kidName');
+        kn.innerText = kid.n; kn.style.color = kid.c;
+        document.getElementById('userInput').value = "";
+
+        if(mode === 'math') {
+            let n1 = Math.floor(Math.random()*12); let n2 = Math.floor(Math.random()*10);
+            currentAns = (n1 + n2).toString();
+            document.getElementById('displayArea').innerText = `${n1} + ${n2}`;
+            document.getElementById('translationArea').innerText = `${n1} ደሚርካ ${n2}`;
+        } else if(mode === 'abc') {
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            currentAns = letters[Math.floor(Math.random()*letters.length)];
+            document.getElementById('displayArea').innerText = currentAns;
+            document.getElementById('translationArea').innerText = "Write this letter!";
         } else {
-            fb.innerText = "❌ Try again / እንደገና / Versuchs nochmal";
-            fb.style.color = "#e74c3c";
+            let ani = animals[Math.floor(Math.random()*animals.length)];
+            currentAns = ani.en.toLowerCase();
+            document.getElementById('displayArea').innerText = ani.img;
+            document.getElementById('translationArea').innerText = `${ani.ti} | ${ani.de}`;
         }
     }
 
-    // Start on load
-    nextQuestion();
+    function check() {
+        let val = document.getElementById('userInput').value.trim().toLowerCase();
+        let fb = document.getElementById('feedback');
+        if(val === currentAns.toLowerCase()) {
+            document.getElementById('correctSound').play();
+            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "green";
+            score += 10;
+            document.getElementById('score').innerText = score;
+            setTimeout(next, 1500);
+        } else {
+            document.getElementById('wrongSound').play();
+            fb.innerText = "❌ Try Again!"; fb.style.color = "red";
+        }
+    }
+    next();
 </script>
-
 </body>
 </html>
