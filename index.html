@@ -8,24 +8,18 @@
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #1a1a1a; }
         body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 15px; }
         .card { background: white; max-width: 500px; margin: auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
-        
         h1 { color: var(--gold); margin: 20px 0 5px; font-size: 28px; font-weight: 900; }
-        #kidName { font-size: 28px; font-weight: bold; margin-bottom: 15px; height: 35px; }
-
-        /* ቋንቋ መምረጺ Buttons */
+        #kidName { font-size: 30px; font-weight: bold; margin-bottom: 15px; height: 35px; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; }
-        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; font-size: 14px; transition: 0.3s; }
-        .menu-grid button.active { background: var(--gold); color: white; scale: 1.05; }
-
-        /* እቲ ጸሊም ሳጹን */
-        .black-box { background: var(--dark); color: white; margin: 0 20px 20px; padding: 45px 15px; border-radius: 20px; min-height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #qMain { font-size: 90px; font-weight: bold; }
+        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; transition: 0.3s; }
+        .menu-grid button.active { background: var(--gold); color: white; }
+        .black-box { background: var(--dark); color: white; margin: 0 20px 20px; padding: 40px 15px; border-radius: 20px; min-height: 160px; position: relative; }
+        #qMain { font-size: 100px; font-weight: bold; cursor: pointer; }
         #qSub { font-size: 22px; color: #888; margin-top: 15px; }
-
         input { width: 75%; padding: 16px; font-size: 26px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 20px; outline: none; }
         .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; margin-bottom: 20px; }
-        
         .score { font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
+        .voice-hint { font-size: 14px; color: var(--gold); margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -41,46 +35,49 @@
         <button id="m-de" onclick="setMode('de')">🇩🇪 Deutsch</button>
     </div>
 
-    <div class="black-box">
+    <div class="black-box" onclick="speakCurrent()">
         <div id="qMain">...</div>
         <div id="qSub">...</div>
+        <div class="voice-hint">🔈 Click to Hear / ድምጺ ስማዕ</div>
     </div>
 
-    <div class="input-area">
-        <input type="text" id="ansInput" placeholder="Write here...">
-        <br>
-        <button class="btn-check" onclick="check()">CHECK / መርምር</button>
-    </div>
-    
-    <div id="feedback" style="height:30px; font-weight:bold; margin-top:-10px; font-size: 18px;"></div>
+    <input type="text" id="ansInput" placeholder="Write here...">
+    <br>
+    <button class="btn-check" onclick="check()">CHECK / መርምር</button>
+    <div id="feedback" style="height:30px; font-weight:bold; margin-top:-10px;"></div>
     <div class="score">⭐ Score: <span id="scoreVal">0</span></div>
 </div>
 
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-
 <script>
-    let currentMode = 'math', currentAns, score = 0;
+    let currentMode = 'math', currentAns, currentSpeak, score = 0;
     const kids = [
         {n: "HERMELA", c: "#ff69b4"}, {n: "ERKABEL", c: "#3498db"},
         {n: "PEGGY", c: "#ff69b4"}, {n: "MARANATA", c: "#ff69b4"}
     ];
 
     const tigrinya = [
-        {q: "ሀ", a: "he", s: "ሀ = he"}, {q: "ሁ", a: "hu", s: "ሁ = hu"}, {q: "ሂ", a: "hi", s: "ሂ = hi"},
-        {q: "ለ", a: "le", s: "ለ = le"}, {q: "ሉ", a: "lu", s: "ሉ = lu"}, {q: "ሊ", a: "li", s: "ሊ = li"}
+        {q: "ሀ", a: "he", v: "he"}, {q: "ሁ", a: "hu", v: "hu"}, {q: "ሂ", a: "hi", v: "hi"},
+        {q: "ለ", a: "le", v: "le"}, {q: "ሉ", a: "lu", v: "lu"}, {q: "ሊ", a: "li", v: "li"}
     ];
 
     const english = [
-        {q: "🍎", a: "apple", s: "Apple"}, {q: "🐶", a: "dog", s: "Dog"}, {q: "🦁", a: "lion", s: "Lion"}
+        {q: "🦁", a: "lion", v: "Lion"}, {q: "🍎", a: "apple", v: "Apple"}, {q: "🐶", a: "dog", v: "Dog"}
     ];
 
     const deutsch = [
-        {q: "🚗", a: "auto", s: "Auto"}, {q: "🍎", a: "apfel", s: "Apfel"}, {q: "🏠", a: "haus", s: "Haus"}
+        {q: "🚗", a: "auto", v: "Auto"}, {q: "🍎", a: "apfel", v: "Apfel"}, {q: "🏠", a: "haus", v: "Haus"}
     ];
+
+    function speakCurrent() {
+        if (!currentSpeak) return;
+        let msg = new SpeechSynthesisUtterance();
+        msg.text = currentSpeak;
+        msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
+        window.speechSynthesis.speak(msg);
+    }
 
     function setMode(mode) {
         currentMode = mode;
-        // Highlight active button
         document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
         document.getElementById('m-' + mode).classList.add('active');
         next();
@@ -89,8 +86,7 @@
     function next() {
         let kid = kids[Math.floor(Math.random() * kids.length)];
         let kn = document.getElementById('kidName');
-        kn.innerText = kid.n; kn.style.color = kid.color; kn.style.color = kid.c;
-        
+        kn.innerText = kid.n; kn.style.color = kid.c;
         document.getElementById('ansInput').value = "";
         document.getElementById('ansInput').focus();
 
@@ -98,14 +94,17 @@
             let n1 = Math.floor(Math.random() * 12) + 1;
             let n2 = Math.floor(Math.random() * 10) + 1;
             currentAns = (n1 + n2).toString();
-            document.getElementById('qMain').innerText = n1 + " + " + n2;
+            currentSpeak = n1 + " plus " + n2;
+            document.getElementById('qMain').innerText = n1 + "+" + n2;
             document.getElementById('qSub').innerText = "Maths Challenge";
         } else {
             let list = (currentMode === 'ti') ? tigrinya : (currentMode === 'en' ? english : deutsch);
             let pick = list[Math.floor(Math.random() * list.length)];
             currentAns = pick.a;
+            currentSpeak = pick.v;
             document.getElementById('qMain').innerText = pick.q;
-            document.getElementById('qSub').innerText = pick.s;
+            document.getElementById('qSub').innerText = (currentMode === 'ti') ? "Write: " + pick.a : "Write in " + currentMode;
+            speakCurrent(); // Automatically speak on new question
         }
     }
 
@@ -113,7 +112,6 @@
         let val = document.getElementById('ansInput').value.trim().toLowerCase();
         let fb = document.getElementById('feedback');
         if (val === currentAns.toLowerCase()) {
-            document.getElementById('winSound').play();
             fb.innerText = "✅ EXCELLENT!"; fb.style.color = "green";
             score += 10; document.getElementById('scoreVal').innerText = score;
             setTimeout(() => { fb.innerText = ""; next(); }, 1200);
