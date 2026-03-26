@@ -7,23 +7,25 @@
     <style>
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #1a1a1a; }
         body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 15px; }
-        .card { background: white; max-width: 500px; margin: auto; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
+        .card { background: white; max-width: 500px; margin: auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
         
-        h1 { color: var(--gold); margin: 20px 0; font-size: 28px; font-weight: 900; }
-        #kidName { font-size: 28px; font-weight: bold; margin-bottom: 10px; height: 35px; }
+        h1 { color: var(--gold); margin: 20px 0 5px; font-size: 28px; font-weight: 900; }
+        #kidName { font-size: 28px; font-weight: bold; margin-bottom: 15px; height: 35px; }
 
-        /* ምርጫታት (Menu) */
-        .selector-box { background: #eee; margin: 10px; padding: 10px; border-radius: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .selector-box button { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: white; color: var(--dark); transition: 0.3s; }
-        .selector-box button.active { background: var(--gold); color: white; }
+        /* ቋንቋ መምረጺ Buttons */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; }
+        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; font-size: 14px; transition: 0.3s; }
+        .menu-grid button.active { background: var(--gold); color: white; scale: 1.05; }
 
-        .black-box { background: var(--dark); color: white; margin: 20px; padding: 40px 10px; border-radius: 20px; min-height: 180px; }
-        #qMain { font-size: 80px; font-weight: bold; }
-        #qSub { font-size: 22px; color: #888; margin-top: 10px; }
+        /* እቲ ጸሊም ሳጹን */
+        .black-box { background: var(--dark); color: white; margin: 0 20px 20px; padding: 45px 15px; border-radius: 20px; min-height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #qMain { font-size: 90px; font-weight: bold; }
+        #qSub { font-size: 22px; color: #888; margin-top: 15px; }
 
-        input { width: 70%; padding: 15px; font-size: 24px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 15px; outline: none; }
-        .btn-check { background: var(--gold); color: white; padding: 15px 50px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; }
-        .score { font-size: 22px; color: var(--gold); font-weight: bold; padding: 15px; }
+        input { width: 75%; padding: 16px; font-size: 26px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 20px; outline: none; }
+        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; margin-bottom: 20px; }
+        
+        .score { font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -32,16 +34,11 @@
     <h1>✨ HEPM ACADEMY ✨</h1>
     <div id="kidName">...</div>
 
-    <div class="selector-box">
-        <button id="btn-math" onclick="setGame('math')">🔢 Maths</button>
-        <button id="btn-ti" onclick="setGame('ti')">🇪🇷 ትግርኛ</button>
-        <button id="btn-en" onclick="setGame('en')">🇬🇧 English</button>
-        <button id="btn-de" onclick="setGame('de')">🇩🇪 Deutsch</button>
-    </div>
-
-    <div id="sub-menu" class="selector-box" style="background: #e0e0e0; display:none;">
-        <button onclick="setSubMode('letters')">ሀሁሂ / ABC</button>
-        <button onclick="setSubMode('words')">ቃላት (Words)</button>
+    <div class="menu-grid">
+        <button id="m-math" onclick="setMode('math')">🔢 Maths</button>
+        <button id="m-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</button>
+        <button id="m-en" onclick="setMode('en')">🇬🇧 English</button>
+        <button id="m-de" onclick="setMode('de')">🇩🇪 Deutsch</button>
     </div>
 
     <div class="black-box">
@@ -49,77 +46,83 @@
         <div id="qSub">...</div>
     </div>
 
-    <input type="text" id="ans" placeholder="Answer here">
-    <br>
-    <button class="btn-check" onclick="check()">CHECK / መርምር</button>
-    <div id="fb" style="height:35px; margin-top:10px; font-weight:bold;"></div>
-    <div class="score">⭐ Score: <span id="sc">0</span></div>
+    <div class="input-area">
+        <input type="text" id="ansInput" placeholder="Write here...">
+        <br>
+        <button class="btn-check" onclick="check()">CHECK / መርምር</button>
+    </div>
+    
+    <div id="feedback" style="height:30px; font-weight:bold; margin-top:-10px; font-size: 18px;"></div>
+    <div class="score">⭐ Score: <span id="scoreVal">0</span></div>
 </div>
 
-<audio id="win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
 <script>
-    let mode = 'math', subMode = 'letters', currentAns, score = 0;
+    let currentMode = 'math', currentAns, score = 0;
     const kids = [
         {n: "HERMELA", c: "#ff69b4"}, {n: "ERKABEL", c: "#3498db"},
         {n: "PEGGY", c: "#ff69b4"}, {n: "MARANATA", c: "#ff69b4"}
     ];
 
-    const data = {
-        ti: {
-            letters: [{q:"ሀ", a:"he"}, {q:"ሁ", a:"hu"}, {q:"ሂ", a:"hi"}, {q:"ሃ", a:"ha"}],
-            words: [{q:"🍎", a:"apple", s:"ቱፋሕ"}, {q:"🦁", a:"lion", s:"ኣንበሳ"}, {q:"🏠", a:"house", s:"ገዛ"}]
-        },
-        en: {
-            letters: [{q:"A", a:"a"}, {q:"B", a:"b"}],
-            words: [{q:"🐶", a:"dog", s:"Dog"}, {q:"🚗", a:"car", s:"Car"}]
-        },
-        de: {
-            letters: [{q:"A", a:"a"}, {q:"B", a:"b"}],
-            words: [{q:"🍎", a:"apfel", s:"Apfel"}, {q:"🚗", a:"auto", s:"Auto"}]
-        }
-    };
+    const tigrinya = [
+        {q: "ሀ", a: "he", s: "ሀ = he"}, {q: "ሁ", a: "hu", s: "ሁ = hu"}, {q: "ሂ", a: "hi", s: "ሂ = hi"},
+        {q: "ለ", a: "le", s: "ለ = le"}, {q: "ሉ", a: "lu", s: "ሉ = lu"}, {q: "ሊ", a: "li", s: "ሊ = li"}
+    ];
 
-    function setGame(m) {
-        mode = m;
-        document.getElementById('sub-menu').style.display = (m === 'math') ? 'none' : 'flex';
-        next();
-    }
+    const english = [
+        {q: "🍎", a: "apple", s: "Apple"}, {q: "🐶", a: "dog", s: "Dog"}, {q: "🦁", a: "lion", s: "Lion"}
+    ];
 
-    function setSubMode(s) {
-        subMode = s;
+    const deutsch = [
+        {q: "🚗", a: "auto", s: "Auto"}, {q: "🍎", a: "apfel", s: "Apfel"}, {q: "🏠", a: "haus", s: "Haus"}
+    ];
+
+    function setMode(mode) {
+        currentMode = mode;
+        // Highlight active button
+        document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
+        document.getElementById('m-' + mode).classList.add('active');
         next();
     }
 
     function next() {
-        let kid = kids[Math.floor(Math.random()*kids.length)];
+        let kid = kids[Math.floor(Math.random() * kids.length)];
         let kn = document.getElementById('kidName');
-        kn.innerText = kid.n; kn.style.color = kid.c;
-        document.getElementById('ans').value = "";
+        kn.innerText = kid.n; kn.style.color = kid.color; kn.style.color = kid.c;
+        
+        document.getElementById('ansInput').value = "";
+        document.getElementById('ansInput').focus();
 
-        if(mode === 'math') {
-            let n1 = Math.floor(Math.random()*12), n2 = Math.floor(Math.random()*10);
-            currentAns = (n1+n2).toString();
-            document.getElementById('qMain').innerText = n1 + "+" + n2;
+        if (currentMode === 'math') {
+            let n1 = Math.floor(Math.random() * 12) + 1;
+            let n2 = Math.floor(Math.random() * 10) + 1;
+            currentAns = (n1 + n2).toString();
+            document.getElementById('qMain').innerText = n1 + " + " + n2;
             document.getElementById('qSub').innerText = "Maths Challenge";
         } else {
-            let list = data[mode][subMode];
-            let pick = list[Math.floor(Math.random()*list.length)];
+            let list = (currentMode === 'ti') ? tigrinya : (currentMode === 'en' ? english : deutsch);
+            let pick = list[Math.floor(Math.random() * list.length)];
             currentAns = pick.a;
             document.getElementById('qMain').innerText = pick.q;
-            document.getElementById('qSub').innerText = pick.s || "Write the answer";
+            document.getElementById('qSub').innerText = pick.s;
         }
     }
 
     function check() {
-        let val = document.getElementById('ans').value.trim().toLowerCase();
-        if(val === currentAns.toLowerCase()) {
-            document.getElementById('win').play();
-            score += 10; document.getElementById('sc').innerText = score;
-            next();
+        let val = document.getElementById('ansInput').value.trim().toLowerCase();
+        let fb = document.getElementById('feedback');
+        if (val === currentAns.toLowerCase()) {
+            document.getElementById('winSound').play();
+            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "green";
+            score += 10; document.getElementById('scoreVal').innerText = score;
+            setTimeout(() => { fb.innerText = ""; next(); }, 1200);
+        } else {
+            fb.innerText = "❌ TRY AGAIN!"; fb.style.color = "red";
         }
     }
-    setGame('math');
+
+    setMode('math');
 </script>
 </body>
 </html>
