@@ -6,20 +6,24 @@
     <title>HEPM ACADEMY</title>
     <style>
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #1a1a1a; }
-        body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 15px; }
-        .card { background: white; max-width: 500px; margin: auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
+        body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 15px; margin: 0; }
+        .card { background: white; max-width: 500px; margin: 20px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
+        
         h1 { color: var(--gold); margin: 20px 0 5px; font-size: 28px; font-weight: 900; }
         #kidName { font-size: 30px; font-weight: bold; margin-bottom: 15px; height: 35px; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; }
-        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; transition: 0.3s; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 20px 15px; }
+        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; font-size: 14px; transition: 0.2s; }
         .menu-grid button.active { background: var(--gold); color: white; }
-        .black-box { background: var(--dark); color: white; margin: 0 20px 20px; padding: 40px 15px; border-radius: 20px; min-height: 160px; position: relative; }
-        #qMain { font-size: 100px; font-weight: bold; cursor: pointer; }
+
+        .black-box { background: var(--dark); color: white; margin: 0 20px 20px; padding: 40px 10px; border-radius: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        #qMain { font-size: 90px; font-weight: bold; line-height: 1; }
         #qSub { font-size: 22px; color: #888; margin-top: 15px; }
-        input { width: 75%; padding: 16px; font-size: 26px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 20px; outline: none; }
-        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; margin-bottom: 20px; }
-        .score { font-size: 22px; color: var(--gold); font-weight: bold; padding-bottom: 20px; }
-        .voice-hint { font-size: 14px; color: var(--gold); margin-top: 5px; }
+
+        input { width: 75%; padding: 16px; font-size: 26px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 15px; outline: none; }
+        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; }
+        
+        .score { font-size: 22px; color: var(--gold); font-weight: bold; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -38,13 +42,13 @@
     <div class="black-box" onclick="speakCurrent()">
         <div id="qMain">...</div>
         <div id="qSub">...</div>
-        <div class="voice-hint">🔈 Click to Hear / ድምጺ ስማዕ</div>
+        <div style="font-size: 12px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound / ድምጺ ስማዕ</div>
     </div>
 
-    <input type="text" id="ansInput" placeholder="Write here...">
+    <input type="text" id="ansInput" placeholder="Type here...">
     <br>
     <button class="btn-check" onclick="check()">CHECK / መርምር</button>
-    <div id="feedback" style="height:30px; font-weight:bold; margin-top:-10px;"></div>
+    <div id="fb" style="height:30px; font-weight:bold; margin-top:10px;"></div>
     <div class="score">⭐ Score: <span id="scoreVal">0</span></div>
 </div>
 
@@ -56,23 +60,25 @@
     ];
 
     const tigrinya = [
-        {q: "ሀ", a: "he", v: "he"}, {q: "ሁ", a: "hu", v: "hu"}, {q: "ሂ", a: "hi", v: "hi"},
-        {q: "ለ", a: "le", v: "le"}, {q: "ሉ", a: "lu", v: "lu"}, {q: "ሊ", a: "li", v: "li"}
+        {q:"ሀ", a:"he"}, {q:"ሁ", a:"hu"}, {q:"ሂ", a:"hi"}, {q:"ሃ", a:"ha"}, {q:"ሄ", a:"he"}, {q:"ህ", a:"h"}, {q:"ሆ", a:"ho"},
+        {q:"ለ", a:"le"}, {q:"ሉ", a:"lu"}, {q:"ሊ", a:"li"}, {q:"ላ", a:"la"}, {q:"ሌ", a:"le"}, {q:"ል", a:"l"}, {q:"ሎ", a:"lo"},
+        {q:"ሐ", a:"he"}, {q:"ሑ", a:"hu"}, {q:"ሒ", a:"hi"}, {q:"ሓ", a:"ha"}, {q:"ሔ", a:"he"}, {q:"ሕ", a:"h"}, {q:"ሖ", a:"ho"}
     ];
 
     const english = [
-        {q: "🦁", a: "lion", v: "Lion"}, {q: "🍎", a: "apple", v: "Apple"}, {q: "🐶", a: "dog", v: "Dog"}
+        {q:"🦁", a:"lion", v:"Lion"}, {q:"🐘", a:"elephant", v:"Elephant"}, {q:"🦒", a:"giraffe", v:"Giraffe"},
+        {q:"🍎", a:"apple", v:"Apple"}, {q:"🏠", a:"house", v:"House"}, {q:"🚗", a:"car", v:"Car"}
     ];
 
-    const deutsch = [
-        {q: "🚗", a: "auto", v: "Auto"}, {q: "🍎", a: "apfel", v: "Apfel"}, {q: "🏠", a: "haus", v: "Haus"}
-    ];
+    const deAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ".split("");
+    const deutsch = deAlphabet.map(l => ({q: l, a: l.toLowerCase(), v: l}));
 
     function speakCurrent() {
         if (!currentSpeak) return;
-        let msg = new SpeechSynthesisUtterance();
-        msg.text = currentSpeak;
+        window.speechSynthesis.cancel();
+        let msg = new SpeechSynthesisUtterance(currentSpeak);
         msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
+        msg.rate = 0.8;
         window.speechSynthesis.speak(msg);
     }
 
@@ -91,35 +97,41 @@
         document.getElementById('ansInput').focus();
 
         if (currentMode === 'math') {
-            let n1 = Math.floor(Math.random() * 12) + 1;
-            let n2 = Math.floor(Math.random() * 10) + 1;
+            let n1 = Math.floor(Math.random() * 15) + 1, n2 = Math.floor(Math.random() * 10) + 1;
             currentAns = (n1 + n2).toString();
             currentSpeak = n1 + " plus " + n2;
             document.getElementById('qMain').innerText = n1 + "+" + n2;
             document.getElementById('qSub').innerText = "Maths Challenge";
+        } else if (currentMode === 'ti') {
+            let p = tigrinya[Math.floor(Math.random() * tigrinya.length)];
+            currentAns = p.a; currentSpeak = p.a;
+            document.getElementById('qMain').innerText = p.q;
+            document.getElementById('qSub').innerText = "Write: " + p.a;
+        } else if (currentMode === 'en') {
+            let p = english[Math.floor(Math.random() * english.length)];
+            currentAns = p.a; currentSpeak = p.v;
+            document.getElementById('qMain').innerText = p.q;
+            document.getElementById('qSub').innerText = "English Word";
         } else {
-            let list = (currentMode === 'ti') ? tigrinya : (currentMode === 'en' ? english : deutsch);
-            let pick = list[Math.floor(Math.random() * list.length)];
-            currentAns = pick.a;
-            currentSpeak = pick.v;
-            document.getElementById('qMain').innerText = pick.q;
-            document.getElementById('qSub').innerText = (currentMode === 'ti') ? "Write: " + pick.a : "Write in " + currentMode;
-            speakCurrent(); // Automatically speak on new question
+            let p = deutsch[Math.floor(Math.random() * deutsch.length)];
+            currentAns = p.a; currentSpeak = p.v;
+            document.getElementById('qMain').innerText = p.q;
+            document.getElementById('qSub').innerText = "Deutsch ABC";
         }
+        speakCurrent();
     }
 
     function check() {
         let val = document.getElementById('ansInput').value.trim().toLowerCase();
-        let fb = document.getElementById('feedback');
-        if (val === currentAns.toLowerCase()) {
-            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "green";
+        let fb = document.getElementById('fb');
+        if (val === currentAns.toLowerCase() || (currentAns === "ß" && val === "ss")) {
+            fb.innerText = "🌟 EXCELLENT!"; fb.style.color = "green";
             score += 10; document.getElementById('scoreVal').innerText = score;
             setTimeout(() => { fb.innerText = ""; next(); }, 1200);
         } else {
             fb.innerText = "❌ TRY AGAIN!"; fb.style.color = "red";
         }
     }
-
     setMode('math');
 </script>
 </body>
