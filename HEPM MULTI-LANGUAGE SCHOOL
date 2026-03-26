@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ti">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEPM School - Multi Language</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #fdf6e3; text-align: center; padding: 10px; }
+        .school-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border-top: 10px solid #2ecc71; }
+        h1 { color: #2c3e50; font-size: 28px; }
+        .lang-box { background: #ecf0f1; padding: 10px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; display: flex; justify-content: space-around; }
+        .question-area { background: #34495e; color: white; padding: 20px; border-radius: 15px; margin: 20px 0; font-size: 24px; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .translation { font-size: 16px; color: #bdc3c7; margin-top: 5px; }
+        input { width: 70%; padding: 15px; font-size: 22px; border-radius: 10px; border: 3px solid #3498db; text-align: center; }
+        .btn-check { background: #2ecc71; color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 20px; cursor: pointer; margin-top: 15px; width: 80%; font-weight: bold; }
+        #feedback { margin-top: 15px; font-size: 20px; font-weight: bold; min-height: 30px; }
+        .stats { margin-top: 20px; color: #7f8c8d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="school-card">
+    <h1>🏫 HEPM SCHOOL</h1>
+    <div class="lang-box">
+        <span>🇪🇷 ትግርኛ</span> | <span>🇬🇧 English</span> | <span>🇩🇪 Deutsch</span>
+    </div>
+
+    <div class="question-area">
+        <div id="qText">Loading...</div>
+        <div id="qTrans" class="translation"></div>
+    </div>
+
+    <input type="number" id="ansInput" placeholder="?">
+    <br>
+    <button class="btn-check" onclick="check()">Check / መርምር / Prüfen</button>
+
+    <div id="feedback"></div>
+    <div class="stats">⭐ Score: <span id="score">0</span></div>
+</div>
+
+<script>
+    let n1, n2, correctAns, op;
+    let score = 0;
+
+    const phrases = {
+        add: { ti: "ተደሚሩ", en: "plus", de: "plus" },
+        sub: { ti: "ተቀኒሱ", en: "minus", de: "minus" },
+        mul: { ti: "ተባዚሑ", en: "times", de: "mal" }
+    };
+
+    function start() {
+        n1 = Math.floor(Math.random() * 12) + 1;
+        n2 = Math.floor(Math.random() * 10) + 1;
+        let r = Math.random();
+        
+        if(r < 0.4) {
+            op = 'add';
+            correctAns = n1 + n2;
+            document.getElementById('qText').innerText = `${n1} + ${n2} = ?`;
+            document.getElementById('qTrans').innerText = `${n1} ${phrases.add.ti} ${n2} | ${n1} ${phrases.add.de} ${n2}`;
+        } else if (r < 0.7) {
+            op = 'sub';
+            let big = Math.max(n1, n2);
+            let small = Math.min(n1, n2);
+            correctAns = big - small;
+            document.getElementById('qText').innerText = `${big} - ${small} = ?`;
+            document.getElementById('qTrans').innerText = `${big} ${phrases.sub.ti} ${small} | ${big} ${phrases.sub.de} ${small}`;
+        } else {
+            op = 'mul';
+            correctAns = n1 * n2;
+            document.getElementById('qText').innerText = `${n1} x ${n2} = ?`;
+            document.getElementById('qTrans').innerText = `${n1} ${phrases.mul.ti} ${n2} | ${n1} ${phrases.mul.de} ${n2}`;
+        }
+        document.getElementById('ansInput').value = "";
+    }
+
+    function check() {
+        let u = parseInt(document.getElementById('ansInput').value);
+        let f = document.getElementById('feedback');
+        if(u === correctAns) {
+            f.innerText = "✅ Excellent! / ብርትዕ! / Sehr gut!";
+            f.style.color = "#27ae60";
+            score += 10;
+            document.getElementById('score').innerText = score;
+            setTimeout(start, 2000);
+        } else {
+            f.innerText = "❌ Try again / እንደገና ፈትን / Versuchs nochmal";
+            f.style.color = "#e74c3c";
+        }
+    }
+
+    start();
+</script>
+
+</body>
+</html>
