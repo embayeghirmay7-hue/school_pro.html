@@ -8,21 +8,21 @@
         :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #1a1a1a; }
         body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 20px; }
         .card { background: white; max-width: 500px; margin: auto; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
-        h1 { color: var(--gold); margin-top: 25px; font-size: 28px; }
-        #kidName { font-size: 26px; font-weight: bold; margin: 15px 0; height: 35px; }
+        h1 { color: var(--gold); margin-top: 25px; font-size: 28px; font-weight: 900; }
+        #kidName { font-size: 32px; font-weight: bold; margin: 15px 0; height: 40px; text-transform: uppercase; }
 
-        .black-box { background: var(--dark); color: white; margin: 20px; padding: 45px 20px; border-radius: 20px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
-        #qMain { font-size: 80px; font-weight: bold; }
-        #qSub { font-size: 20px; color: #888; margin-top: 10px; }
+        /* እቲ ጸሊም ሳጹን */
+        .black-box { background: var(--dark); color: white; margin: 20px; padding: 45px 20px; border-radius: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        #qMain { font-size: 100px; font-weight: bold; line-height: 1; }
+        #qSub { font-size: 24px; color: #888; margin-top: 15px; }
 
         .menu { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .menu button { padding: 10px 15px; border-radius: 10px; border: none; cursor: pointer; background: #eee; font-weight: bold; font-size: 14px; }
-        .menu button:hover { background: var(--gold); color: white; }
-
-        input { width: 65%; padding: 15px; font-size: 24px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 15px; outline: none; }
-        .btn { background: var(--gold); color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; }
         
-        .score { font-size: 22px; color: var(--gold); font-weight: bold; padding: 20px; }
+        input { width: 70%; padding: 15px; font-size: 24px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 15px; outline: none; }
+        .btn { background: var(--gold); color: white; padding: 18px 50px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; }
+        
+        .score { font-size: 24px; color: var(--gold); font-weight: bold; padding: 20px; }
     </style>
 </head>
 <body>
@@ -34,9 +34,9 @@
 
     <div class="menu">
         <button onclick="setMode('math')">🔢 Maths</button>
-        <button onclick="setMode('ti')">🇪🇷 ትግርኛ (ሀ-ፐ)</button>
-        <button onclick="setMode('en')">🇬🇧 English (A-Z)</button>
-        <button onclick="setMode('de')">🇩🇪 Deutsch (A-Z)</button>
+        <button onclick="setMode('ti')">🇪🇷 ትግርኛ (ሀ-ሂ)</button>
+        <button onclick="setMode('en')">🇬🇧 English</button>
+        <button onclick="setMode('de')">🇩🇪 Deutsch</button>
     </div>
 
     <div class="black-box">
@@ -44,10 +44,10 @@
         <div id="qSub">...</div>
     </div>
 
-    <input type="text" id="ans" placeholder="Type here...">
+    <input type="text" id="ans" placeholder="Type answer here...">
     <br>
     <button class="btn" onclick="check()">CHECK / መርምር</button>
-    <div id="fb" style="height:35px; margin-top:10px; font-weight:bold; font-size: 20px;"></div>
+    <div id="fb" style="height:35px; margin-top:10px; font-weight:bold; font-size: 22px;"></div>
 
     <div class="score">⭐ Score: <span id="sc">0</span></div>
 </div>
@@ -61,8 +61,13 @@
         {n: "PEGGY", c: "#ff69b4"}, {n: "MARANATA", c: "#ff69b4"}
     ];
 
-    const tigrinyaLetters = ["ሀ", "ሁ", "ሂ", "ሃ", "ሄ", "ህ", "ሆ", "ለ", "ሉ", "ሊ", "ላ", "ሌ", "ል", "ሎ"];
-    const englishLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    // ትግርኛ ፊደላትን ከመይ ጌሮም ከም ዝጽሕፍዎምን (Key Map)
+    const tiAlphabet = [
+        {f: "ሀ", a: "he"}, {f: "ሁ", a: "hu"}, {f: "ሂ", a: "hi"}, {f: "ሃ", a: "ha"}, {f: "ሄ", a: "he"}, {f: "ህ", a: "h"}, {f: "ሆ", a: "ho"},
+        {f: "ለ", a: "le"}, {f: "ሉ", a: "lu"}, {f: "ሊ", a: "li"}, {f: "ላ", a: "la"}, {f: "ሌ", a: "le"}, {f: "ል", a: "l"}, {f: "ሎ", a: "lo"}
+    ];
+
+    const enAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
     function setMode(m) { mode = m; next(); }
 
@@ -78,39 +83,32 @@
             let n1 = Math.floor(Math.random()*12)+1, n2 = Math.floor(Math.random()*10)+1;
             currentAns = (n1+n2).toString();
             document.getElementById('qMain').innerText = n1 + " + " + n2;
-            document.getElementById('qSub').innerText = "ደሚርካ (Plus)";
+            document.getElementById('qSub').innerText = "Maths Challenge";
         } 
         else if(mode === 'ti') {
-            currentAns = tigrinyaLetters[Math.floor(Math.random()*tigrinyaLetters.length)];
-            document.getElementById('qMain').innerText = currentAns;
-            document.getElementById('qSub').innerText = "Write this Tigrinya letter";
+            let pick = tiAlphabet[Math.floor(Math.random()*tiAlphabet.length)];
+            currentAns = pick.a;
+            document.getElementById('qMain').innerText = pick.f;
+            document.getElementById('qSub').innerText = `Write: "${pick.a}"`;
         }
-        else if(mode === 'en') {
-            currentAns = englishLetters[Math.floor(Math.random()*englishLetters.length)];
+        else {
+            currentAns = enAlphabet[Math.floor(Math.random()*enAlphabet.length)];
             document.getElementById('qMain').innerText = currentAns;
-            document.getElementById('qSub').innerText = "Write this English letter";
-        }
-        else if(mode === 'de') {
-            currentAns = englishLetters[Math.floor(Math.random()*englishLetters.length)];
-            document.getElementById('qMain').innerText = currentAns;
-            document.getElementById('qSub').innerText = "Schreib diesen Buchstaben (DE)";
+            document.getElementById('qSub').innerText = (mode === 'en') ? "English Letter" : "Deutscher Buchstabe";
         }
     }
 
     function check() {
-        let val = document.getElementById('ans').value.trim();
+        let val = document.getElementById('ans').value.trim().toLowerCase();
         let f = document.getElementById('fb');
         
-        // Handle case sensitivity for alphabets
-        let isCorrect = (val.toLowerCase() === currentAns.toLowerCase());
-
-        if(isCorrect) {
+        if(val === currentAns.toLowerCase()) {
             document.getElementById('win').play();
-            f.innerText = "✅ EXCELLENT! / ብርትዕ!"; f.style.color = "green";
+            f.innerText = "✅ EXCELLENT!"; f.style.color = "green";
             score += 10; document.getElementById('sc').innerText = score;
             setTimeout(() => { f.innerText = ""; next(); }, 1200);
         } else {
-            f.innerText = "❌ TRY AGAIN! / እንደገና!"; f.style.color = "red";
+            f.innerText = "❌ TRY AGAIN!"; f.style.color = "red";
         }
     }
     next();
