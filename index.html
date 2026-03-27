@@ -3,64 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Grade 1 to 4</title>
+    <title>HEPM ACADEMY - Corrected</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 600px; margin: 10px auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-top: 8px solid var(--gold); overflow: hidden; }
-        .header { padding: 20px; background: #fff; }
-        h1 { color: var(--gold); margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
-        
-        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; background: #f9f9f9; }
-        .menu-grid button { padding: 10px 5px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; background: white; transition: 0.3s; }
+        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; --red: #e74c3c; }
+        body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; margin: 0; padding: 10px; }
+        .card { background: white; max-width: 500px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
+        h1 { color: var(--gold); margin: 20px 0 5px; font-size: 26px; font-weight: 900; }
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; }
+        .menu-grid button { padding: 10px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; font-size: 11px; }
         .menu-grid button.active { background: var(--gold); color: white; border-color: var(--gold); }
-
-        .black-box { background: var(--dark); color: white; margin: 15px; padding: 40px 10px; border-radius: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
-        #qHint { font-size: 50px; margin-bottom: 10px; }
-        #qMain { font-size: 55px; font-weight: bold; letter-spacing: 5px; }
-        #qSub { font-size: 18px; color: var(--gold); margin-top: 10px; font-style: italic; }
-
-        .input-area { padding: 20px; }
-        input { width: 85%; padding: 15px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); }
-        
-        .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 15px; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
-        
-        .status-bar { display: flex; justify-content: space-around; padding: 20px; background: #f8f8f8; font-size: 18px; font-weight: bold; }
-        #fb { height: 30px; font-weight: bold; font-size: 20px; margin-top: 10px; }
+        .black-box { background: var(--dark); color: white; margin: 0 20px 15px; padding: 40px 10px; border-radius: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #qMain { font-size: 65px; font-weight: bold; letter-spacing: 5px; }
+        #qHint { font-size: 45px; margin-bottom: 10px; }
+        input { width: 80%; padding: 16px; font-size: 24px; border-radius: 15px; border: 3px solid #eee; text-align: center; outline: none; }
+        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 20px; cursor: pointer; width: 85%; font-weight: bold; margin-top: 15px; }
+        #fb { height: 40px; margin-top: 10px; font-weight: bold; font-size: 18px; }
+        .status-bar { display: flex; justify-content: space-around; padding: 15px; font-weight: bold; color: var(--gold); background: #fafafa; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <div class="header">
-        <h1>✨ HEPM ACADEMY ✨</h1>
-        <div id="kidName" style="font-size: 24px; font-weight: bold; margin-top: 10px;">Welcome!</div>
-    </div>
+    <h1>✨ HEPM ACADEMY ✨</h1>
+    <div id="kidName" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Welcome</div>
 
     <div class="menu-grid">
-        <button id="m-math" onclick="setMode('math')">🔢 MATHS</button>
+        <button id="m-math" onclick="setMode('math')">🔢 MATH</button>
         <button id="m-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</button>
-        <button id="m-en" onclick="setMode('en')">🇬🇧 ENGLISH</button>
-        <button id="m-de" onclick="setMode('de')">🇩🇪 DEUTSCH</button>
+        <button id="m-en" onclick="setMode('en')">🇬🇧 EN</button>
+        <button id="m-de" onclick="setMode('de')">🇩🇪 DE</button>
     </div>
 
     <div class="black-box" onclick="speakCurrent()">
         <div id="qHint">🎓</div>
-        <div id="qMain">Loading...</div>
-        <div id="qSub">Level 1</div>
-        <div style="font-size: 11px; color: #666; margin-top: 20px; letter-spacing: 0;">🔈 Click for Sound / ጽቐጥ</div>
+        <div id="qMain">---</div>
+        <div style="font-size: 11px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound / ስማዕ</div>
     </div>
 
-    <div class="input-area">
-        <input type="text" id="ansInput" placeholder="Write your answer..." autocomplete="off">
-        <button class="btn-check" onclick="check()">SUBMIT / መርምር</button>
-        <div id="fb"></div>
-    </div>
-    
+    <input type="text" id="ansInput" placeholder="Type answer..." autocomplete="off">
+    <button class="btn-check" onclick="check()">CHECK / መርምር</button>
+    <div id="fb"></div>
+
     <div class="status-bar">
-        <div style="color: var(--gold);">⭐ Score: <span id="scoreVal">0</span></div>
-        <div style="color: var(--green);">🏆 Level: <span id="levelVal">1</span></div>
+        <div>⭐ Score: <span id="scoreVal">0</span></div>
+        <div>🏆 Level: <span id="levelVal">1</span></div>
     </div>
 </div>
 
@@ -68,37 +54,13 @@
     let currentMode = 'math', currentAns, currentSpeak, score = 0, level = 1;
     const kids = [{n:"HERMELA", c:"#ff69b4"}, {n:"ERKABEL", c:"#3498db"}, {n:"PEGGY", c:"#ff69b4"}, {n:"MARANATA", c:"#ff69b4"}];
 
-    // ሰፊሕ ዳታቤዝ ንኹሉ ክፍሊ
-    const lessons = {
-        en: [
-            {q:"🍎", w:"apple"}, {q:"🏫", w:"school"}, {q:"🏙️", w:"city"}, {q:"📖", w:"reading"},
-            {q:"🌳", w:"nature"}, {q:"🚁", w:"helicopter"}, {q:"🧬", w:"science"}, {q:"🌍", w:"planet"}
-        ],
-        de: [
-            {q:"🍎", w:"apfel"}, {q:"🏫", w:"schule"}, {q:"🏙️", w:"stadt"}, {q:"📚", w:"lernen"},
-            {q:"🚲", w:"fahrrad"}, {q:"🇩🇪", w:"deutschland"}, {q:"👨‍🏫", w:"lehrer"}, {q:"🖥️", w:"computer"}
-        ],
-        ti: [
-            {q:"🏠", w:"geza"}, {q:"🏫", w:"bet timhirti"}, {q:"🏙️", w:"ketema"}, {q:"🍎", w:"poma"},
-            {q:"🚜", w:"trakter"}, {q:"✍️", w:"tsihfet"}, {q:"🌞", w:"tsahay"}, {q:"🌊", w:"bahri"}
-        ]
+    const database = {
+        en: [{q:"🍎", w:"apple"}, {q:"🏫", w:"school"}, {q:"🏙️", w:"city"}, {q:"🏠", w:"house"}, {q:"🚗", w:"car"}],
+        de: [{q:"🍎", w:"apfel"}, {q:"🏫", w:"schule"}, {q:"🏙️", w:"stadt"}, {q:"🏠", w:"haus"}, {q:"🚗", w:"auto"}],
+        ti: [{q:"🏠", w:"geza"}, {q:"🏙️", w:"ketema"}, {q:"🏫", w:"bet timhirti"}, {q:"🛒", w:"idaga"}]
     };
 
-    function setMode(m) { currentMode = m; updateUI(); next(); }
-
-    function updateUI() {
-        document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
-        document.getElementById('m-' + currentMode).classList.add('active');
-        document.getElementById('ansInput').type = (currentMode === 'math') ? 'number' : 'text';
-    }
-
-    function speakCurrent() {
-        if (!currentSpeak || currentMode === 'ti') return;
-        window.speechSynthesis.cancel();
-        let msg = new SpeechSynthesisUtterance(currentSpeak);
-        msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
-        window.speechSynthesis.speak(msg);
-    }
+    function setMode(m) { currentMode = m; next(); }
 
     function next() {
         let kid = kids[Math.floor(Math.random() * kids.length)];
@@ -106,70 +68,25 @@
         document.getElementById('kidName').style.color = kid.c;
         document.getElementById('ansInput').value = "";
         document.getElementById('fb').innerText = "";
-        document.getElementById('ansInput').focus();
-
+        
         if (currentMode === 'math') {
-            generateMath();
+            let n1 = Math.floor(Math.random() * (level * 10)) + 1;
+            let n2 = Math.floor(Math.random() * 10) + 1;
+            currentAns = (n1 + n2).toString();
+            currentSpeak = n1 + " plus " + n2;
+            document.getElementById('qHint').innerText = "🔢";
+            document.getElementById('qMain').innerText = n1 + "+" + n2;
         } else {
-            generateLanguage();
+            let list = database[currentMode];
+            let item = list[Math.floor(Math.random() * list.length)];
+            currentAns = item.w;
+            currentSpeak = item.w;
+            // Create one gap
+            let idx = Math.floor(Math.random() * (item.w.length));
+            let display = item.w.substring(0, idx) + "_" + item.w.substring(idx + 1);
+            document.getElementById('qHint').innerText = item.q;
+            document.getElementById('qMain').innerText = display;
         }
-    }
-
-    function generateMath() {
-        let n1, n2, op;
-        // Grade 1-4 Logic
-        if (level <= 2) { // 1st & 2nd Grade: Addition & Subtraction
-            op = Math.random() > 0.5 ? "+" : "-";
-            n1 = Math.floor(Math.random() * 20) + 5;
-            n2 = Math.floor(Math.random() * n1);
-        } else if (level === 3) { // 3rd Grade: Multiplication starts
-            op = "×";
-            n1 = Math.floor(Math.random() * 10) + 1;
-            n2 = Math.floor(Math.random() * 5) + 1;
-        } else { // 4th Grade: Harder Multiplication & Division
-            let r = Math.random();
-            if (r < 0.5) { op = "×"; n1 = Math.floor(Math.random() * 12) + 2; n2 = Math.floor(Math.random() * 10) + 1; }
-            else { op = "÷"; n2 = Math.floor(Math.random() * 9) + 1; n1 = n2 * (Math.floor(Math.random() * 10) + 1); }
-        }
-
-        if (op === "+") { currentAns = (n1 + n2).toString(); currentSpeak = n1 + " plus " + n2; }
-        else if (op === "-") { currentAns = (n1 - n2).toString(); currentSpeak = n1 + " minus " + n2; }
-        else if (op === "×") { currentAns = (n1 * n2).toString(); currentSpeak = n1 + " times " + n2; }
-        else { currentAns = (n1 / n2).toString(); currentSpeak = n1 + " divided by " + n2; }
-
-        document.getElementById('qHint').innerText = "🔢";
-        document.getElementById('qMain').innerText = `${n1}${op}${n2}`;
-        document.getElementById('qSub').innerText = "Maths - Grade Level " + level;
-        speakCurrent();
-    }
-
-    function generateLanguage() {
-        let list = lessons[currentMode];
-        let item = list[Math.floor(Math.random() * list.length)];
-        currentAns = item.w;
-        currentSpeak = item.w;
-
-        // "Fill the gaps" logic based on level
-        let word = item.w;
-        let display = "";
-        let gapChance = (level / 10) + 0.2; // Higher level = more gaps
-
-        for(let i=0; i<word.length; i++) {
-            if (i > 0 && i < word.length - 1 && Math.random() < gapChance) {
-                display += "_";
-            } else {
-                display += word[i];
-            }
-        }
-        if (!display.includes("_")) { // Force a gap
-            let idx = Math.floor(Math.random() * (word.length - 2)) + 1;
-            display = word.substring(0, idx) + "_" + word.substring(idx+1);
-        }
-
-        document.getElementById('qHint').innerText = item.q;
-        document.getElementById('qMain').innerText = display;
-        document.getElementById('qSub').innerText = "Complete the word";
-        if (currentMode !== 'ti') speakCurrent();
     }
 
     function check() {
@@ -177,18 +94,24 @@
         let fb = document.getElementById('fb');
         
         if (val === currentAns.toLowerCase()) {
-            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "var(--green)";
+            fb.innerHTML = "<span style='color:green'>✅ Correct!</span>";
             score += 10;
-            if (score > 0 && score % 100 === 0) {
-                level++;
-                fb.innerText = "🚀 LEVEL UP TO GRADE " + level + "!";
-            }
+            if (score % 100 === 0) level++;
             document.getElementById('scoreVal').innerText = score;
             document.getElementById('levelVal').innerText = level;
-            setTimeout(next, 1500);
+            setTimeout(next, 1200);
         } else {
-            fb.innerText = "❌ TRY AGAIN!"; fb.style.color = "red";
+            // CORRECTION FEATURE: ጌጋ እንተጽሒፉ ቅኑዕ መልሲ ይነግሮ
+            fb.innerHTML = `<span style='color:red'>❌ Oops! Correct is: ${currentAns}</span>`;
         }
+    }
+    
+    function speakCurrent() {
+        if (currentMode === 'ti') return;
+        window.speechSynthesis.cancel();
+        let msg = new SpeechSynthesisUtterance(currentSpeak);
+        msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
+        window.speechSynthesis.speak(msg);
     }
 
     setMode('math');
