@@ -3,47 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY</title>
+    <title>HEPM ACADEMY - Grade 1 to 4</title>
     <style>
-        :root { --gold: #D4AF37; --blue: #3498db; --pink: #ff69b4; --dark: #1a1a1a; }
-        body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; padding: 15px; margin: 0; }
-        .card { background: white; max-width: 500px; margin: 15px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
-        h1 { color: var(--gold); margin: 20px 0 5px; font-size: 28px; font-weight: 900; }
-        #kidName { font-size: 30px; font-weight: bold; margin-bottom: 15px; height: 35px; }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 20px 15px; }
-        .menu-grid button { padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; background: #eee; font-size: 14px; transition: 0.2s; }
-        .menu-grid button.active { background: var(--gold); color: white; }
-        .black-box { background: var(--dark); color: white; margin: 0 20px 15px; padding: 45px 10px; border-radius: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
-        #qMain { font-size: 85px; font-weight: bold; line-height: 1; }
-        #qSub { font-size: 22px; color: #888; margin-top: 15px; }
-        input { width: 75%; padding: 16px; font-size: 26px; border-radius: 15px; border: 3px solid #eee; text-align: center; margin-bottom: 15px; outline: none; }
-        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 85%; font-weight: bold; }
-        .status-bar { display: flex; justify-content: space-around; padding: 10px; font-size: 20px; font-weight: bold; color: var(--gold); border-top: 2px solid #eee; margin-top: 10px; }
+        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
+        .card { background: white; max-width: 600px; margin: 10px auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-top: 8px solid var(--gold); overflow: hidden; }
+        .header { padding: 20px; background: #fff; }
+        h1 { color: var(--gold); margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; background: #f9f9f9; }
+        .menu-grid button { padding: 10px 5px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; background: white; transition: 0.3s; }
+        .menu-grid button.active { background: var(--gold); color: white; border-color: var(--gold); }
+
+        .black-box { background: var(--dark); color: white; margin: 15px; padding: 40px 10px; border-radius: 20px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+        #qHint { font-size: 50px; margin-bottom: 10px; }
+        #qMain { font-size: 55px; font-weight: bold; letter-spacing: 5px; }
+        #qSub { font-size: 18px; color: var(--gold); margin-top: 10px; font-style: italic; }
+
+        .input-area { padding: 20px; }
+        input { width: 85%; padding: 15px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--gold); }
+        
+        .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 15px; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+        
+        .status-bar { display: flex; justify-content: space-around; padding: 20px; background: #f8f8f8; font-size: 18px; font-weight: bold; }
+        #fb { height: 30px; font-weight: bold; font-size: 20px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>✨ HEPM ACADEMY ✨</h1>
-    <div id="kidName">...</div>
+    <div class="header">
+        <h1>✨ HEPM ACADEMY ✨</h1>
+        <div id="kidName" style="font-size: 24px; font-weight: bold; margin-top: 10px;">Welcome!</div>
+    </div>
+
     <div class="menu-grid">
-        <button id="m-math" onclick="setMode('math')">🔢 Maths</button>
+        <button id="m-math" onclick="setMode('math')">🔢 MATHS</button>
         <button id="m-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</button>
-        <button id="m-en" onclick="setMode('en')">🇬🇧 English</button>
-        <button id="m-de" onclick="setMode('de')">🇩🇪 Deutsch</button>
+        <button id="m-en" onclick="setMode('en')">🇬🇧 ENGLISH</button>
+        <button id="m-de" onclick="setMode('de')">🇩🇪 DEUTSCH</button>
     </div>
+
     <div class="black-box" onclick="speakCurrent()">
-        <div id="qMain">...</div>
-        <div id="qSub">...</div>
-        <div id="voiceHint" style="font-size: 12px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound</div>
+        <div id="qHint">🎓</div>
+        <div id="qMain">Loading...</div>
+        <div id="qSub">Level 1</div>
+        <div style="font-size: 11px; color: #666; margin-top: 20px; letter-spacing: 0;">🔈 Click for Sound / ጽቐጥ</div>
     </div>
-    <input type="number" id="ansInput" placeholder="Answer here...">
-    <br>
-    <button class="btn-check" onclick="check()">CHECK / መርምር</button>
-    <div id="fb" style="height:25px; margin-top:10px; font-weight:bold;"></div>
+
+    <div class="input-area">
+        <input type="text" id="ansInput" placeholder="Write your answer..." autocomplete="off">
+        <button class="btn-check" onclick="check()">SUBMIT / መርምር</button>
+        <div id="fb"></div>
+    </div>
+    
     <div class="status-bar">
-        <div>⭐ Score: <span id="scoreVal">0</span></div>
-        <div>🏆 Level: <span id="levelVal">1</span></div>
+        <div style="color: var(--gold);">⭐ Score: <span id="scoreVal">0</span></div>
+        <div style="color: var(--green);">🏆 Level: <span id="levelVal">1</span></div>
     </div>
 </div>
 
@@ -51,90 +68,129 @@
     let currentMode = 'math', currentAns, currentSpeak, score = 0, level = 1;
     const kids = [{n:"HERMELA", c:"#ff69b4"}, {n:"ERKABEL", c:"#3498db"}, {n:"PEGGY", c:"#ff69b4"}, {n:"MARANATA", c:"#ff69b4"}];
 
-    const tigrinya = [{q:"ሀ", a:"he"}, {q:"ሁ", a:"hu"}, {q:"ሂ", a:"hi"}, {q:"ለ", a:"le"}, {q:"ሉ", a:"lu"}, {q:"ሊ", a:"li"}, {q:"መ", a:"me"}, {q:"ሙ", a:"mu"}, {q:"ረ", a:"re"}, {q:"ሩ", a:"ru"}];
-    const english = [{q:"🦁", a:"lion", v:"Lion"}, {q:"🍎", a:"apple", v:"Apple"}, {q:"🚗", a:"car", v:"Car"}, {q:"🐶", a:"dog", v:"Dog"}, {q:"⚽", a:"ball", v:"Ball"}];
-    const deutsch = [{q:"🦁", a:"löwe", v:"Löwe"}, {q:"🚗", a:"auto", v:"Auto"}, {q:"🍎", a:"apfel", v:"Apfel"}, {q:"🏠", a:"haus", v:"Haus"}];
+    // ሰፊሕ ዳታቤዝ ንኹሉ ክፍሊ
+    const lessons = {
+        en: [
+            {q:"🍎", w:"apple"}, {q:"🏫", w:"school"}, {q:"🏙️", w:"city"}, {q:"📖", w:"reading"},
+            {q:"🌳", w:"nature"}, {q:"🚁", w:"helicopter"}, {q:"🧬", w:"science"}, {q:"🌍", w:"planet"}
+        ],
+        de: [
+            {q:"🍎", w:"apfel"}, {q:"🏫", w:"schule"}, {q:"🏙️", w:"stadt"}, {q:"📚", w:"lernen"},
+            {q:"🚲", w:"fahrrad"}, {q:"🇩🇪", w:"deutschland"}, {q:"👨‍🏫", w:"lehrer"}, {q:"🖥️", w:"computer"}
+        ],
+        ti: [
+            {q:"🏠", w:"geza"}, {q:"🏫", w:"bet timhirti"}, {q:"🏙️", w:"ketema"}, {q:"🍎", w:"poma"},
+            {q:"🚜", w:"trakter"}, {q:"✍️", w:"tsihfet"}, {q:"🌞", w:"tsahay"}, {q:"🌊", w:"bahri"}
+        ]
+    };
+
+    function setMode(m) { currentMode = m; updateUI(); next(); }
+
+    function updateUI() {
+        document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
+        document.getElementById('m-' + currentMode).classList.add('active');
+        document.getElementById('ansInput').type = (currentMode === 'math') ? 'number' : 'text';
+    }
 
     function speakCurrent() {
         if (!currentSpeak || currentMode === 'ti') return;
         window.speechSynthesis.cancel();
         let msg = new SpeechSynthesisUtterance(currentSpeak);
         msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
-        msg.rate = 0.8;
         window.speechSynthesis.speak(msg);
-    }
-
-    function setMode(mode) {
-        currentMode = mode;
-        document.querySelectorAll('.menu-grid button').forEach(b => b.classList.remove('active'));
-        document.getElementById('m-' + mode).classList.add('active');
-        document.getElementById('ansInput').type = (mode === 'math') ? 'number' : 'text';
-        document.getElementById('voiceHint').style.display = (mode === 'ti') ? 'none' : 'block';
-        next();
     }
 
     function next() {
         let kid = kids[Math.floor(Math.random() * kids.length)];
-        let kn = document.getElementById('kidName');
-        kn.innerText = kid.n; kn.style.color = kid.c;
+        document.getElementById('kidName').innerText = kid.n;
+        document.getElementById('kidName').style.color = kid.c;
         document.getElementById('ansInput').value = "";
+        document.getElementById('fb').innerText = "";
         document.getElementById('ansInput').focus();
 
         if (currentMode === 'math') {
-            generateMathProblem();
+            generateMath();
         } else {
-            let list = (currentMode === 'ti') ? tigrinya : (currentMode === 'en' ? english : deutsch);
-            let p = list[Math.floor(Math.random() * list.length)];
-            currentAns = p.a; currentSpeak = p.v || p.a;
-            document.getElementById('qMain').innerText = p.q;
-            document.getElementById('qSub').innerText = (currentMode === 'ti') ? "Write: " + p.a : "Write the answer";
+            generateLanguage();
         }
-        if (currentMode !== 'ti') speakCurrent();
     }
 
-    function generateMathProblem() {
+    function generateMath() {
         let n1, n2, op;
-        if (level === 1) {
-            n1 = Math.floor(Math.random() * 10) + 1;
-            n2 = Math.floor(Math.random() * 10) + 1;
-            op = "+";
-        } else if (level === 2) {
+        // Grade 1-4 Logic
+        if (level <= 2) { // 1st & 2nd Grade: Addition & Subtraction
             op = Math.random() > 0.5 ? "+" : "-";
             n1 = Math.floor(Math.random() * 20) + 5;
             n2 = Math.floor(Math.random() * n1);
-        } else {
-            let rand = Math.random();
-            if (rand < 0.4) { op = "+"; n1 = Math.floor(Math.random() * 50); n2 = Math.floor(Math.random() * 30); }
-            else if (rand < 0.7) { op = "-"; n1 = Math.floor(Math.random() * 40); n2 = Math.floor(Math.random() * n1); }
-            else { op = "×"; n1 = Math.floor(Math.random() * 10) + 1; n2 = Math.floor(Math.random() * 5) + 1; }
+        } else if (level === 3) { // 3rd Grade: Multiplication starts
+            op = "×";
+            n1 = Math.floor(Math.random() * 10) + 1;
+            n2 = Math.floor(Math.random() * 5) + 1;
+        } else { // 4th Grade: Harder Multiplication & Division
+            let r = Math.random();
+            if (r < 0.5) { op = "×"; n1 = Math.floor(Math.random() * 12) + 2; n2 = Math.floor(Math.random() * 10) + 1; }
+            else { op = "÷"; n2 = Math.floor(Math.random() * 9) + 1; n1 = n2 * (Math.floor(Math.random() * 10) + 1); }
         }
 
         if (op === "+") { currentAns = (n1 + n2).toString(); currentSpeak = n1 + " plus " + n2; }
         else if (op === "-") { currentAns = (n1 - n2).toString(); currentSpeak = n1 + " minus " + n2; }
-        else { currentAns = (n1 * n2).toString(); currentSpeak = n1 + " times " + n2; }
+        else if (op === "×") { currentAns = (n1 * n2).toString(); currentSpeak = n1 + " times " + n2; }
+        else { currentAns = (n1 / n2).toString(); currentSpeak = n1 + " divided by " + n2; }
 
+        document.getElementById('qHint').innerText = "🔢";
         document.getElementById('qMain').innerText = `${n1}${op}${n2}`;
-        document.getElementById('qSub').innerText = "Maths: Level " + level;
+        document.getElementById('qSub').innerText = "Maths - Grade Level " + level;
+        speakCurrent();
+    }
+
+    function generateLanguage() {
+        let list = lessons[currentMode];
+        let item = list[Math.floor(Math.random() * list.length)];
+        currentAns = item.w;
+        currentSpeak = item.w;
+
+        // "Fill the gaps" logic based on level
+        let word = item.w;
+        let display = "";
+        let gapChance = (level / 10) + 0.2; // Higher level = more gaps
+
+        for(let i=0; i<word.length; i++) {
+            if (i > 0 && i < word.length - 1 && Math.random() < gapChance) {
+                display += "_";
+            } else {
+                display += word[i];
+            }
+        }
+        if (!display.includes("_")) { // Force a gap
+            let idx = Math.floor(Math.random() * (word.length - 2)) + 1;
+            display = word.substring(0, idx) + "_" + word.substring(idx+1);
+        }
+
+        document.getElementById('qHint').innerText = item.q;
+        document.getElementById('qMain').innerText = display;
+        document.getElementById('qSub').innerText = "Complete the word";
+        if (currentMode !== 'ti') speakCurrent();
     }
 
     function check() {
         let val = document.getElementById('ansInput').value.trim().toLowerCase();
         let fb = document.getElementById('fb');
+        
         if (val === currentAns.toLowerCase()) {
-            fb.innerText = "🌟 EXCELLENT!"; fb.style.color = "green";
+            fb.innerText = "✅ EXCELLENT!"; fb.style.color = "var(--green)";
             score += 10;
             if (score > 0 && score % 100 === 0) {
                 level++;
-                fb.innerText = "🚀 LEVEL UP! Level " + level;
-                fb.style.color = "#2ecc71";
+                fb.innerText = "🚀 LEVEL UP TO GRADE " + level + "!";
             }
             document.getElementById('scoreVal').innerText = score;
             document.getElementById('levelVal').innerText = level;
-            setTimeout(() => { fb.innerText = ""; next(); }, 1200);
+            setTimeout(next, 1500);
         } else {
             fb.innerText = "❌ TRY AGAIN!"; fb.style.color = "red";
         }
     }
+
     setMode('math');
 </script>
 </body>
