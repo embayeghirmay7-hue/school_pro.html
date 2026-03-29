@@ -3,44 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Corrected</title>
+    <title>HEPM ACADEMY - Full Sentences</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; --red: #e74c3c; }
+        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; }
         body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 500px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
+        .card { background: white; max-width: 600px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
         h1 { color: var(--gold); margin: 20px 0 5px; font-size: 26px; font-weight: 900; }
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; }
         .menu-grid button { padding: 10px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; font-size: 11px; }
         .menu-grid button.active { background: var(--gold); color: white; border-color: var(--gold); }
-        .black-box { background: var(--dark); color: white; margin: 0 20px 15px; padding: 40px 10px; border-radius: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #qMain { font-size: 65px; font-weight: bold; letter-spacing: 5px; }
-        #qHint { font-size: 45px; margin-bottom: 10px; }
-        input { width: 80%; padding: 16px; font-size: 24px; border-radius: 15px; border: 3px solid #eee; text-align: center; outline: none; }
-        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 20px; cursor: pointer; width: 85%; font-weight: bold; margin-top: 15px; }
-        #fb { height: 40px; margin-top: 10px; font-weight: bold; font-size: 18px; }
-        .status-bar { display: flex; justify-content: space-around; padding: 15px; font-weight: bold; color: var(--gold); background: #fafafa; }
+        .black-box { background: var(--dark); color: white; margin: 0 20px 15px; padding: 40px 15px; border-radius: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #qMain { font-size: 32px; font-weight: bold; line-height: 1.4; color: #fff; }
+        #qHint { font-size: 50px; margin-bottom: 15px; }
+        input { width: 85%; padding: 18px; font-size: 20px; border-radius: 15px; border: 3px solid #eee; text-align: center; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--gold); }
+        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 20px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 15px; }
+        #fb { height: 50px; margin-top: 10px; font-weight: bold; font-size: 18px; padding: 0 10px; }
+        .status-bar { display: flex; justify-content: space-around; padding: 15px; font-weight: bold; color: var(--gold); background: #fafafa; border-top: 2px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h1>✨ HEPM ACADEMY ✨</h1>
-    <div id="kidName" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Welcome</div>
+    <div id="kidName" style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">...</div>
 
     <div class="menu-grid">
         <button id="m-math" onclick="setMode('math')">🔢 MATH</button>
         <button id="m-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</button>
-        <button id="m-en" onclick="setMode('en')">🇬🇧 EN</button>
-        <button id="m-de" onclick="setMode('de')">🇩🇪 DE</button>
+        <button id="m-en" onclick="setMode('en')">🇬🇧 ENGLISH</button>
+        <button id="m-de" onclick="setMode('de')">🇩🇪 DEUTSCH</button>
     </div>
 
     <div class="black-box" onclick="speakCurrent()">
-        <div id="qHint">🎓</div>
+        <div id="qHint">🏠</div>
         <div id="qMain">---</div>
-        <div style="font-size: 11px; color: var(--gold); margin-top: 15px;">🔈 Hear Sound / ስማዕ</div>
+        <div style="font-size: 12px; color: var(--gold); margin-top: 20px;">🔈 Hear Full Sentence / ስማዕ</div>
     </div>
 
-    <input type="text" id="ansInput" placeholder="Type answer..." autocomplete="off">
+    <input type="text" id="ansInput" placeholder="Write the full sentence here..." autocomplete="off">
     <button class="btn-check" onclick="check()">CHECK / መርምር</button>
     <div id="fb"></div>
 
@@ -51,70 +52,19 @@
 </div>
 
 <script>
-    let currentMode = 'math', currentAns, currentSpeak, score = 0, level = 1;
+    let currentMode = 'en', currentAns, currentSpeak, score = 0, level = 1;
     const kids = [{n:"HERMELA", c:"#ff69b4"}, {n:"ERKABEL", c:"#3498db"}, {n:"PEGGY", c:"#ff69b4"}, {n:"MARANATA", c:"#ff69b4"}];
 
-    const database = {
-        en: [{q:"🍎", w:"apple"}, {q:"🏫", w:"school"}, {q:"🏙️", w:"city"}, {q:"🏠", w:"house"}, {q:"🚗", w:"car"}],
-        de: [{q:"🍎", w:"apfel"}, {q:"🏫", w:"schule"}, {q:"🏙️", w:"stadt"}, {q:"🏠", w:"haus"}, {q:"🚗", w:"auto"}],
-        ti: [{q:"🏠", w:"geza"}, {q:"🏙️", w:"ketema"}, {q:"🏫", w:"bet timhirti"}, {q:"🛒", w:"idaga"}]
-    };
-
-    function setMode(m) { currentMode = m; next(); }
-
-    function next() {
-        let kid = kids[Math.floor(Math.random() * kids.length)];
-        document.getElementById('kidName').innerText = kid.n;
-        document.getElementById('kidName').style.color = kid.c;
-        document.getElementById('ansInput').value = "";
-        document.getElementById('fb').innerText = "";
-        
-        if (currentMode === 'math') {
-            let n1 = Math.floor(Math.random() * (level * 10)) + 1;
-            let n2 = Math.floor(Math.random() * 10) + 1;
-            currentAns = (n1 + n2).toString();
-            currentSpeak = n1 + " plus " + n2;
-            document.getElementById('qHint').innerText = "🔢";
-            document.getElementById('qMain').innerText = n1 + "+" + n2;
-        } else {
-            let list = database[currentMode];
-            let item = list[Math.floor(Math.random() * list.length)];
-            currentAns = item.w;
-            currentSpeak = item.w;
-            // Create one gap
-            let idx = Math.floor(Math.random() * (item.w.length));
-            let display = item.w.substring(0, idx) + "_" + item.w.substring(idx + 1);
-            document.getElementById('qHint').innerText = item.q;
-            document.getElementById('qMain').innerText = display;
-        }
-    }
-
-    function check() {
-        let val = document.getElementById('ansInput').value.trim().toLowerCase();
-        let fb = document.getElementById('fb');
-        
-        if (val === currentAns.toLowerCase()) {
-            fb.innerHTML = "<span style='color:green'>✅ Correct!</span>";
-            score += 10;
-            if (score % 100 === 0) level++;
-            document.getElementById('scoreVal').innerText = score;
-            document.getElementById('levelVal').innerText = level;
-            setTimeout(next, 1200);
-        } else {
-            // CORRECTION FEATURE: ጌጋ እንተጽሒፉ ቅኑዕ መልሲ ይነግሮ
-            fb.innerHTML = `<span style='color:red'>❌ Oops! Correct is: ${currentAns}</span>`;
-        }
-    }
-    
-    function speakCurrent() {
-        if (currentMode === 'ti') return;
-        window.speechSynthesis.cancel();
-        let msg = new SpeechSynthesisUtterance(currentSpeak);
-        msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
-        window.speechSynthesis.speak(msg);
-    }
-
-    setMode('math');
-</script>
-</body>
-</html>
+    // ምሉእ ሓሳባት (Sentences)
+    const sentences = {
+        en: [
+            {q:"🏠", s:"this is my house", g:"this is my _____"},
+            {q:"🍎", s:"i like to eat apple", g:"i like to eat _____"},
+            {q:"🏫", s:"i go to school", g:"i go to _____"},
+            {q:"🐶", s:"the dog is running", g:"the dog is _____"},
+            {q:"🦁", s:"the lion is big", g:"the lion is _____"}
+        ],
+        de: [
+            {q:"🏠", s:"das ist mein haus", g:"das ist mein _____"},
+            {q:"🍎", s:"ich esse einen apfel", g:"ich esse einen _____"},
+            {q:"🏫", s:"ich gehe zur schule", g
