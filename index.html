@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Mega Version</title>
+    <title>HEPM ACADEMY - Fixed</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --green: #2ecc71; }
+        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; position: relative; padding-bottom: 25px; }
+        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 25px; min-height: 400px; }
         
-        /* Player Selection */
-        .p-btn { width: 90%; padding: 15px; margin: 8px; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; color: white; cursor: pointer; transition: 0.3s; }
-        .p-btn:hover { transform: scale(1.05); }
+        /* Player Selection Screen */
+        #player-screen { padding: 40px 20px; }
+        .p-btn { width: 90%; padding: 15px; margin: 10px auto; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; color: white; cursor: pointer; display: block; }
 
         /* Game Screen */
         .player-header { font-size: 26px; font-weight: 900; padding: 15px; letter-spacing: 2px; }
@@ -20,9 +20,9 @@
         .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
 
         /* Black Display Box */
-        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; position: relative; }
-        #qHint { font-size: 70px; margin-bottom: 10px; cursor: pointer; }
-        #qMain { font-size: 30px; font-weight: bold; line-height: 1.4; color: #fff; }
+        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
+        #qHint { font-size: 70px; margin-bottom: 10px; }
+        #qMain { font-size: 30px; font-weight: bold; line-height: 1.4; }
         
         /* Correction Label */
         #correction-box { margin-top: 15px; display: none; }
@@ -30,30 +30,25 @@
         .cor-word { color: var(--red); font-size: 30px; font-weight: 900; text-decoration: underline; }
 
         /* Controls */
-        input { width: 85%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 10px; }
+        input { width: 85%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 10px; outline: none; }
         .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 15px; cursor: pointer; }
         
         .footer-stats { display: flex; justify-content: space-around; margin-top: 20px; font-weight: bold; color: #777; }
-        .music-toggle { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 20px; background: rgba(255,255,255,0.8); border-radius: 50%; padding: 5px; }
     </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"></audio>
 <audio id="correctSound"><source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg"></audio>
 <audio id="wrongSound"><source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg"></audio>
 
 <div class="card">
     <div id="player-screen">
-        <h1 style="color: var(--gold); margin-top: 30px;">✨ HEPM ACADEMY ✨</h1>
+        <h1 style="color: var(--gold);">✨ HEPM ACADEMY ✨</h1>
         <p>SELECT PLAYER TO START</p>
-        <div id="pButtons"></div>
-    </div>
+        <div id="pButtons"></div> </div>
 
     <div id="game-screen" style="display:none;">
-        <div class="music-toggle" onclick="toggleMusic()">🎵</div>
-        <div class="player-header" id="activePName">HERMELA</div>
-        
+        <div class="player-header" id="activePName">PLAYER</div>
         <div class="tabs">
             <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH</div>
             <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
@@ -61,14 +56,13 @@
             <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DEUTSCH</div>
         </div>
 
-        <div class="black-book" onclick="speakText()">
+        <div class="black-book">
             <div id="qHint">🏠</div>
             <div id="qMain">---</div>
             <div id="correction-box">
                 <span class="cor-label">TYPE: </span>
                 <span class="cor-word" id="correctWord"></span>
             </div>
-            <div style="font-size: 10px; color: var(--gold); margin-top: 15px;">🔈 CLICK TO HEAR / ስማዕ</div>
         </div>
 
         <input type="text" id="ansInput" placeholder="Answer..." autocomplete="off">
@@ -87,37 +81,25 @@
         {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
         {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
         {name: "MARANATA", color: "#9b59b6", score: 0, level: 1}
-        {name: "girmay"   ,color:"  "#3498db", score: 0, level: 1}
     ];
 
-    let activeP, mode = 'en', currentAns, currentFull, needsCorrection = false;
+    let activeP, mode = 'en', currentAns, needsCorrection = false;
 
-    // Mega Database (Expanded)
     const database = {
-        en: [
-            {q:"🦁", a:"LION", s:"THE LION IS KING"}, {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"},
-            {q:"🐘", a:"ELEPHANT", s:"THE ELEPHANT IS BIG"}, {q:"🚁", a:"HELICOPTER", s:"THE HELICOPTER FLIES"},
-            {q:"🥦", a:"BROCCOLI", s:"I LIKE BROCCOLI"}, {q:"🚲", a:"BICYCLE", s:"I RIDE MY BICYCLE"},
-            {q:"🦒", a:"GIRAFFE", s:"THE GIRAFFE IS TALL"}, {q:"🍕", a:"PIZZA", s:"I LOVE PIZZA"}
-        ],
-        de: [
-            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
-            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🐶", a:"HUND", s:"DER HUND IST TREU"},
-            {q:"🌞", a:"SONNE", s:"DIE SONNE SCHEINT"}, {q:"🚲", a:"FAHRRAD", s:"ICH FAHRE FAHRRAD"}
-        ],
-        ti: [
-            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"},
-            {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🏫", a:"ትምህርቲ", s:"ናብ ትምህርቲ እኸይድ"}
-        ]
+        en: [{q:"🦁", a:"LION", s:"THE LION IS KING"}, {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏠", a:"HOUSE", s:"THIS IS MY HOUSE"}],
+        de: [{q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"}],
+        ti: [{q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}]
     };
 
-    const pButtons = document.getElementById('pButtons');
+    // 1. Load Player Buttons (Fixes the blank screen)
+    const btnContainer = document.getElementById('pButtons');
     players.forEach((p, i) => {
         let b = document.createElement('button');
-        b.className = 'p-btn'; b.style.backgroundColor = p.color;
-        b.innerText = p.name; 
+        b.className = 'p-btn';
+        b.style.backgroundColor = p.color;
+        b.innerText = p.name;
         b.onclick = () => { activeP = p; startGame(); };
-        pButtons.appendChild(b);
+        btnContainer.appendChild(b);
     });
 
     function startGame() {
@@ -125,24 +107,15 @@
         document.getElementById('game-screen').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
         document.getElementById('activePName').style.color = activeP.color;
-        
-        // Start Audio on first click (User Interaction)
-        let music = document.getElementById('bgMusic');
-        music.volume = 0.2;
-        music.play().catch(e => console.log("Music needs manual play"));
-        
+        updateStats();
         setMode('en');
-    }
-
-    function toggleMusic() {
-        let m = document.getElementById('bgMusic');
-        m.paused ? m.play() : m.pause();
     }
 
     function setMode(m) {
         mode = m;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById('t-' + m).classList.add('active');
+        needsCorrection = false;
         next();
     }
 
@@ -154,59 +127,36 @@
         if (mode === 'math') {
             let n1 = Math.floor(Math.random() * 10 * activeP.level), n2 = Math.floor(Math.random() * 10);
             currentAns = (n1 + n2).toString();
-            currentFull = currentAns;
             document.getElementById('qHint').innerText = "🔢";
-            document.getElementById('qMain').innerText = `${n1} + ${n2} = ?`;
+            document.getElementById('qMain').innerText = `${n1} + ${n2}`;
         } else {
             let list = database[mode];
             let item = list[Math.floor(Math.random() * list.length)];
             currentAns = (activeP.level === 1) ? item.a : item.s;
-            currentFull = (activeP.level === 1) ? item.a : item.s;
             document.getElementById('qHint').innerText = item.q;
             document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : item.s.split(" ").slice(0,-1).join(" ") + " ___";
         }
     }
 
-  function checkAns() {
-    let val = document.getElementById('ansInput').value.trim().toUpperCase();
-    
-    // 1. እቲ መልሲ ቅኑዕ እንተኾይኑ
-    if (val === currentAns.toUpperCase()) {
-        
-        // ነጥቢ ዝውሃቦ "needsCorrection" false እንተኔሩ ጥራይ እዩ (ቀዳማይ ፈተነ)
-        if (needsCorrection === false) {
-            activeP.score += 10; // 🏆 ነጥቢ ሃቦ
-            document.getElementById('correctSound').play(); 
-        } 
-        // መኣረምታ ርእዩ እንተጸሒፍዎ፡ ስቕ ኢሉ ናብ ዝቕጽል ይሓልፍ እምበር ነጥቢ ኣይውሃቦን
-        
-        // Level Up logic
-        if (activeP.score > 0 && activeP.score % 100 === 0 && needsCorrection === false) {
-            activeP.level++;
+    // 2. Fixed Scoring Function (Corrected version)
+    function checkAns() {
+        let val = document.getElementById('ansInput').value.trim().toUpperCase();
+        if (val === currentAns.toUpperCase()) {
+            if (needsCorrection === false) {
+                activeP.score += 10;
+                document.getElementById('correctSound').play();
+            }
+            if (activeP.score > 0 && activeP.score % 100 === 0 && needsCorrection === false) {
+                activeP.level++;
+            }
+            updateStats();
+            next();
+        } else {
+            document.getElementById('wrongSound').play();
+            document.getElementById('correction-box').style.display = 'block';
+            document.getElementById('correctWord').innerText = currentAns;
+            needsCorrection = true;
         }
-
-        updateStats();
-        
-        // ኩሉ ጽሩይ ጌርካ ናብ ዝቕጽል ሕቶ ስገር
-        needsCorrection = false; 
-        document.getElementById('correction-box').style.display = 'none';
-        setTimeout(next, 800);
-
-    } else {
-        // 2. ጌጋ እንተጽሒፉ መኣረምታ ኣርኢ
-        document.getElementById('wrongSound').play();
-        document.getElementById('correction-box').style.display = 'block';
-        document.getElementById('correctWord').innerText = currentAns;
-        needsCorrection = true; 
-    }
-}
-
-    function speakText() {
-        if (mode === 'ti') return;
-        window.speechSynthesis.cancel();
-        let msg = new SpeechSynthesisUtterance(currentFull);
-        msg.lang = (mode === 'de') ? 'de-DE' : 'en-US';
-        window.speechSynthesis.speak(msg);
     }
 
     function updateStats() {
