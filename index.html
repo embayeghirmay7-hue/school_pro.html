@@ -87,6 +87,7 @@
         {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
         {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
         {name: "MARANATA", color: "#9b59b6", score: 0, level: 1}
+        {name: "girmay"   ,color:"  "#3498db", score: 0, level: 1}
     ];
 
     let activeP, mode = 'en', currentAns, currentFull, needsCorrection = false;
@@ -166,21 +167,39 @@
         }
     }
 
-    function checkAns() {
-        let val = document.getElementById('ansInput').value.trim().toUpperCase();
-        if (val === currentAns.toUpperCase()) {
-            document.getElementById('correctSound').play();
-            if (!needsCorrection) activeP.score += 10;
-            if (activeP.score > 0 && activeP.score % 100 === 0) activeP.level++;
-            updateStats();
-            setTimeout(next, 1000);
-        } else {
-            document.getElementById('wrongSound').play();
-            document.getElementById('correction-box').style.display = 'block';
-            document.getElementById('correctWord').innerText = currentAns;
-            needsCorrection = true;
+  function checkAns() {
+    let val = document.getElementById('ansInput').value.trim().toUpperCase();
+    
+    // 1. እቲ መልሲ ቅኑዕ እንተኾይኑ
+    if (val === currentAns.toUpperCase()) {
+        
+        // ነጥቢ ዝውሃቦ "needsCorrection" false እንተኔሩ ጥራይ እዩ (ቀዳማይ ፈተነ)
+        if (needsCorrection === false) {
+            activeP.score += 10; // 🏆 ነጥቢ ሃቦ
+            document.getElementById('correctSound').play(); 
+        } 
+        // መኣረምታ ርእዩ እንተጸሒፍዎ፡ ስቕ ኢሉ ናብ ዝቕጽል ይሓልፍ እምበር ነጥቢ ኣይውሃቦን
+        
+        // Level Up logic
+        if (activeP.score > 0 && activeP.score % 100 === 0 && needsCorrection === false) {
+            activeP.level++;
         }
+
+        updateStats();
+        
+        // ኩሉ ጽሩይ ጌርካ ናብ ዝቕጽል ሕቶ ስገር
+        needsCorrection = false; 
+        document.getElementById('correction-box').style.display = 'none';
+        setTimeout(next, 800);
+
+    } else {
+        // 2. ጌጋ እንተጽሒፉ መኣረምታ ኣርኢ
+        document.getElementById('wrongSound').play();
+        document.getElementById('correction-box').style.display = 'block';
+        document.getElementById('correctWord').innerText = currentAns;
+        needsCorrection = true; 
     }
+}
 
     function speakText() {
         if (mode === 'ti') return;
