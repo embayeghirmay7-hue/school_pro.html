@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Full Sentences</title>
+    <title>HEPM ACADEMY - Master Edition</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #1a1a1a; --green: #2ecc71; }
-        body { font-family: 'Arial', sans-serif; background: #f4f7f6; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 600px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 20px; }
-        h1 { color: var(--gold); margin: 20px 0 5px; font-size: 26px; font-weight: 900; }
+        :root { --gold: #D4AF37; --dark: #111; --green: #2ecc71; --red: #e74c3c; }
+        body { font-family: 'Arial', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
+        .card { background: white; max-width: 600px; margin: 10px auto; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--gold); overflow: hidden; }
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; }
-        .menu-grid button { padding: 10px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; font-size: 11px; }
+        .menu-grid button { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; background: white; font-size: 11px; }
         .menu-grid button.active { background: var(--gold); color: white; border-color: var(--gold); }
-        .black-box { background: var(--dark); color: white; margin: 0 20px 15px; padding: 40px 15px; border-radius: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .black-box { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 25px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 5px solid transparent; transition: 0.3s; }
+        .black-box.wrong { border-color: var(--red); }
+        .black-box.correct { border-color: var(--green); }
+        #qHint { font-size: 80px; margin-bottom: 10px; }
         #qMain { font-size: 32px; font-weight: bold; line-height: 1.4; color: #fff; }
-        #qHint { font-size: 50px; margin-bottom: 15px; }
-        input { width: 85%; padding: 18px; font-size: 20px; border-radius: 15px; border: 3px solid #eee; text-align: center; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); }
-        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 20px; cursor: pointer; width: 90%; font-weight: bold; margin-top: 15px; }
-        #fb { height: 50px; margin-top: 10px; font-weight: bold; font-size: 18px; padding: 0 10px; }
-        .status-bar { display: flex; justify-content: space-around; padding: 15px; font-weight: bold; color: var(--gold); background: #fafafa; border-top: 2px solid #eee; }
+        #correction-text { color: var(--red); font-size: 20px; font-weight: bold; margin-top: 10px; display: none; }
+        input { width: 85%; padding: 18px; font-size: 22px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; margin-top: 10px; }
+        .btn-check { background: var(--gold); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 22px; cursor: pointer; width: 90%; font-weight: bold; margin: 15px 0; }
+        #fb { height: 50px; font-weight: bold; font-size: 18px; }
+        .status-bar { display: flex; justify-content: space-around; padding: 15px; font-weight: bold; color: var(--gold); background: #f9f9f9; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>✨ HEPM ACADEMY ✨</h1>
-    <div id="kidName" style="font-size: 22px; font-weight: bold; margin-bottom: 5px;">...</div>
+    <h1 style="color: var(--gold); margin-top: 20px;">✨ HEPM ACADEMY ✨</h1>
+    <div id="kidName" style="font-size: 22px; font-weight: bold;">Loading...</div>
 
     <div class="menu-grid">
         <button id="m-math" onclick="setMode('math')">🔢 MATH</button>
@@ -35,14 +36,15 @@
         <button id="m-de" onclick="setMode('de')">🇩🇪 DEUTSCH</button>
     </div>
 
-    <div class="black-box" onclick="speakCurrent()">
-        <div id="qHint">🏠</div>
+    <div id="displayBox" class="black-box" onclick="speakCurrent()">
+        <div id="qHint">🐾</div>
         <div id="qMain">---</div>
-        <div style="font-size: 12px; color: var(--gold); margin-top: 20px;">🔈 Hear Full Sentence / ስማዕ</div>
+        <div id="correction-text">CORRECT ANSWER: <span id="correctWord"></span></div>
+        <div style="font-size: 11px; color: var(--gold); margin-top: 20px;">🔈 Click to Hear / ስማዕ</div>
     </div>
 
-    <input type="text" id="ansInput" placeholder="Write the full sentence here..." autocomplete="off">
-    <button class="btn-check" onclick="check()">CHECK / መርምር</button>
+    <input type="text" id="ansInput" placeholder="Type here..." autocomplete="off">
+    <button class="btn-check" onclick="check()">SUBMIT / መርምር</button>
     <div id="fb"></div>
 
     <div class="status-bar">
@@ -52,19 +54,102 @@
 </div>
 
 <script>
-    let currentMode = 'en', currentAns, currentSpeak, score = 0, level = 1;
+    let currentMode = 'en', currentFullAns, currentSpeak, score = 0, level = 1, needsCorrection = false;
     const kids = [{n:"HERMELA", c:"#ff69b4"}, {n:"ERKABEL", c:"#3498db"}, {n:"PEGGY", c:"#ff69b4"}, {n:"MARANATA", c:"#ff69b4"}];
 
-    // ምሉእ ሓሳባት (Sentences)
-    const sentences = {
+    const data = {
         en: [
-            {q:"🏠", s:"this is my house", g:"this is my _____"},
-            {q:"🍎", s:"i like to eat apple", g:"i like to eat _____"},
-            {q:"🏫", s:"i go to school", g:"i go to _____"},
-            {q:"🐶", s:"the dog is running", g:"the dog is _____"},
-            {q:"🦁", s:"the lion is big", g:"the lion is _____"}
+            {q:"🦁", w:"lion", s:"the lion is king"}, {q:"🏫", w:"school", s:"i go to school"},
+            {q:"🍎", w:"apple", s:"i eat an apple"}, {q:"🚗", w:"car", s:"the car is fast"}
         ],
         de: [
-            {q:"🏠", s:"das ist mein haus", g:"das ist mein _____"},
-            {q:"🍎", s:"ich esse einen apfel", g:"ich esse einen _____"},
-            {q:"🏫", s:"ich gehe zur schule", g
+            {q:"🦁", w:"löwe", s:"der löwe ist könig"}, {q:"🏫", w:"schule", s:"ich gehe zur schule"},
+            {q:"🚗", w:"auto", s:"das auto ist schnell"}
+        ],
+        ti: [
+            {q:"🦁", w:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🏠", w:"ገዛ", s:"እዚ ገዛይ እዩ"},
+            {q:"🏫", w:"ትምህርቲ", s:"ናብ ትምህርቲ እኸይድ"}
+        ]
+    };
+
+    function setMode(m) { currentMode = m; needsCorrection = false; next(); }
+
+    function next() {
+        if (needsCorrection) return; // Don't skip if they haven't corrected yet
+        
+        let kid = kids[Math.floor(Math.random() * kids.length)];
+        document.getElementById('kidName').innerText = kid.n;
+        document.getElementById('kidName').style.color = kid.c;
+        document.getElementById('ansInput').value = "";
+        document.getElementById('fb').innerText = "";
+        document.getElementById('displayBox').className = "black-box";
+        document.getElementById('correction-text').style.display = "none";
+
+        if (currentMode === 'math') {
+            generateMath();
+        } else {
+            generateLang();
+        }
+    }
+
+    function generateMath() {
+        let n1 = Math.floor(Math.random()*10 * level), n2 = Math.floor(Math.random()*10);
+        currentFullAns = (n1 + n2).toString();
+        document.getElementById('qHint').innerText = "🔢";
+        document.getElementById('qMain').innerText = `${n1} + ${n2} = ?`;
+        currentSpeak = `${n1} plus ${n2}`;
+    }
+
+    function generateLang() {
+        let item = data[currentMode][Math.floor(Math.random() * data[currentMode].length)];
+        document.getElementById('qHint').innerText = item.q;
+        
+        if (level === 1) {
+            currentFullAns = item.w;
+            document.getElementById('qMain').innerText = item.w[0] + "_".repeat(item.w.length-1);
+        } else {
+            currentFullAns = item.s;
+            let words = item.s.split(" ");
+            words[words.length-1] = "____";
+            document.getElementById('qMain').innerText = words.join(" ");
+        }
+        currentSpeak = item.s;
+    }
+
+    function check() {
+        let val = document.getElementById('ansInput').value.trim().toLowerCase();
+        let fb = document.getElementById('fb');
+        let box = document.getElementById('displayBox');
+
+        if (val === currentFullAns.toLowerCase()) {
+            fb.innerHTML = "<span style='color:green'>✅ VERY GOOD!</span>";
+            box.className = "black-box correct";
+            if (!needsCorrection) score += 10;
+            if (score > 0 && score % 100 === 0) level++;
+            
+            needsCorrection = false;
+            document.getElementById('scoreVal').innerText = score;
+            document.getElementById('levelVal').innerText = level;
+            setTimeout(next, 1500);
+        } else {
+            // CORRECTION MODE START
+            fb.innerHTML = "<span style='color:red'>❌ Incorrect. Please type the correct answer!</span>";
+            box.className = "black-box wrong";
+            document.getElementById('correction-text').style.display = "block";
+            document.getElementById('correctWord').innerText = currentFullAns.toUpperCase();
+            needsCorrection = true; // They must type it correctly now
+        }
+    }
+
+    function speakCurrent() {
+        if (currentMode === 'ti') return;
+        window.speechSynthesis.cancel();
+        let msg = new SpeechSynthesisUtterance(currentSpeak);
+        msg.lang = (currentMode === 'de') ? 'de-DE' : 'en-US';
+        window.speechSynthesis.speak(msg);
+    }
+
+    setMode('en');
+</script>
+</body>
+</html>
