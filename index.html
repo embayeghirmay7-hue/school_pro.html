@@ -3,134 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Book Edition</title>
+    <title>HEPM ACADEMY - Master</title>
     <style>
         :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --green: #2ecc71; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
         
-        .card { background: white; max-width: 500px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 25px; }
-        
-        /* Player Name Display */
-        .player-tag { font-size: 28px; font-weight: 900; padding: 20px; color: #ff69b4; letter-spacing: 2px; }
+        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; position: relative; padding-bottom: 25px; }
 
+        /* Player Selection */
+        #player-screen { padding: 40px 20px; }
+        .p-btn { width: 100%; padding: 20px; margin: 10px 0; border: none; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+
+        /* Game Screen */
+        #game-screen { display: none; }
+        .player-header { font-size: 28px; font-weight: 900; padding: 15px; letter-spacing: 2px; }
+        
         /* Menu Tabs */
         .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px 15px; }
-        .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 11px; background: #fff; transition: 0.3s; }
+        .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 11px; background: #fff; }
         .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
 
-        /* THE BLACK BOOK BOX (As seen in your image) */
-        .black-book { background: var(--dark); color: white; margin: 15px; padding: 40px 15px; border-radius: 20px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border: 4px solid #333; }
-        #qHint { font-size: 65px; margin-bottom: 15px; }
-        #qMain { font-size: 45px; font-weight: bold; letter-spacing: 5px; color: #fff; }
+        /* Black Book Box (As seen in Screenshot) */
+        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 240px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
+        #qHint { font-size: 70px; margin-bottom: 10px; }
+        #qMain { font-size: 45px; font-weight: bold; letter-spacing: 4px; color: #fff; }
         
-        /* CORRECTION AREA (Like the "TYPE: AUTO" in your image) */
-        #correction-box { margin-top: 20px; display: none; }
-        .correction-label { color: var(--red); font-size: 22px; font-weight: 900; letter-spacing: 1px; }
-        .correction-word { color: var(--red); font-size: 35px; font-weight: 900; text-decoration: underline; }
+        /* Correction Message (TYPE: AUTO) */
+        #correction-box { margin-top: 15px; display: none; }
+        .cor-label { color: var(--red); font-size: 20px; font-weight: 900; }
+        .cor-word { color: var(--red); font-size: 35px; font-weight: 900; text-decoration: underline; }
 
-        /* Input & Button */
-        .input-group { padding: 0 20px; }
-        input { width: 100%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; box-sizing: border-box; }
-        .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; width: 100%; font-weight: bold; margin-top: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
-
-        .footer-stats { display: flex; justify-content: space-around; margin-top: 25px; font-weight: bold; color: #777; font-size: 18px; }
-    </style>
-</head>
-<body>
-
-<div class="card">
-    <div class="player-tag" id="pName">HERMELA</div>
-
-    <div class="tabs">
-        <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH</div>
-        <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
-        <div class="tab" id="t-en" onclick="setMode('en')">🇬🇧 ENGLISH</div>
-        <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DEUTSCH</div>
-    </div>
-
-    <div class="black-book" id="displayBox">
-        <div id="qHint">🚗</div>
-        <div id="qMain">A_T_</div>
+        /* Controls */
+        input { width: 85%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; margin-top: 10px; }
+        .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 15px; cursor: pointer; }
         
-        <div id="correction-box">
-            <span class="correction-label">TYPE: </span>
-            <span class="correction-word" id="correctWord">AUTO</span>
-        </div>
-    </div>
-
-    <div class="input-group">
-        <input type="text" id="ansInput" placeholder="Write here..." autocomplete="off">
-        <button class="btn-check" onclick="checkAnswer()">CHECK / መርምር</button>
-    </div>
-
-    <div class="footer-stats">
-        <div>⭐ Score: <span id="sVal">0</span></div>
-        <div>🏆 Level: <span id="lVal">1</span></div>
-    </div>
-</div>
-
-<script>
-    let mode = 'de', currentAns = '', score = 0, level = 1, needsCorrection = false;
-
-    const database = {
-        de: [ {q:"🚗", a:"AUTO"}, {q:"🏠", a:"HAUS"}, {q:"🍎", a:"APFEL"}, {q:"🐶", a:"HUND"} ],
-        en: [ {q:"🚗", a:"CAR"}, {q:"🏠", a:"HOUSE"}, {q:"🍎", a:"APPLE"}, {q:"🦁", a:"LION"} ],
-        ti: [ {q:"🏠", a:"ገዛ"}, {q:"🦁", a:"ኣንበሳ"}, {q:"🍎", a:"ፖማ"} ]
-    };
-
-    function setMode(m) {
-        mode = m;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('t-' + m).classList.add('active');
-        needsCorrection = false;
-        nextQuestion();
-    }
-
-    function nextQuestion() {
-        if (needsCorrection) return;
-        
-        document.getElementById('ansInput').value = '';
-        document.getElementById('correction-box').style.display = 'none';
-        
-        if (mode === 'math') {
-            let n1 = Math.floor(Math.random() * 10 * level);
-            let n2 = Math.floor(Math.random() * 10);
-            currentAns = (n1 + n2).toString();
-            document.getElementById('qHint').innerText = "🔢";
-            document.getElementById('qMain').innerText = `${n1} + ${n2}`;
-        } else {
-            let list = database[mode];
-            let item = list[Math.floor(Math.random() * list.length)];
-            currentAns = item.a;
-            document.getElementById('qHint').innerText = item.q;
-            
-            // Create the A_T_ style blanks
-            let word = item.a;
-            let display = word[0] + "_".repeat(word.length - 1);
-            document.getElementById('qMain').innerText = display;
-        }
-    }
-
-    function checkAnswer() {
-        let val = document.getElementById('ansInput').value.trim().toUpperCase();
-        
-        if (val === currentAns.toUpperCase()) {
-            if (!needsCorrection) score += 10;
-            if (score > 0 && score % 100 === 0) level++;
-            
-            document.getElementById('sVal').innerText = score;
-            document.getElementById('lVal').innerText = level;
-            needsCorrection = false;
-            nextQuestion();
-        } else {
-            // SHOW CORRECTION (Exactly like your image)
-            document.getElementById('correction-box').style.display = 'block';
-            document.getElementById('correctWord').innerText = currentAns;
-            needsCorrection = true;
-        }
-    }
-
-    setMode('de'); // Matches your screenshot starting with German (Auto)
-</script>
-</body>
-</html>
+        .footer-stats { display: flex; justify-content: space-around; margin-top: 20px; font-weight: bold; color: #777; font-size: 18px; }
+        .back-btn { position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 14
