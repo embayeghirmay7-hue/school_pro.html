@@ -3,39 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Master</title>
+    <title>HEPM ACADEMY - Full Combined</title>
     <style>
         :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --green: #2ecc71; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        
         .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; position: relative; padding-bottom: 25px; }
-
-        /* Player Selection */
-        #player-screen { padding: 40px 20px; }
-        .p-btn { width: 100%; padding: 20px; margin: 10px 0; border: none; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
-
-        /* Game Screen */
-        #game-screen { display: none; }
-        .player-header { font-size: 28px; font-weight: 900; padding: 15px; letter-spacing: 2px; }
+        
+        /* Player & Stats Header */
+        .player-header { font-size: 26px; font-weight: 900; padding: 15px; letter-spacing: 2px; }
         
         /* Menu Tabs */
         .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px 15px; }
         .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 11px; background: #fff; }
         .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
 
-        /* Black Book Box (As seen in Screenshot) */
-        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 240px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
+        /* Black Display Box */
+        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
         #qHint { font-size: 70px; margin-bottom: 10px; }
-        #qMain { font-size: 45px; font-weight: bold; letter-spacing: 4px; color: #fff; }
+        #qMain { font-size: 30px; font-weight: bold; line-height: 1.4; color: #fff; }
         
-        /* Correction Message (TYPE: AUTO) */
+        /* The Correction Label (AS REQUESTED) */
         #correction-box { margin-top: 15px; display: none; }
         .cor-label { color: var(--red); font-size: 20px; font-weight: 900; }
-        .cor-word { color: var(--red); font-size: 35px; font-weight: 900; text-decoration: underline; }
+        .cor-word { color: var(--red); font-size: 32px; font-weight: 900; text-decoration: underline; }
 
         /* Controls */
-        input { width: 85%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; outline: none; margin-top: 10px; }
+        input { width: 85%; padding: 18px; font-size: 24px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 10px; }
         .btn-check { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 15px; cursor: pointer; }
         
-        .footer-stats { display: flex; justify-content: space-around; margin-top: 20px; font-weight: bold; color: #777; font-size: 18px; }
-        .back-btn { position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 14
+        .footer-stats { display: flex; justify-content: space-around; margin-top: 20px; font-weight: bold; color: #777; }
+        .p-btn { width: 90%; padding: 15px; margin: 8px; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; color: white; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="player-screen">
+        <h1 style="color: var(--gold);">HEPM ACADEMY</h1>
+        <div id="pButtons"></div>
+    </div>
+
+    <div id="game-screen" style="display:none;">
+        <div class="player-header" id="activePName">HERMELA</div>
+        <div class="tabs">
+            <div class="tab active" id="t-math" onclick="setMode('math')">🔢 MATH</div>
+            <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
+            <div class="tab" id="t-en" onclick="setMode('en')">🇬🇧 ENGLISH</div>
+            <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DEUTSCH</div>
+        </div>
+
+        <div class="black-book">
+            <div id="qHint">🏠</div>
+            <div id="qMain">---</div>
+            <div id="correction-box">
+                <span class="cor-label">TYPE: </span>
+                <span class="cor-word" id="correctWord"></span>
+            </div>
+        </div>
+
+        <input type="text" id="ansInput" placeholder="Answer..." autocomplete="off">
+        <button class="btn-check" onclick="checkAns()">CHECK / መርምር</button>
+
+        <div class="footer-stats">
+            <div>⭐ Score: <span id="sVal">0</span></div>
+            <div>🏆 Level: <span id="lVal">1</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const players = [
+        {name: "HERMELA", color: "#ff69b4", score: 0, level: 1},
+        {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
+        {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
+        {name: "MARANATA", color: "#9b59b6", score: 0, level: 1}
+    ];
+
+    let activeP, mode = 'en', currentAns, needsCorrection = false;
+
+    // Database ቃላትን ምሉእ ሓሳባትን (All combined)
+    const database = {
+        en: [
+            {q:"🦁", a:"LION", s:"THE LION IS KING"},
+            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"},
+            {q:"🏠", a:"HOUSE", s:"THIS IS MY HOUSE"},
+            {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"}
+        ],
+        de: [
+            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"},
+            {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
+            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}
+        ],
+        ti: [
+            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"},
+            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"},
+            {q:"🏫", a:"ትምህርቲ", s:"ናብ ትምህርቲ እኸይድ"}
+        ]
+    };
+
+    const pButtons = document.getElementById('pButtons');
+    players.forEach((p, i) => {
+        let b = document.createElement('button');
+        b.className = 'p-btn'; b.style.backgroundColor = p.color;
+        b.innerText = p.name; b.onclick = () => { activeP = p; startGame(); };
+        pButtons.appendChild(b);
+    });
+
+    function startGame() {
+        document.getElementById('player-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('activePName').innerText = activeP.name;
+        document.getElementById('activePName').style.color = activeP.color;
+        setMode('en');
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('t-' + m).classList.add('active');
+        next();
+    }
+
+    function next() {
+        document.getElementById('ansInput').value = '';
+        document.getElementById('correction-box').style.display = 'none';
+        needsCorrection = false;
+
+        if (mode === 'math') {
+            let n1 = Math.floor(Math.random() * 10 * activeP.level), n2 = Math.floor(Math.random() * 10);
+            currentAns = (n1 + n2).toString();
+            document.getElementById('qHint').innerText = "🔢";
+            document.getElementById('qMain').innerText = `${n1} + ${n2} = ?`;
+        } else {
+            let list = database[mode];
+            let item = list[Math.floor(Math.random() * list.length)];
+            // Level 1: Word, Level 2+: Full Sentence
+            currentAns = (activeP.level === 1) ? item.a : item.s;
+            document.getElementById('qHint').innerText = item.q;
+            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "___" : item.s.split(" ").slice(0,-1).join(" ") + " ___";
+        }
+    }
+
+    function checkAns() {
+        let val = document.getElementById('ansInput').value.trim().toUpperCase();
+        if (val === currentAns.toUpperCase()) {
+            if (!needsCorrection) activeP.score += 10;
+            if (activeP.score > 0 && activeP.score % 100 === 0) activeP.level++;
+            document.getElementById('sVal').innerText = activeP.score;
+            document.getElementById('lVal').innerText = activeP.level;
+            next();
+        } else {
+            document.getElementById('correction-box').style.display = 'block';
+            document.getElementById('correctWord').innerText = currentAns;
+            needsCorrection = true;
+        }
+    }
+</script>
+</body>
+</html>
