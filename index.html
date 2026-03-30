@@ -1,18 +1,212 @@
- function showWin() {
-    const today = new Date().toLocaleDateString();
-    const progressData = `${today} | ${activeP.name} | 1000 COINS | WON €50 GIFT CARD`;
-    
-    document.getElementById('winner-msg').innerText = activeP.name + "!!!";
-    document.getElementById('winner-overlay').style.display = 'flex';
-    document.getElementById('winSound').play();
+ <!DOCTYPE html>
+<html lang="ti">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEPM ACADEMY - Champion Edition</title>
+    <style>
+        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --green: #2ecc71; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; overflow-x: hidden; }
+        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 25px; min-height: 600px; position: relative; }
+        
+        /* Start Screen */
+        #player-screen { padding: 40px 20px; }
+        .p-btn { width: 90%; padding: 18px; margin: 12px auto; border: none; border-radius: 15px; font-size: 22px; font-weight: bold; color: white; cursor: pointer; display: block; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-    // እዚ መጠወቂ እዚ ነቲ ዳታ ኮፒ ይገብረልካ
-    let copyBtn = document.createElement("button");
-    copyBtn.innerText = "COPY DATA FOR EXCEL";
-    copyBtn.style = "margin-top:20px; padding:10px; background:white; color:black; font-weight:bold; border-radius:10px; border:none; cursor:pointer;";
-    copyBtn.onclick = () => {
-        navigator.clipboard.writeText(progressData);
-        alert("ተዓዊትካ! ሕጂ ኣብ Excel ኬድካ Paste ግበሮ።");
+        /* Game UI */
+        #game-screen { display: none; }
+        .player-header { font-size: 28px; font-weight: 900; padding: 15px; letter-spacing: 2px; }
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 15px 15px; }
+        .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 10px; background: #fff; }
+        .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
+
+        /* Question Box */
+        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 280px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; position: relative; }
+        #qHint { font-size: 85px; margin-bottom: 10px; }
+        #qMain { font-size: 28px; font-weight: bold; line-height: 1.4; color: #fff; padding: 0 15px; }
+        
+        #correction-box { margin-top: 15px; display: none; }
+        .cor-label { color: var(--red); font-size: 16px; font-weight: 900; }
+        .cor-word { color: var(--red); font-size: 32px; font-weight: 900; text-decoration: underline; }
+
+        input { width: 85%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 15px; outline: none; }
+        .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        
+        .footer-stats { display: flex; justify-content: space-around; margin-top: 25px; font-weight: bold; color: #777; font-size: 18px; }
+        .music-btn { position: absolute; top: 15px; right: 15px; background: #fff; border-radius: 50%; padding: 8px; cursor: pointer; z-index: 10; font-size: 20px; }
+
+        /* WINNER OVERLAY */
+        #winner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000, #D4AF37, #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"></audio>
+<audio id="winSound"><source src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" type="audio/mpeg"></audio>
+
+<div id="winner-overlay">
+    <h1 style="font-size: 50px;">🎊 WOW! 🎊</h1>
+    <h2 id="winner-msg" style="font-size: 40px; color: gold;"></h2>
+    <div style="font-size: 180px;">💳</div>
+    <p style="font-size: 35px; font-weight: bold;">YOU WON A €50 GIFT CARD!</p>
+    <p style="background: white; color: black; padding: 15px 30px; border-radius: 50px; font-size: 22px; margin-top: 20px;">GO TO DAD TO COLLECT YOUR PRIZE! 🎁</p>
+    <button onclick="location.reload()" style="margin-top: 30px; padding: 15px 40px; font-size: 20px; background: gold; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">PLAY AGAIN</button>
+</div>
+
+<div class="card">
+    <div id="player-screen">
+        <h1 style="color: var(--gold); font-size: 45px; margin-bottom: 0;">HEPM</h1>
+        <h2 style="margin-top: 0; letter-spacing: 5px; color: #333;">ACADEMY</h2>
+        <p style="font-weight: bold; color: #888;">TARGET: 1000 COINS = €50 GIFT CARD</p>
+        <div id="pButtons"></div>
+    </div>
+
+    <div id="game-screen">
+        <div class="music-btn" onclick="toggleMusic()">🎵</div>
+        <div class="player-header" id="activePName">PLAYER</div>
+        <div class="tabs">
+            <div class="tab" id="t-math" onclick="setMode('math')">⚖️ MATH(kg)</div>
+            <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
+            <div class="tab active" id="t-en" onclick="setMode('en')">🇬🇧 ENGLISH</div>
+            <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DEUTSCH</div>
+        </div>
+
+        <div class="black-book" onclick="speakText()">
+            <div id="qHint">🌾</div>
+            <div id="qMain">---</div>
+            <div id="correction-box">
+                <span class="cor-label">CORRECT WORD: </span><br>
+                <span class="cor-word" id="correctWord"></span>
+            </div>
+            <div style="font-size: 11px; color: var(--gold); margin-top: 15px; opacity: 0.7;">🔉 CLICK TO HEAR / ስማዕ</div>
+        </div>
+
+        <input type="text" id="ansInput" placeholder="Write here..." autocomplete="off">
+        <button class="btn-check" onclick="checkAns()">CHECK / መርምር</button>
+
+        <div class="footer-stats">
+            <div>💰 Coins: <span id="sVal">0</span> / 1000</div>
+            <div>🏆 Level: <span id="lVal">1</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const players = [
+        {name: "HERMELA", color: "#ff69b4", score: 0, level: 1},
+        {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
+        {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
+        {name: "MARANATA", color: "#9b59b6", score: 0, level: 1}
+    ];
+
+    let activeP, mode = 'en', currentAns, currentFull, needsCorrection = false;
+
+    // 🚀 OFFLINE DATABASE (Tigrinya + English + German)
+    const database = {
+        en: [
+            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, {q:"🦁", a:"LION", s:"THE LION IS KING"},
+            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"},
+            {q:"🥛", a:"MILK", s:"DRINK YOUR MILK"}, {q:"🐶", a:"DOG", s:"THE DOG IS BRAVE"}
+        ],
+        de: [
+            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
+            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🥛", a:"MILCH", s:"ICH TRINKE MILCH"}
+        ],
+        ti: [
+            {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"},
+            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"},
+            {q:"🦶", a:"እግሪ", s:"ክልተ እግሪ ኣሎኒ"}, {q:"🦷", a:"ስኒ", s:"ስነይ እሕጸብ ኣለኹ"}
+        ]
     };
-    document.getElementById('winner-overlay').appendChild(copyBtn);
-}
+
+    const btnContainer = document.getElementById('pButtons');
+    players.forEach((p) => {
+        let b = document.createElement('button');
+        b.className = 'p-btn'; b.style.backgroundColor = p.color;
+        b.innerText = p.name; b.onclick = () => { activeP = p; startGame(); };
+        btnContainer.appendChild(b);
+    });
+
+    function startGame() {
+        document.getElementById('player-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('activePName').innerText = activeP.name;
+        document.getElementById('activePName').style.color = activeP.color;
+        document.getElementById('bgMusic').volume = 0.1;
+        document.getElementById('bgMusic').play().catch(()=>{});
+        updateStats();
+        setMode('en');
+    }
+
+    function toggleMusic() {
+        let m = document.getElementById('bgMusic');
+        m.paused ? m.play() : m.pause();
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('t-' + m).classList.add('active');
+        next();
+    }
+
+    function next() {
+        document.getElementById('ansInput').value = '';
+        document.getElementById('correction-box').style.display = 'none';
+        needsCorrection = false;
+
+        if (mode === 'math') {
+            let k1 = Math.floor(Math.random() * 10) + 1;
+            let k2 = Math.floor(Math.random() * 5) + 1;
+            currentAns = (k1 + k2).toString();
+            currentFull = `${k1} plus ${k2} is ${currentAns}`;
+            document.getElementById('qHint').innerText = "⚖️";
+            document.getElementById('qMain').innerText = `${k1}kg + ${k2}kg = ?`;
+        } else {
+            let list = database[mode] || database['en'];
+            let item = list[Math.floor(Math.random() * list.length)];
+            currentAns = (activeP.level === 1) ? item.a : item.s;
+            currentFull = currentAns;
+            document.getElementById('qHint').innerText = item.q;
+            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "COMPLETE: " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
+        }
+    }
+
+    function checkAns() {
+        let val = document.getElementById('ansInput').value.trim().toUpperCase();
+        if (val === currentAns.toUpperCase()) {
+            if (!needsCorrection) {
+                activeP.score += 10;
+                if (activeP.score >= 1000) { showWin(); return; }
+            }
+            if (activeP.score > 0 && activeP.score % 100 === 0 && !needsCorrection) activeP.level++;
+            updateStats();
+            setTimeout(next, 400);
+        } else {
+            document.getElementById('correction-box').style.display = 'block';
+            document.getElementById('correctWord').innerText = currentAns;
+            needsCorrection = true;
+        }
+    }
+
+    function showWin() {
+        document.getElementById('winner-msg').innerText = activeP.name + "!!!";
+        document.getElementById('winner-overlay').style.display = 'flex';
+        document.getElementById('winSound').play();
+    }
+
+    function speakText() {
+        if (mode === 'ti') return;
+        window.speechSynthesis.cancel();
+        let msg = new SpeechSynthesisUtterance(currentFull);
+        msg.lang = (mode === 'de') ? 'de-DE' : 'en-US';
+        window.speechSynthesis.speak(msg);
+    }
+
+    function updateStats() {
+        document.getElementById('sVal').innerText = activeP.score;
+        document.getElementById('lVal').innerText = activeP.level;
+    }
+</script>
+</body>
+</html>
