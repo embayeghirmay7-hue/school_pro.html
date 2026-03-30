@@ -3,44 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - Pro Edition</title>
+    <title>HEPM ACADEMY - FULL DATABASE</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; }
+        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
         .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 25px; min-height: 650px; position: relative; }
-        
-        /* UI Elements */
         #game-screen { display: none; }
         .p-btn { width: 90%; padding: 18px; margin: 12px auto; border: none; border-radius: 15px; font-size: 22px; font-weight: bold; color: white; cursor: pointer; display: block; }
         .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 15px; }
         .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 10px; background: #fff; }
         .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
-
-        /* Display */
         .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
-        #qMain { font-size: 35px; font-weight: bold; }
+        #qMain { font-size: 30px; font-weight: bold; line-height: 1.4; }
         #unit-tag { color: var(--gold); font-size: 18px; margin-top: 10px; font-weight: bold; }
-
         input { width: 85%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 15px; outline: none; }
         .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        
         #winner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000, #D4AF37, #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="winner-overlay">
-    <h1>🎊 CONGRATULATIONS! 🎊</h1>
-    <h2 id="winner-msg"></h2>
+    <h1 style="font-size: 50px;">🎊 CONGRATULATIONS! 🎊</h1>
+    <h2 id="winner-msg" style="font-size: 40px; color: gold;"></h2>
     <div style="font-size: 150px;">💳</div>
-    <h2>YOU WON A €50 GIFT CARD!</h2>
-    <button onclick="location.reload()" style="padding: 15px 30px; background: gold; border: none; cursor: pointer; font-weight: bold;">PLAY AGAIN</button>
+    <h2 style="font-size: 30px;">YOU WON A €50 GIFT CARD!</h2>
+    <button onclick="location.reload()" style="margin-top: 30px; padding: 15px 40px; background: gold; border: none; font-weight: bold; cursor: pointer;">PLAY AGAIN</button>
 </div>
 
 <div class="card">
     <div id="player-screen">
-        <h1 style="color: var(--gold);">HEPM ACADEMY</h1>
-        <p>Target: 1000 Coins = €50 Gift Card</p>
+        <h1 style="color: var(--gold); font-size: 40px;">HEPM ACADEMY</h1>
+        <p>1000 COINS = €50 GIFT CARD</p>
         <div id="pButtons"></div>
     </div>
 
@@ -57,13 +51,13 @@
             <div id="qHint" style="font-size: 60px;">⚖️</div>
             <div id="qMain">---</div>
             <div id="unit-tag"></div>
-            <div id="cor-box" style="display:none; color: #e74c3c; font-weight: bold; margin-top: 10px;">CORRECT: <span id="cor-word"></span></div>
+            <div id="cor-box" style="display:none; color: var(--red); font-weight: bold; margin-top: 10px;">CORRECT: <span id="cor-word"></span></div>
         </div>
 
-        <input type="text" id="ansInput" placeholder="Write Answer..." autocomplete="off">
+        <input type="text" id="ansInput" placeholder="Answer..." autocomplete="off">
         <button class="btn-check" onclick="checkAns()">CHECK ANSWER</button>
 
-        <div style="margin-top: 20px; font-weight: bold; color: #777;">
+        <div style="margin-top: 25px; font-weight: bold; color: #666;">
             💰 Coins: <span id="sVal">0</span> / 1000 | 🏆 Level: <span id="lVal">1</span>
         </div>
     </div>
@@ -79,13 +73,54 @@
 
     let activeP, mode = 'en', currentAns, needsCorrection = false;
 
+    // 🚀 FULL DATABASE WITH 50+ SENTENCES
     const database = {
-        en: [{q:"🦁", a:"LION"}, {q:"🍎", a:"APPLE"}, {q:"🏠", a:"HOUSE"}, {q:"🚗", a:"CAR"}, {q:"🌳", a:"TREE"}, {q:"📚", a:"BOOK"}, {q:"🥛", a:"MILK"}, {q:"🚲", a:"BICYCLE"}],
-        de: [{q:"🚗", a:"AUTO"}, {q:"🏠", a:"HAUS"}, {q:"🍎", a:"APFEL"}, {q:"🐶", a:"HUND"}, {q:"🐱", a:"KATZE"}, {q:"🥛", a:"MILCH"}, {q:"🏫", a:"SCHULE"}],
-        ti: [{q:"🦁", a:"ኣንበሳ"}, {q:"🏠", a:"ገዛ"}, {q:"🌞", a:"ጸሓይ"}, {q:"🍎", a:"ፖማ"}, {q:"🌾", a:"ጣፍ"}, {q:"🥛", a:"ጸባ"}]
+        en: [
+            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, {q:"🦁", a:"LION", s:"THE LION IS KING"},
+            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏫", a:"SCHOOL", s:"I LOVE MY SCHOOL"},
+            {q:"🥛", a:"MILK", s:"DRINK YOUR MILK"}, {q:"🚗", a:"CAR", s:"THE CAR IS FAST"},
+            {q:"🍌", a:"BANANA", s:"I LIKE BANANAS"}, {q:"🐶", a:"DOG", s:"MY DOG IS BRAVE"},
+            {q:"🐱", a:"CAT", s:"THE CAT IS SLEEPING"}, {q:"🚲", a:"BICYCLE", s:"I RIDE MY BICYCLE"}
+        ],
+        de: [
+            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
+            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🥛", a:"MILCH", s:"DIE MILCH IST KALT"},
+            {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"}, {q:"🚲", a:"FAHRRAD", s:"MEIN FAHRRAD IST NEU"}
+        ],
+        ti: [
+            {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
+            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🏫", a:"ቤት ትምህርቲ", s:"ናብ ቤት ትምህርቲ እኸይድ"},
+            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🍌", a:"ባናና", s:"ባናና ጥዑም እዩ"},
+            {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🍎", a:"ፖማ", s:"ፖማ እበልዕ ኣለኹ"},
+            {q:"🚲", a:"ቢሲክለታ", s:"ብቢሲክለታ እጻወት"}, {q:"🐶", a:"ከልቢ", s:"እቲ ከልቢ ይጮኽ ኣሎ"}
+         {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
+            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🏫", a:"ቤት ትምህርቲ", s:"ናብ ቤት ትምህርቲ እኸይድ"},
+            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🍌", a:"ባናና", s:"ባናና ጥዑም እዩ"},
+            {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🍎", a:"ፖማ", s:"ፖማ እበልዕ ኣለኹ"},
+            {q:"🚲", a:"ቢሲክለታ", s:"ብቢሲክለታ እጻወት"}, {q:"🐶", a:"ከልቢ", s:"እቲ ከልቢ ይጮኽ ኣሎ"},
+            {q:"🌳", a:"ኦም", s:"እዛ ኦም ዓባይ እያ"}, {q:"🚗", a:"መኪና", s:"መኪና ትጎይይ ኣላ"},
+            {q:"💧", a:"ማይ", s:"ማይ እሰቲ ኣለኹ"}, {q:"📚", a:"መጽሓፍ", s:"መጽሓፍ አንብብ ኣለኹ"},
+            {q:"✏️", a:"ርሳስ", s:"ብሬሳስ እጽሕፍ ኣለኹ"}, {q:"🐄", a:"ላም", s:"ላም ጸባ ትህበና"},
+            {q:"🐓", a:"ደርሆ", s:"ደርሆ እንቋቁሖ ትህብ"}, {q:"⛰️", a:"እምባ", s:"እቲ እምባ ነዊሕ እዩ"},
+            {q:"🦶", a:"እግሪ", s:"ክልተ እግሪ ኣሎኒ"}, {q:"👁️", a:"ዓይን", s:"ብዓይን እርኢ ኣለኹ"},
+            {q:"👂", a:"እዝኒ", s:"ብእዝኒ እሰምዕ ኣለኹ"}, {q:"🦷", a:"ስኒ", s:"ስነይ እሕጸብ ኣለኹ"},
+            {q:"👃", a:"ኣፍንጫ", s:"ብኣፍንጫ እሸትት ኣለኹ"}, {q:"🍚", a:"ሩዝ", s:"ሩዝ ምስ ስጋ እበልዕ"},
+            {q:"🛏️", a:"ዓራት", s:"ኣብ ዓራት እድቅስ"}, {q:"🧥", a:"ጃኬት", s:"ጃኬት እለብስ ኣለኹ"},
+            {q:"👟", a:"ጫማ", s:"ጫማይ ጽቡቕ እዩ"}, {q:"🧤", a:"ጓንቲ", s:"ጓንቲ እገብር ኣለኹ"},
+            {q:"🔥", a:"ሓዊ", s:"ሓዊ የንድድ ኣሎ"}, {q:"🥣", a:"ሽሮ", s:"ሽሮ ጥዑም እዩ"},
+            {q:"🍴", a:"ማንካ", s:"ብማንካ እበልዕ"}, {q:"🥚", a:"እንቋቁሖ", s:"እንቋቁሖ እፈቱ"},
+            {q:"🧅", a:"ሽንኩርቲ", s:"ሽንኩርቲ ይቐልጥ ኣሎ"}, {q:"🥔", a:"ድንች", s:"ድንች እፈቱ"},
+            {q:"🥬", a:"ሓምሊ", s:"ሓምሊ ንጥዕና ጽቡቕ እዩ"}, {q:"🍯", a:"መዓር", s:"መዓር ጥዑም እዩ"},
+            {q:"☕", a:"ቡን", s:"ቡን ይፈቱ"}, {q:"🍵", a:"ሻሂ", s:"ሻሂ እሰቲ ኣለኹ"},
+            {q:"🍞", a:"ባኒ", s:"ባኒ እበልዕ ኣለኹ"}, {q:"🍝", a:"ፓስታ", s:"ፓስታ ብስልሲ ይፈቱ"},
+            {q:"⚖️", a:"ኪሎ", s:"ሓደ ኪሎ ጣፍ እደሊ"}, {q:"🛣️", a:"መገዲ", s:"ነዊሕ መገዲ ተጓዒዝና"},
+            {q:"🏘️", a:"ከተማ", s:"ከተማ ኣስመራ ጽብቕቲ እያ"}, {q:"🕊️", a:"ርግቢ", s:"ርግቢ የዋህ እያ"},
+            {q:"🐪", a:"ገመል", s:"ገመል ዓቕሊ ኣለዋ"}, {q:"🐴", a:"ፈረስ", s:"ፈረስ ይጎይይ ኣሎ"},
+            {q:"🐐", a:"ጤል", s:"ጤል ሳዕሪ ትበልዕ"}, {q:"🐱", a:"ድሙ", s:"ድሙ ጸባ ትፈቱ"},
+            {q:"🐀", a:"ኣንጭዋ", s:"ድሙ ኣንጭዋ ትሕዝ"}, {q:"🐝", a:"ንህቢ", s:"ንህቢ መዓር ትሰርሕ"}
+        ]
     };
 
-    // Setup Player Buttons
     players.forEach(p => {
         let b = document.createElement('button');
         b.className = 'p-btn'; b.style.backgroundColor = p.color;
@@ -119,24 +154,23 @@
             const op = ops[Math.floor(Math.random() * ops.length)];
             const units = ['kg', 'km'];
             const unit = units[Math.floor(Math.random() * units.length)];
-            
-            let n1 = Math.floor(Math.random() * 10) + 1;
-            let n2 = Math.floor(Math.random() * 10) + 1;
+            let n1 = Math.floor(Math.random() * 10) + 1, n2 = Math.floor(Math.random() * 5) + 1, dOp = op;
 
             if (op === '-') { if (n1 < n2) [n1, n2] = [n2, n1]; currentAns = (n1 - n2).toString(); }
-            else if (op === '*') { currentAns = (n1 * n2).toString(); }
-            else if (op === '/') { n1 = n1 * n2; currentAns = (n1 / n2).toString(); }
+            else if (op === '*') { dOp = 'x'; currentAns = (n1 * n2).toString(); }
+            else if (op === '/') { dOp = '÷'; n1 = n1 * n2; currentAns = (n1 / n2).toString(); }
             else { currentAns = (n1 + n2).toString(); }
 
             document.getElementById('qHint').innerText = (unit === 'kg') ? "⚖️" : "🛣️";
-            document.getElementById('qMain').innerText = `${n1} ${op} ${n2} = ?`;
+            document.getElementById('qMain').innerText = `${n1} ${dOp} ${n2} = ?`;
             document.getElementById('unit-tag').innerText = `RESULT IN ${unit.toUpperCase()}`;
         } else {
             let list = database[mode];
             let item = list[Math.floor(Math.random() * list.length)];
-            currentAns = item.a;
+            // Level 1: Word, Level 2+: Sentence
+            currentAns = (activeP.level === 1) ? item.a : item.s;
             document.getElementById('qHint').innerText = item.q;
-            document.getElementById('qMain').innerText = item.a[0] + "_".repeat(item.a.length-1);
+            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "COMPLETE: " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
         }
     }
 
@@ -146,9 +180,9 @@
             if (!needsCorrection) {
                 activeP.score += 10;
                 if (activeP.score >= 1000) { showWin(); return; }
+                if (activeP.score % 100 === 0) activeP.level++;
             }
-            updateStats();
-            next();
+            updateStats(); next();
         } else {
             document.getElementById('cor-box').style.display = 'block';
             document.getElementById('cor-word').innerText = currentAns;
@@ -158,13 +192,4 @@
 
     function showWin() {
         document.getElementById('winner-msg').innerText = activeP.name + "!!!";
-        document.getElementById('winner-overlay').style.display = 'flex';
-    }
-
-    function updateStats() {
-        document.getElementById('sVal').innerText = activeP.score;
-        document.getElementById('lVal').innerText = Math.floor(activeP.score / 100) + 1;
-    }
-</script>
-</body>
-</html>
+        document.getElementById('winner-overlay').style
