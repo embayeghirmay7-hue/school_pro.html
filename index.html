@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - FULL DATABASE</title>
+    <title>HEPM ACADEMY - 50 TIGRINYA WORDS</title>
     <style>
         :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
@@ -14,7 +14,7 @@
         .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 10px; background: #fff; }
         .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
         .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
-        #qMain { font-size: 30px; font-weight: bold; line-height: 1.4; }
+        #qMain { font-size: 32px; font-weight: bold; line-height: 1.4; }
         #unit-tag { color: var(--gold); font-size: 18px; margin-top: 10px; font-weight: bold; }
         input { width: 85%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 15px; outline: none; }
         .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
@@ -54,8 +54,8 @@
             <div id="cor-box" style="display:none; color: var(--red); font-weight: bold; margin-top: 10px;">CORRECT: <span id="cor-word"></span></div>
         </div>
 
-        <input type="text" id="ansInput" placeholder="Answer..." autocomplete="off">
-        <button class="btn-check" onclick="checkAns()">CHECK ANSWER</button>
+        <input type="text" id="ansInput" placeholder="መሊስካ ጸሓፍ..." autocomplete="off">
+        <button class="btn-check" onclick="checkAns()">CHECK / መርምር</button>
 
         <div style="margin-top: 25px; font-weight: bold; color: #666;">
             💰 Coins: <span id="sVal">0</span> / 1000 | 🏆 Level: <span id="lVal">1</span>
@@ -73,27 +73,10 @@
 
     let activeP, mode = 'en', currentAns, needsCorrection = false;
 
-    // 🚀 FULL DATABASE WITH 50+ SENTENCES
+    // 🚀 THE FULL 50+ TIGRINYA DATABASE
     const database = {
-        en: [
-            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, {q:"🦁", a:"LION", s:"THE LION IS KING"},
-            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏫", a:"SCHOOL", s:"I LOVE MY SCHOOL"},
-            {q:"🥛", a:"MILK", s:"DRINK YOUR MILK"}, {q:"🚗", a:"CAR", s:"THE CAR IS FAST"},
-            {q:"🍌", a:"BANANA", s:"I LIKE BANANAS"}, {q:"🐶", a:"DOG", s:"MY DOG IS BRAVE"},
-            {q:"🐱", a:"CAT", s:"THE CAT IS SLEEPING"}, {q:"🚲", a:"BICYCLE", s:"I RIDE MY BICYCLE"}
-        ],
-        de: [
-            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
-            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🥛", a:"MILCH", s:"DIE MILCH IST KALT"},
-            {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"}, {q:"🚲", a:"FAHRRAD", s:"MEIN FAHRRAD IST NEU"}
-        ],
         ti: [
             {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
-            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🏫", a:"ቤት ትምህርቲ", s:"ናብ ቤት ትምህርቲ እኸይድ"},
-            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🍌", a:"ባናና", s:"ባናና ጥዑም እዩ"},
-            {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🍎", a:"ፖማ", s:"ፖማ እበልዕ ኣለኹ"},
-            {q:"🚲", a:"ቢሲክለታ", s:"ብቢሲክለታ እጻወት"}, {q:"🐶", a:"ከልቢ", s:"እቲ ከልቢ ይጮኽ ኣሎ"}
-         {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
             {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🏫", a:"ቤት ትምህርቲ", s:"ናብ ቤት ትምህርቲ እኸይድ"},
             {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🍌", a:"ባናና", s:"ባናና ጥዑም እዩ"},
             {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🍎", a:"ፖማ", s:"ፖማ እበልዕ ኣለኹ"},
@@ -118,6 +101,14 @@
             {q:"🐪", a:"ገመል", s:"ገመል ዓቕሊ ኣለዋ"}, {q:"🐴", a:"ፈረስ", s:"ፈረስ ይጎይይ ኣሎ"},
             {q:"🐐", a:"ጤል", s:"ጤል ሳዕሪ ትበልዕ"}, {q:"🐱", a:"ድሙ", s:"ድሙ ጸባ ትፈቱ"},
             {q:"🐀", a:"ኣንጭዋ", s:"ድሙ ኣንጭዋ ትሕዝ"}, {q:"🐝", a:"ንህቢ", s:"ንህቢ መዓር ትሰርሕ"}
+        ],
+        en: [
+            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, {q:"🦁", a:"LION", s:"THE LION IS KING"},
+            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"}
+        ],
+        de: [
+            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
+            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}
         ]
     };
 
@@ -163,14 +154,14 @@
 
             document.getElementById('qHint').innerText = (unit === 'kg') ? "⚖️" : "🛣️";
             document.getElementById('qMain').innerText = `${n1} ${dOp} ${n2} = ?`;
-            document.getElementById('unit-tag').innerText = `RESULT IN ${unit.toUpperCase()}`;
+            document.getElementById('unit-tag').innerText = `ANSWER IN ${unit.toUpperCase()}`;
         } else {
             let list = database[mode];
             let item = list[Math.floor(Math.random() * list.length)];
             // Level 1: Word, Level 2+: Sentence
             currentAns = (activeP.level === 1) ? item.a : item.s;
             document.getElementById('qHint').innerText = item.q;
-            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "COMPLETE: " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
+            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "መልእ፦ " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
         }
     }
 
@@ -192,4 +183,13 @@
 
     function showWin() {
         document.getElementById('winner-msg').innerText = activeP.name + "!!!";
-        document.getElementById('winner-overlay').style
+        document.getElementById('winner-overlay').style.display = 'flex';
+    }
+
+    function updateStats() {
+        document.getElementById('sVal').innerText = activeP.score;
+        document.getElementById('lVal').innerText = activeP.level;
+    }
+</script>
+</body>
+</html>
