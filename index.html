@@ -73,7 +73,6 @@
 
     let activeP, mode = 'en', currentAns, needsCorrection = false;
 
-    // 🚀 THE FULL 50+ TIGRINYA DATABASE
     const database = {
         ti: [
             {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
@@ -103,13 +102,19 @@
             {q:"🐀", a:"ኣንጭዋ", s:"ድሙ ኣንጭዋ ትሕዝ"}, {q:"🐝", a:"ንህቢ", s:"ንህቢ መዓር ትሰርሕ"}
         ],
         en: [
-            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, {q:"🦁", a:"LION", s:"THE LION IS KING"},
-            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"}
+            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, 
+            {q:"🦁", a:"LION", s:"THE LION IS KING"},
+            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, 
+            {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"},
+            {q:"🏭", a:"WAREHOUSE", s:"I WORK IN A WAREHOUSE"},
+            {q:"📅", a:"APPOINTMENT", s:"I HAVE AN APPOINTMENT"},
+            {q:"🛠️", a:"EXPERIENCE", s:"I HAVE FIVE YEARS EXPERIENCE"},
+            {q:"🕒", a:"SHIFT", s:"I PREFER THE NIGHT SHIFT"},
+            {q:"🏥", a:"EMERGENCY", s:"THIS IS AN EMERGENCY"},
+            {q:"📄", a:"STATEMENT", s:"I NEED MY UC STATEMENT"}
         ],
         de: [
-            {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"},
-            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"},
-         {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"},
+            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"},
             {q:"🥛", a:"MILCH", s:"DIE MILCH IST GESUND"}, {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"},
             {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"}, {q:"🌳", a:"BAUM", s:"DER BAUM IST GRÜN"},
             {q:"📚", a:"BUCH", s:"ICH LESE EIN BUCH"}, {q:"✏️", a:"STIFT", s:"HAST DU EINEN STIFT"},
@@ -130,7 +135,7 @@
             {q:"🎨", a:"FARBE", s:"BLAU IST EINE FARBE"}, {q:"🕰️", a:"UHR", s:"WIE SPÄT IST ES"},
             {q:"☁️", a:"WOLKE", s:"DIE WOLKE IST WEISS"}, {q:"🌧️", a:"REGEN", s:"ES REGNET HEUTE"},
             {q:"❄️", a:"SCHNEE", s:"DER SCHNEE IST KALT"}, {q:"🌉", a:"BRÜCKE", s:"DIE BRÜCKE IST LANG"},
-            {q:"🏞️", a:"FLUSS", s:"DAS WASSER FLIESST"}, {q:"🏔️", a:"BERG", s:"DER BERG IST HOCH"},
+            {q:"🏞️", a:"FLUSS", s:"DAS WASSER FLIESST"}, {q:"🏞️", a:"BERG", s:"DER BERG IST HOCH"},
             {q:"🇩🇪", a:"DEUTSCH", s:"ICH LERNE DEUTSCH"}
         ]
     };
@@ -181,7 +186,6 @@
         } else {
             let list = database[mode];
             let item = list[Math.floor(Math.random() * list.length)];
-            // Level 1: Word, Level 2+: Sentence
             currentAns = (activeP.level === 1) ? item.a : item.s;
             document.getElementById('qHint').innerText = item.q;
             document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "መልእ፦ " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
