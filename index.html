@@ -19,6 +19,7 @@
         input { width: 85%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 15px; outline: none; }
         .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
         #winner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000, #D4AF37, #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
+        .back-nav { position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 20px; background: #eee; padding: 5px 10px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -28,7 +29,7 @@
     <h2 id="winner-msg" style="font-size: 40px; color: gold;"></h2>
     <div style="font-size: 150px;">💳</div>
     <h2 style="font-size: 30px;">YOU WON A €50 GIFT CARD!</h2>
-    <button onclick="location.reload()" style="margin-top: 30px; padding: 15px 40px; background: gold; border: none; font-weight: bold; cursor: pointer;">PLAY AGAIN</button>
+    <button onclick="resetCurrentPlayer()" style="margin-top: 30px; padding: 15px 40px; background: gold; border: none; font-weight: bold; cursor: pointer;">PLAY AGAIN</button>
 </div>
 
 <div class="card">
@@ -39,7 +40,8 @@
     </div>
 
     <div id="game-screen">
-        <div class="player-header" id="activePName" style="font-size: 24px; font-weight: bold; padding: 10px;"></div>
+        <div class="back-nav" onclick="goHome()">🏠 Back</div>
+        <div class="player-header" id="activePName" style="font-size: 24px; font-weight: bold; padding: 10px; margin-top: 20px;"></div>
         <div class="tabs">
             <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH PRO</div>
             <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
@@ -64,7 +66,8 @@
 </div>
 
 <script>
-    const players = [
+    // Load players from storage or use defaults
+    let players = JSON.parse(localStorage.getItem('hepm_players')) || [
         {name: "HERMELA", color: "#ff69b4", score: 0, level: 1},
         {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
         {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
@@ -102,57 +105,45 @@
             {q:"🐀", a:"ኣንጭዋ", s:"ድሙ ኣንጭዋ ትሕዝ"}, {q:"🐝", a:"ንህቢ", s:"ንህቢ መዓር ትሰርሕ"}
         ],
         en: [
-            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, 
-            {q:"🦁", a:"LION", s:"THE LION IS KING"},
-            {q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, 
-            {q:"🏫", a:"SCHOOL", s:"I GO TO SCHOOL"},
             {q:"🏭", a:"WAREHOUSE", s:"I WORK IN A WAREHOUSE"},
             {q:"📅", a:"APPOINTMENT", s:"I HAVE AN APPOINTMENT"},
             {q:"🛠️", a:"EXPERIENCE", s:"I HAVE FIVE YEARS EXPERIENCE"},
             {q:"🕒", a:"SHIFT", s:"I PREFER THE NIGHT SHIFT"},
             {q:"🏥", a:"EMERGENCY", s:"THIS IS AN EMERGENCY"},
-            {q:"📄", a:"STATEMENT", s:"I NEED MY UC STATEMENT"}
+            {q:"📄", a:"STATEMENT", s:"I NEED MY UC STATEMENT"},
+            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, 
+            {q:"🦁", a:"LION", s:"THE LION IS KING"}
         ],
         de: [
             {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"},
-            {q:"🥛", a:"MILCH", s:"DIE MILCH IST GESUND"}, {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"},
-            {q:"🏠", a:"HAUS", s:"DAS IST MEIN HAUS"}, {q:"🌳", a:"BAUM", s:"DER BAUM IST GRÜN"},
-            {q:"📚", a:"BUCH", s:"ICH LESE EIN BUCH"}, {q:"✏️", a:"STIFT", s:"HAST DU EINEN STIFT"},
-            {q:"🐶", a:"HUND", s:"MEIN HUND IST LIEB"}, {q:"🐱", a:"KATZE", s:"DIE KATZE SCHLÄFT"},
-            {q:"🍞", a:"BROT", s:"ICH MAG BROT"}, {q:"💧", a:"WASSER", s:"ICH TRINKE WASSER"},
-            {q:"🌞", a:"SONNE", s:"DIE SONNE SCHEINT"}, {q:"🌕", a:"MOND", s:"DER MOND IST HELL"},
-            {q:"🚲", a:"FAHRRAD", s:"MEIN FAHRRAD IST NEU"}, {q:"👟", a:"SCHUHE", s:"MEINE SCHUHE SIND BLAU"},
-            {q:"🧥", a:"JACKE", s:"ZIEH DEINE JACKE AN"}, {q:"🍦", a:"EIS", s:"DAS EIS IST KALT"},
-            {q:"🍰", a:"KUCHEN", s:"DER KUCHEN IST LECKER"}, {q:"🥚", a:"EI", s:"ICH ESSE EIN EI"},
-            {q:"🥕", a:"KAROTTE", s:"HASEN ESSEN KAROTTEN"}, {q:"🧀", a:"KÄSE", s:"ICH LIEBE KÄSE"},
-            {q:"🍕", a:"PIZZA", s:"WIR ESSEN PIZZA"}, {q:"🥗", a:"SALAT", s:"SALAT IST GESUND"},
-            {q:"🧃", a:"SAFT", s:"ICH TRINKE SAFT"}, {q:"⚽", a:"BALL", s:"WIR SPIELEN BALL"},
-            {q:"🧸", a:"BÄR", s:"MEIN BÄR IST WEICH"}, {q:"🎁", a:"GESCHENK", s:"EIN GESCHENK FÜR DICH"},
-            {q:"🎈", a:"BALLON", s:"DER BALLON IST ROT"}, {q:"🐝", a:"BIENE", s:"DIE BIENE MACHT HONIG"},
-            {q:"🦋", a:"SCHMETTERLING", s:"ER IST SEHR BUNT"}, {q:"🦜", a:"VOGEL", s:"DER VOGEL SINGT"},
-            {q:"🐟", a:"FISCH", s:"DER FISCH SCHWIMMT"}, {q:"🐘", a:"ELEFANT", s:"DER ELEFANT IST GROSS"},
-            {q:"🐒", a:"AFFE", s:"DER AFFE KLETTERT"}, {q:"🦁", a:"LÖWE", s:"DER LÖWE BRÜLLT"},
-            {q:"🎨", a:"FARBE", s:"BLAU IST EINE FARBE"}, {q:"🕰️", a:"UHR", s:"WIE SPÄT IST ES"},
-            {q:"☁️", a:"WOLKE", s:"DIE WOLKE IST WEISS"}, {q:"🌧️", a:"REGEN", s:"ES REGNET HEUTE"},
-            {q:"❄️", a:"SCHNEE", s:"DER SCHNEE IST KALT"}, {q:"🌉", a:"BRÜCKE", s:"DIE BRÜCKE IST LANG"},
-            {q:"🏞️", a:"FLUSS", s:"DAS WASSER FLIESST"}, {q:"🏞️", a:"BERG", s:"DER BERG IST HOCH"},
-            {q:"🇩🇪", a:"DEUTSCH", s:"ICH LERNE DEUTSCH"}
+            {q:"🥛", a:"MILCH", s:"DIE MILCH IST GESUND"}, {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}
         ]
     };
 
-    players.forEach(p => {
-        let b = document.createElement('button');
-        b.className = 'p-btn'; b.style.backgroundColor = p.color;
-        b.innerText = p.name; b.onclick = () => { activeP = p; startGame(); };
-        document.getElementById('pButtons').appendChild(b);
-    });
+    function renderButtons() {
+        document.getElementById('pButtons').innerHTML = "";
+        players.forEach(p => {
+            let b = document.createElement('button');
+            b.className = 'p-btn'; b.style.backgroundColor = p.color;
+            b.innerText = `${p.name} (Coins: ${p.score})`; b.onclick = () => { activeP = p; startGame(); };
+            document.getElementById('pButtons').appendChild(b);
+        });
+    }
+    renderButtons();
 
     function startGame() {
         document.getElementById('player-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
         document.getElementById('activePName').style.color = activeP.color;
+        updateStats();
         setMode('en');
+    }
+
+    function goHome() {
+        document.getElementById('player-screen').style.display = 'block';
+        document.getElementById('game-screen').style.display = 'none';
+        renderButtons();
     }
 
     function setMode(m) {
@@ -199,6 +190,7 @@
                 activeP.score += 10;
                 if (activeP.score >= 1000) { showWin(); return; }
                 if (activeP.score % 100 === 0) activeP.level++;
+                saveData(); // Save to computer!
             }
             updateStats(); next();
         } else {
@@ -206,6 +198,17 @@
             document.getElementById('cor-word').innerText = currentAns;
             needsCorrection = true;
         }
+    }
+
+    function saveData() {
+        localStorage.setItem('hepm_players', JSON.stringify(players));
+    }
+
+    function resetCurrentPlayer() {
+        activeP.score = 0;
+        activeP.level = 1;
+        saveData();
+        location.reload();
     }
 
     function showWin() {
