@@ -3,198 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - 50 TIGRINYA WORDS</title>
+    <title>HEPM ACADEMY - PRO DASHBOARD</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; }
+        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --blue: #3498db; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); overflow: hidden; padding-bottom: 25px; min-height: 650px; position: relative; }
-        #game-screen { display: none; }
-        .p-btn { width: 90%; padding: 18px; margin: 12px auto; border: none; border-radius: 15px; font-size: 22px; font-weight: bold; color: white; cursor: pointer; display: block; }
-        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 15px; }
-        .tab { padding: 12px 5px; border: 2px solid #eee; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 10px; background: #fff; }
-        .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
-        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px solid #333; }
-        #qMain { font-size: 32px; font-weight: bold; line-height: 1.4; }
-        #unit-tag { color: var(--gold); font-size: 18px; margin-top: 10px; font-weight: bold; }
-        input { width: 85%; padding: 18px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; text-align: center; margin-top: 15px; outline: none; }
+        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); min-height: 700px; position: relative; padding-bottom: 30px; overflow: hidden; }
+        #dashboard-view { display: block; padding: 20px; }
+        #game-view { display: none; }
+        .p-row { background: #fff; border: 2px solid #eee; border-radius: 20px; margin: 12px auto; padding: 15px; display: flex; justify-content: space-between; align-items: center; width: 90%; cursor: pointer; transition: 0.2s; }
+        .p-row:hover { border-color: var(--gold); background: #fffdf5; }
+        .score-box { background: var(--gold); color: white; padding: 8px 15px; border-radius: 50px; font-weight: bold; min-width: 50px; }
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; background: #f9f9f9; }
+        .tab { padding: 12px 5px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; background: white; border: 1px solid #ddd; }
+        .tab.active { background: var(--gold); color: white; border: none; }
+        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 25px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; border: 5px solid #333; box-shadow: inset 0 0 20px #000; }
+        input { width: 80%; padding: 20px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; margin-top: 15px; text-align: center; }
         .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        #winner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000, #D4AF37, #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
-        .back-nav { position: absolute; top: 10px; left: 10px; cursor: pointer; font-size: 20px; background: #eee; padding: 5px 10px; border-radius: 10px; }
+        #winner-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; }
     </style>
 </head>
 <body>
 
-<div id="winner-overlay">
-    <h1 style="font-size: 50px;">🎊 CONGRATULATIONS! 🎊</h1>
-    <h2 id="winner-msg" style="font-size: 40px; color: gold;"></h2>
-    <div style="font-size: 150px;">💳</div>
-    <h2 style="font-size: 30px;">YOU WON A €50 GIFT CARD!</h2>
-    <button onclick="resetCurrentPlayer()" style="margin-top: 30px; padding: 15px 40px; background: gold; border: none; font-weight: bold; cursor: pointer;">PLAY AGAIN</button>
+<div id="winner-screen">
+    <h1 style="color: gold; font-size: 50px;">LEVEL COMPLETE! 🏆</h1>
+    <h2 id="winner-name-msg"></h2>
+    <div style="font-size: 100px;">🎁</div>
+    <h3>GO TO DAD FOR YOUR €50 PRIZE!</h3>
+    <button onclick="location.reload()" style="padding: 15px 40px; font-size: 20px; cursor: pointer;">HOME</button>
 </div>
 
 <div class="card">
-    <div id="player-screen">
-        <h1 style="color: var(--gold); font-size: 40px;">HEPM ACADEMY</h1>
-        <p>1000 COINS = €50 GIFT CARD</p>
-        <div id="pButtons"></div>
+    <div id="dashboard-view">
+        <h1 style="color: var(--gold); font-size: 35px; margin-bottom: 5px;">HEPM ACADEMY</h1>
+        <p style="color: #666;">Select name to start / ስም ምረጽ</p>
+        <div id="players-container">Loading scores...</div>
+        <button onclick="fetchScores()" style="margin-top: 20px; background: none; border: 1px solid #ccc; padding: 10px 20px; border-radius: 50px; cursor: pointer;">🔄 Refresh Scores</button>
     </div>
 
-    <div id="game-screen">
-        <div class="back-nav" onclick="goHome()">🏠 Back</div>
-        <div class="player-header" id="activePName" style="font-size: 24px; font-weight: bold; padding: 10px; margin-top: 20px;"></div>
+    <div id="game-view">
+        <div style="display:flex; justify-content: space-between; padding: 15px; align-items: center;">
+            <button onclick="location.reload()" style="border:none; background: #eee; padding: 8px 15px; border-radius: 10px; cursor:pointer;">🏠 Home</button>
+            <div id="activePName" style="font-size: 20px; font-weight: bold;"></div>
+            <div style="font-weight: bold; color: var(--gold);">💰 <span id="sVal">0</span></div>
+        </div>
+
         <div class="tabs">
-            <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH PRO</div>
-            <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 ትግርኛ</div>
-            <div class="tab active" id="t-en" onclick="setMode('en')">🇬🇧 ENGLISH</div>
-            <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DEUTSCH</div>
+            <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH</div>
+            <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 TI</div>
+            <div class="tab active" id="t-en" onclick="setMode('en')">🇬🇧 EN</div>
+            <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DE</div>
         </div>
 
         <div class="black-book">
-            <div id="qHint" style="font-size: 60px;">⚖️</div>
-            <div id="qMain">---</div>
-            <div id="unit-tag"></div>
-            <div id="cor-box" style="display:none; color: var(--red); font-weight: bold; margin-top: 10px;">CORRECT: <span id="cor-word"></span></div>
+            <div id="qHint" style="font-size: 60px;">🍎</div>
+            <div id="qMain" style="font-size: 26px; font-weight: bold; padding: 0 10px;">---</div>
+            <div id="unit-tag" style="color: gold; margin-top: 10px; font-weight: bold;"></div>
+            <div id="cor-box" style="display:none; color: var(--red); margin-top: 15px; font-weight: bold;">CORRECT: <span id="cor-word"></span></div>
         </div>
 
-        <input type="text" id="ansInput" placeholder="መሊስካ ጸሓፍ..." autocomplete="off">
-        <button class="btn-check" onclick="checkAns()">CHECK / መርምር</button>
-
-        <div style="margin-top: 25px; font-weight: bold; color: #666;">
-            💰 Coins: <span id="sVal">0</span> / 1000 | 🏆 Level: <span id="lVal">1</span>
-        </div>
+        <input type="text" id="ansInput" placeholder="Type here..." autocomplete="off">
+        <button class="btn-check" onclick="checkAns()">SUBMIT ANSWER</button>
     </div>
 </div>
 
 <script>
-    // Load players from storage or use defaults
-    let players = JSON.parse(localStorage.getItem('hepm_players')) || [
-        {name: "HERMELA", color: "#ff69b4", score: 0, level: 1},
-        {name: "ERKABEL", color: "#3498db", score: 0, level: 1},
-        {name: "PEGGY", color: "#e67e22", score: 0, level: 1},
-        {name: "MARANATA", color: "#9b59b6", score: 0, level: 1}
+    const SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE"; // <--- ነቲ ሊንክ ኣብዚ ኣእትዎ
+
+    const playersInfo = [
+        {name: "HERMELA", color: "#ff69b4"},
+        {name: "ERKABEL", color: "#3498db"},
+        {name: "PEGGY", color: "#e67e22"},
+        {name: "MARANATA", color: "#9b59b6"}
     ];
 
     let activeP, mode = 'en', currentAns, needsCorrection = false;
 
-    const database = {
-        ti: [
-            {q:"🌾", a:"ጣፍ", s:"ጻዕዳ ጣፍ ጽቡቕ እዩ"}, {q:"🥛", a:"ጸባ", s:"ጸባ ንጥዕና ጽቡቕ እዩ"},
-            {q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🏫", a:"ቤት ትምህርቲ", s:"ናብ ቤት ትምህርቲ እኸይድ"},
-            {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}, {q:"🍌", a:"ባናና", s:"ባናና ጥዑም እዩ"},
-            {q:"🌞", a:"ጸሓይ", s:"ጸሓይ ትበርቅ ኣላ"}, {q:"🍎", a:"ፖማ", s:"ፖማ እበልዕ ኣለኹ"},
-            {q:"🚲", a:"ቢሲክለታ", s:"ብቢሲክለታ እጻወት"}, {q:"🐶", a:"ከልቢ", s:"እቲ ከልቢ ይጮኽ ኣሎ"},
-            {q:"🌳", a:"ኦም", s:"እዛ ኦም ዓባይ እያ"}, {q:"🚗", a:"መኪና", s:"መኪና ትጎይይ ኣላ"},
-            {q:"💧", a:"ማይ", s:"ማይ እሰቲ ኣለኹ"}, {q:"📚", a:"መጽሓፍ", s:"መጽሓፍ አንብብ ኣለኹ"},
-            {q:"✏️", a:"ርሳስ", s:"ብሬሳስ እጽሕፍ ኣለኹ"}, {q:"🐄", a:"ላም", s:"ላም ጸባ ትህበና"},
-            {q:"🐓", a:"ደርሆ", s:"ደርሆ እንቋቁሖ ትህብ"}, {q:"⛰️", a:"እምባ", s:"እቲ እምባ ነዊሕ እዩ"},
-            {q:"🦶", a:"እግሪ", s:"ክልተ እግሪ ኣሎኒ"}, {q:"👁️", a:"ዓይን", s:"ብዓይን እርኢ ኣለኹ"},
-            {q:"👂", a:"እዝኒ", s:"ብእዝኒ እሰምዕ ኣለኹ"}, {q:"🦷", a:"ስኒ", s:"ስነይ እሕጸብ ኣለኹ"},
-            {q:"👃", a:"ኣፍንጫ", s:"ብኣፍንጫ እሸትት ኣለኹ"}, {q:"🍚", a:"ሩዝ", s:"ሩዝ ምስ ስጋ እበልዕ"},
-            {q:"🛏️", a:"ዓራት", s:"ኣብ ዓራት እድቅስ"}, {q:"🧥", a:"ጃኬት", s:"ጃኬት እለብስ ኣለኹ"},
-            {q:"👟", a:"ጫማ", s:"ጫማይ ጽቡቕ እዩ"}, {q:"🧤", a:"ጓንቲ", s:"ጓንቲ እገብር ኣለኹ"},
-            {q:"🔥", a:"ሓዊ", s:"ሓዊ የንድድ ኣሎ"}, {q:"🥣", a:"ሽሮ", s:"ሽሮ ጥዑም እዩ"},
-            {q:"🍴", a:"ማንካ", s:"ብማንካ እበልዕ"}, {q:"🥚", a:"እንቋቁሖ", s:"እንቋቁሖ እፈቱ"},
-            {q:"🧅", a:"ሽንኩርቲ", s:"ሽንኩርቲ ይቐልጥ ኣሎ"}, {q:"🥔", a:"ድንች", s:"ድንች እፈቱ"},
-            {q:"🥬", a:"ሓምሊ", s:"ሓምሊ ንጥዕና ጽቡቕ እዩ"}, {q:"🍯", a:"መዓር", s:"መዓር ጥዑም እዩ"},
-            {q:"☕", a:"ቡን", s:"ቡን ይፈቱ"}, {q:"🍵", a:"ሻሂ", s:"ሻሂ እሰቲ ኣለኹ"},
-            {q:"🍞", a:"ባኒ", s:"ባኒ እበልዕ ኣለኹ"}, {q:"🍝", a:"ፓስታ", s:"ፓስታ ብስልሲ ይፈቱ"},
-            {q:"⚖️", a:"ኪሎ", s:"ሓደ ኪሎ ጣፍ እደሊ"}, {q:"🛣️", a:"መገዲ", s:"ነዊሕ መገዲ ተጓዒዝና"},
-            {q:"🏘️", a:"ከተማ", s:"ከተማ ኣስመራ ጽብቕቲ እያ"}, {q:"🕊️", a:"ርግቢ", s:"ርግቢ የዋህ እያ"},
-            {q:"🐪", a:"ገመል", s:"ገመል ዓቕሊ ኣለዋ"}, {q:"🐴", a:"ፈረስ", s:"ፈረስ ይጎይይ ኣሎ"},
-            {q:"🐐", a:"ጤል", s:"ጤል ሳዕሪ ትበልዕ"}, {q:"🐱", a:"ድሙ", s:"ድሙ ጸባ ትፈቱ"},
-            {q:"🐀", a:"ኣንጭዋ", s:"ድሙ ኣንጭዋ ትሕዝ"}, {q:"🐝", a:"ንህቢ", s:"ንህቢ መዓር ትሰርሕ"}
-        ],
-        en: [
-            {q:"🏭", a:"WAREHOUSE", s:"I WORK IN A WAREHOUSE"},
-            {q:"📅", a:"APPOINTMENT", s:"I HAVE AN APPOINTMENT"},
-            {q:"🛠️", a:"EXPERIENCE", s:"I HAVE FIVE YEARS EXPERIENCE"},
-            {q:"🕒", a:"SHIFT", s:"I PREFER THE NIGHT SHIFT"},
-            {q:"🏥", a:"EMERGENCY", s:"THIS IS AN EMERGENCY"},
-            {q:"📄", a:"STATEMENT", s:"I NEED MY UC STATEMENT"},
-            {q:"🌾", a:"TEFF", s:"WHITE TEFF IS GOOD"}, 
-            {q:"🦁", a:"LION", s:"THE LION IS KING"}
-        ],
-        de: [
-            {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"},
-            {q:"🥛", a:"MILCH", s:"DIE MILCH IST GESUND"}, {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}
-         {q:"🍎", a:"APFEL", s:"ICH ESSE EINEN APFEL"},
-    {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"},
-    {q:"🥛", a:"MILCH", s:"DIE MILCH IST GESUND"},
-    {q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"},
-    {q:"🏠", a:"HAUS", s:"DAS HAUS IST GROSS"},
-    {q:"🐶", a:"HUND", s:"DER HUND BELLT LAUT"},
-    {q:"🐱", a:"KATZE", s:"DIE KATZE SCHLÄFT"},
-    {q:"☀️", a:"SONNE", s:"DIE SONNE SCHEINT"},
-    {q:"🌙", a:"MOND", s:"DER MOND LEUCHTET"},
-    {q:"🌳", a:"BAUM", s:"DER BAUM IST GRÜN"},
-    {q:"💧", a:"WASSER", s:"ICH TRINKE WASSER"},
-    {q:"🍞", a:"BROT", s:"DAS BROT SCHMECKT GUT"},
-    {q:"🍌", a:"BANANE", s:"DIE BANANE IST GELB"},
-    {q:"📖", a:"BUCH", s:"ICH LESE EIN BUCH"},
-    {q:"💻", a:"COMPUTER", s:"DER COMPUTER IST NEU"},
-    {q:"🚲", a:"FAHRRAD", s:"ICH FAHRE FAHRRAD"},
-    {q:"🚂", a:"ZUG", s:"DER ZUG KOMMT AN"},
-    {q:"✈️", a:"FLUGZEUG", s:"DAS FLUGZEUG FLIEGT"},
-    {q:"⚽", a:"BALL", s:"WIR SPIELEN MIT DEM BALL"},
-    {q:"👟", a:"SCHUH", s:"MEIN SCHUH IST WEISS"},
-    {q:"👕", a:"T-SHIRT", s:"DAS T-SHIRT IST BLAU"},
-    {q:"🧤", a:"HANDSCHUH", s:"DER HANDSCHUH IST WARM"},
-    {q:"🧥", a:"JACKE", s:"ICH ZIEHE DIE JACKE AN"},
-    {q:"🕰️", a:"UHR", s:"DIE UHR ZEIGT DIE ZEIT"},
-    {q:"🪑", a:"STUHL", s:"DER STUHL IST BEQUEM"},
-    {q:"🛏️", a:"BETT", s:"ICH LIEGE IM BETT"},
-    {q:"🛋️", a:"SOFA", s:"DAS SOFA IST WEICH"},
-    {q:"🚪", a:"TÜR", s:"DIE TÜR IST OFFEN"},
-    {q:"🪟", a:"FENSTER", s:"DAS FENSTER IST SAUBER"},
-    {q:"💡", a:"LAMPE", s:"DIE LAMPE IST HELL"},
-    {q:"📱", a:"HANDY", s:"DAS HANDY KLINGELT"},
-    {q:"🖊️", a:"STIFT", s:"ICH SCHREIBE MIT EINEM STIFT"},
-    {q:"🥣", a:"SUPPE", s:"DIE SUPPE IST HEISS"},
-    {q:"🧀", a:"KÄSE", s:"ICH MAG KÄSE"},
-    {q:"🥚", a:"EI", s:"DAS EI IST GEKOCHT"},
-    {q:"🐟", a:"FISCH", s:"DER FISCH SCHWIMMT"},
-    {q:"🐦", a:"VOGEL", s:"DER VOGEL SINGT"},
-    {q:"🦋", a:"SCHMETTERLING", s:"DER SCHMETTERLING IST BUNT"},
-    {q:"🌸", a:"BLUME", s:"DIE BLUME RIECHT GUT"},
-    {q:"🌧️", a:"REGEN", s:"DER REGEN FÄLLT"},
-    {q:"❄️", a:"SCHNEE", s:"DER SCHNEE IST KALT"},
-    {q:"🏔️", a:"BERG", s:"DER BERG IST HOCH"},
-    {q:"🌊", a:"MEER", s:"DAS MEER IST BLAU"},
-    {q:"🔥", a:"FEUER", s:"DAS FEUER BRENNT"},
-    {q:"🍳", a:"PFANNE", s:"DIE PFANNE IST AUF DEM HERD"},
-    {q:"🍴", a:"GABEL", s:"DIE GABEL LIEGT HIER"},
-    {q:"🥄", a:"LÖFFEL", s:"ICH ESSE MIT EINEM LÖFFEL"},
-    {q:"🔪", a:"MESSER", s:"DAS MESSER IST SCHARF"},
-    {q:"🥤", a:"SAFT", s:"ICH TRINKE APFELSAFT"},
-    {q:"🧸", a:"TEDDY", s:"DER TEDDY IST SÜSS"}
-]
-        ]
+    // Database
+    const words = {
+        en: [{q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🐶", a:"DOG", s:"MY DOG IS BRAVE"}],
+        ti: [{q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}],
+        de: [{q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"}]
     };
 
-    function renderButtons() {
-        document.getElementById('pButtons').innerHTML = "";
-        players.forEach(p => {
-            let b = document.createElement('button');
-            b.className = 'p-btn'; b.style.backgroundColor = p.color;
-            b.innerText = `${p.name} (Coins: ${p.score})`; b.onclick = () => { activeP = p; startGame(); };
-            document.getElementById('pButtons').appendChild(b);
+    async function fetchScores() {
+        try {
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+            renderDashboard(data);
+        } catch (e) {
+            renderDashboard([]);
+        }
+    }
+
+    function renderDashboard(onlineScores) {
+        const container = document.getElementById('players-container');
+        container.innerHTML = '';
+        playersInfo.forEach(p => {
+            const scoreData = onlineScores.find(s => s.name === p.name) || {score: 0};
+            const div = document.createElement('div');
+            div.className = 'p-row';
+            div.innerHTML = `
+                <div style="text-align: left;">
+                    <b style="color:${p.color}; font-size: 20px;">${p.name}</b><br>
+                    <small style="color: #999;">Level: ${Math.floor(scoreData.score/100) + 1}</small>
+                </div>
+                <div class="score-badge score-box">${scoreData.score}</div>
+            `;
+            div.onclick = () => { activeP = {...p, score: scoreData.score}; startGame(); };
+            container.appendChild(div);
         });
     }
-    renderButtons();
 
     function startGame() {
-        document.getElementById('player-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('dashboard-view').style.display = 'none';
+        document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
         document.getElementById('activePName').style.color = activeP.color;
-        updateStats();
-        setMode('en');
-    }
-
-    function goHome() {
-        document.getElementById('player-screen').style.display = 'block';
-        document.getElementById('game-screen').style.display = 'none';
-        renderButtons();
+        updateStats(); next();
     }
 
     function setMode(m) {
@@ -211,37 +136,26 @@
         needsCorrection = false;
 
         if (mode === 'math') {
-            const ops = ['+', '-', '*', '/'];
-            const op = ops[Math.floor(Math.random() * ops.length)];
-            const units = ['kg', 'km'];
-            const unit = units[Math.floor(Math.random() * units.length)];
-            let n1 = Math.floor(Math.random() * 10) + 1, n2 = Math.floor(Math.random() * 5) + 1, dOp = op;
-
-            if (op === '-') { if (n1 < n2) [n1, n2] = [n2, n1]; currentAns = (n1 - n2).toString(); }
-            else if (op === '*') { dOp = 'x'; currentAns = (n1 * n2).toString(); }
-            else if (op === '/') { dOp = '÷'; n1 = n1 * n2; currentAns = (n1 / n2).toString(); }
-            else { currentAns = (n1 + n2).toString(); }
-
-            document.getElementById('qHint').innerText = (unit === 'kg') ? "⚖️" : "🛣️";
-            document.getElementById('qMain').innerText = `${n1} ${dOp} ${n2} = ?`;
-            document.getElementById('unit-tag').innerText = `ANSWER IN ${unit.toUpperCase()}`;
+            let n1 = Math.floor(Math.random() * 10) + 1, n2 = Math.floor(Math.random() * 5) + 1;
+            currentAns = (n1 + n2).toString();
+            document.getElementById('qHint').innerText = "⚖️";
+            document.getElementById('qMain').innerText = `${n1}kg + ${n2}kg = ?`;
         } else {
-            let list = database[mode];
+            let list = words[mode];
             let item = list[Math.floor(Math.random() * list.length)];
-            currentAns = (activeP.level === 1) ? item.a : item.s;
+            currentAns = (activeP.score < 100) ? item.a : item.s;
             document.getElementById('qHint').innerText = item.q;
-            document.getElementById('qMain').innerText = (activeP.level === 1) ? item.a[0] + "_".repeat(item.a.length-1) : "መልእ፦ " + item.s.split(" ").slice(0,-1).join(" ") + " ___";
+            document.getElementById('qMain').innerText = (activeP.score < 100) ? item.a[0] + "_ _ _" : "COMPLETE THE SENTENCE";
         }
     }
 
-    function checkAns() {
+    async function checkAns() {
         let val = document.getElementById('ansInput').value.trim().toUpperCase();
         if (val === currentAns.toUpperCase()) {
             if (!needsCorrection) {
                 activeP.score += 10;
+                syncScore(); // ሴቭ ይገብር
                 if (activeP.score >= 1000) { showWin(); return; }
-                if (activeP.score % 100 === 0) activeP.level++;
-                saveData(); // Save to computer!
             }
             updateStats(); next();
         } else {
@@ -251,26 +165,21 @@
         }
     }
 
-    function saveData() {
-        localStorage.setItem('hepm_players', JSON.stringify(players));
+    function syncScore() {
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({name: activeP.name, score: activeP.score})
+        });
     }
 
-    function resetCurrentPlayer() {
-        activeP.score = 0;
-        activeP.level = 1;
-        saveData();
-        location.reload();
+    function updateStats() { document.getElementById('sVal').innerText = activeP.score; }
+    function showWin() { 
+        document.getElementById('winner-name-msg').innerText = activeP.name;
+        document.getElementById('winner-screen').style.display = 'flex'; 
     }
 
-    function showWin() {
-        document.getElementById('winner-msg').innerText = activeP.name + "!!!";
-        document.getElementById('winner-overlay').style.display = 'flex';
-    }
-
-    function updateStats() {
-        document.getElementById('sVal').innerText = activeP.score;
-        document.getElementById('lVal').innerText = activeP.level;
-    }
+    fetchScores();
 </script>
 </body>
 </html>
