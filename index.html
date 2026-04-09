@@ -1,89 +1,64 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY - PRO DASHBOARD</title>
+    <title>HEPM ACADEMY</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --red: #e74c3c; --blue: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 550px; margin: 10px auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-top: 10px solid var(--gold); min-height: 700px; position: relative; padding-bottom: 30px; overflow: hidden; }
-        #dashboard-view { display: block; padding: 20px; }
+        :root { --gold: #D4AF37; --dark: #111; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; display: flex; justify-content: center; }
+        .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 25px; min-height: 85vh; margin-top: 20px; }
+        h1 { color: var(--gold); font-size: 28px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+        .p-row { background: #fff; border: 2px solid #eee; border-radius: 18px; margin: 12px 0; padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
+        .p-row:hover { transform: scale(1.02); border-color: var(--gold); }
+        .p-name { font-size: 20px; font-weight: bold; color: #333; }
+        .score-box { background: var(--gold); color: white; padding: 6px 18px; border-radius: 25px; font-weight: bold; font-size: 18px; }
         #game-view { display: none; }
-        .p-row { background: #fff; border: 2px solid #eee; border-radius: 20px; margin: 12px auto; padding: 15px; display: flex; justify-content: space-between; align-items: center; width: 90%; cursor: pointer; transition: 0.2s; }
-        .p-row:hover { border-color: var(--gold); background: #fffdf5; }
-        .score-box { background: var(--gold); color: white; padding: 8px 15px; border-radius: 50px; font-weight: bold; min-width: 50px; }
-        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; background: #f9f9f9; }
-        .tab { padding: 12px 5px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; background: white; border: 1px solid #ddd; }
-        .tab.active { background: var(--gold); color: white; border: none; }
-        .black-book { background: var(--dark); color: white; margin: 15px; padding: 30px 10px; border-radius: 25px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; border: 5px solid #333; box-shadow: inset 0 0 20px #000; }
-        input { width: 80%; padding: 20px; font-size: 26px; border-radius: 15px; border: 3px solid #ddd; margin-top: 15px; text-align: center; }
-        .btn-check { background: var(--gold); color: white; padding: 20px; border: none; border-radius: 50px; font-size: 22px; width: 85%; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        #winner-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 25px; margin: 25px 0; font-size: 35px; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
+        input { width: 90%; padding: 15px; font-size: 22px; border-radius: 12px; border: 2px solid #ddd; margin: 15px 0; text-align: center; outline: none; }
+        input:focus { border-color: var(--gold); }
+        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 100%; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .home-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="winner-screen">
-    <h1 style="color: gold; font-size: 50px;">LEVEL COMPLETE! 🏆</h1>
-    <h2 id="winner-name-msg"></h2>
-    <div style="font-size: 100px;">🎁</div>
-    <h3>GO TO DAD FOR YOUR €50 PRIZE!</h3>
-    <button onclick="location.reload()" style="padding: 15px 40px; font-size: 20px; cursor: pointer;">HOME</button>
-</div>
-
 <div class="card">
     <div id="dashboard-view">
-        <h1 style="color: var(--gold); font-size: 35px; margin-bottom: 5px;">HEPM ACADEMY</h1>
-        <p style="color: #666;">Select name to start / ስም ምረጽ</p>
-        <div id="players-container">Loading scores...</div>
-        <button onclick="fetchScores()" style="margin-top: 20px; background: none; border: 1px solid #ccc; padding: 10px 20px; border-radius: 50px; cursor: pointer;">🔄 Refresh Scores</button>
+        <h1>HEPM ACADEMY</h1>
+        <div id="players-list">
+            <p style="color: #666;">Loading scores...</p>
+        </div>
+        <button onclick="fetchScores()" style="margin-top:25px; background:none; border:1px solid #ccc; padding:10px 20px; border-radius:10px; cursor:pointer; color: #666;">🔄 Refresh Dashboard</button>
     </div>
 
     <div id="game-view">
-        <div style="display:flex; justify-content: space-between; padding: 15px; align-items: center;">
-            <button onclick="location.reload()" style="border:none; background: #eee; padding: 8px 15px; border-radius: 10px; cursor:pointer;">🏠 Home</button>
-            <div id="activePName" style="font-size: 20px; font-weight: bold;"></div>
-            <div style="font-weight: bold; color: var(--gold);">💰 <span id="sVal">0</span></div>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <button class="home-btn" onclick="location.reload()">🏠 Home</button>
+            <h2 id="activePName" style="margin:0; color:#333;"></h2>
+            <div style="font-weight:bold; color:var(--gold); font-size: 22px;">💰 <span id="sVal">0</span></div>
         </div>
-
-        <div class="tabs">
-            <div class="tab" id="t-math" onclick="setMode('math')">🔢 MATH</div>
-            <div class="tab" id="t-ti" onclick="setMode('ti')">🇪🇷 TI</div>
-            <div class="tab active" id="t-en" onclick="setMode('en')">🇬🇧 EN</div>
-            <div class="tab" id="t-de" onclick="setMode('de')">🇩🇪 DE</div>
-        </div>
-
         <div class="black-book">
-            <div id="qHint" style="font-size: 60px;">🍎</div>
-            <div id="qMain" style="font-size: 26px; font-weight: bold; padding: 0 10px;">---</div>
-            <div id="unit-tag" style="color: gold; margin-top: 10px; font-weight: bold;"></div>
-            <div id="cor-box" style="display:none; color: var(--red); margin-top: 15px; font-weight: bold;">CORRECT: <span id="cor-word"></span></div>
+            <div id="qHint" style="font-size: 70px; margin-bottom: 10px;"></div>
+            <div id="qMain" style="letter-spacing: 5px; font-weight: bold;"></div>
         </div>
-
-        <input type="text" id="ansInput" placeholder="Type here..." autocomplete="off">
-        <button class="btn-check" onclick="checkAns()">SUBMIT ANSWER</button>
+        <input type="text" id="ansInput" placeholder="Type answer here..." autocomplete="off">
+        <button class="btn" onclick="checkAns()">CHECK ANSWER</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE"; // <--- ነቲ ሊንክ ኣብዚ ኣእትዎ
+    // እታ ካብ Google Apps Script ዝረኸብካያ URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
 
-    const playersInfo = [
-        {name: "HERMELA", color: "#ff69b4"},
-        {name: "ERKABEL", color: "#3498db"},
-        {name: "PEGGY", color: "#e67e22"},
-        {name: "MARANATA", color: "#9b59b6"}
+    let activeP, currentAns;
+    const players = ["HERMELA", "ERKABEL", "PEGGY", "MARANATA"];
+    const db = [
+        {q:"🍎", a:"APPLE"}, {q:"🏠", a:"HOUSE"}, {q:"🦁", a:"LION"}, 
+        {q:"🚗", a:"CAR"}, {q:"🌞", a:"SUN"}, {q:"🐶", a:"DOG"},
+        {q:"🐱", a:"CAT"}, {q:"🌳", a:"TREE"}, {q:"🐘", a:"ELEPHANT"}
     ];
-
-    let activeP, mode = 'en', currentAns, needsCorrection = false;
-
-    // Database
-    const words = {
-        en: [{q:"🍎", a:"APPLE", s:"I EAT AN APPLE"}, {q:"🐶", a:"DOG", s:"MY DOG IS BRAVE"}],
-        ti: [{q:"🏠", a:"ገዛ", s:"እዚ ገዛይ እዩ"}, {q:"🦁", a:"ኣንበሳ", s:"ኣንበሳ ንጉስ እዩ"}],
-        de: [{q:"🚗", a:"AUTO", s:"DAS AUTO IST SCHNELL"}, {q:"🏫", a:"SCHULE", s:"ICH GEHE ZUR SCHULE"}]
-    };
 
     async function fetchScores() {
         try {
@@ -91,26 +66,27 @@
             const data = await res.json();
             renderDashboard(data);
         } catch (e) {
+            console.error("Error fetching scores:", e);
             renderDashboard([]);
         }
     }
 
-    function renderDashboard(onlineScores) {
-        const container = document.getElementById('players-container');
-        container.innerHTML = '';
-        playersInfo.forEach(p => {
-            const scoreData = onlineScores.find(s => s.name === p.name) || {score: 0};
+    function renderDashboard(onlineData) {
+        const list = document.getElementById('players-list');
+        list.innerHTML = '';
+        players.forEach(pName => {
+            const pData = onlineData.find(d => d.name === pName) || {score: 0};
             const div = document.createElement('div');
             div.className = 'p-row';
             div.innerHTML = `
-                <div style="text-align: left;">
-                    <b style="color:${p.color}; font-size: 20px;">${p.name}</b><br>
-                    <small style="color: #999;">Level: ${Math.floor(scoreData.score/100) + 1}</small>
-                </div>
-                <div class="score-badge score-box">${scoreData.score}</div>
+                <span class="p-name">${pName}</span>
+                <span class="score-box">${pData.score}</span>
             `;
-            div.onclick = () => { activeP = {...p, score: scoreData.score}; startGame(); };
-            container.appendChild(div);
+            div.onclick = () => { 
+                activeP = {name: pName, score: pData.score}; 
+                startGame(); 
+            };
+            list.appendChild(div);
         });
     }
 
@@ -118,68 +94,42 @@
         document.getElementById('dashboard-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
-        document.getElementById('activePName').style.color = activeP.color;
-        updateStats(); next();
-    }  
- const SCRIPT_URL = "https://script.google.com/macros/s/1JcEDHUD0qqa480GKZvk5ZQS6tXA3JeUNOR8PNNzTPi_ENE0rJA87N1yR/exec";
-    function setMode(m) {
-        mode = m;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('t-' + m).classList.add('active');
+        document.getElementById('sVal').innerText = activeP.score;
         next();
     }
 
     function next() {
+        const item = db[Math.floor(Math.random()*db.length)];
+        currentAns = item.a;
+        document.getElementById('qHint').innerText = item.q;
+        document.getElementById('qMain').innerText = item.a[0] + "_".repeat(item.a.length - 1);
         document.getElementById('ansInput').value = '';
-        document.getElementById('cor-box').style.display = 'none';
-        document.getElementById('unit-tag').innerText = "";
-        needsCorrection = false;
-
-        if (mode === 'math') {
-            let n1 = Math.floor(Math.random() * 10) + 1, n2 = Math.floor(Math.random() * 5) + 1;
-            currentAns = (n1 + n2).toString();
-            document.getElementById('qHint').innerText = "⚖️";
-            document.getElementById('qMain').innerText = `${n1}kg + ${n2}kg = ?`;
-        } else {
-            let list = words[mode];
-            let item = list[Math.floor(Math.random() * list.length)];
-            currentAns = (activeP.score < 100) ? item.a : item.s;
-            document.getElementById('qHint').innerText = item.q;
-            document.getElementById('qMain').innerText = (activeP.score < 100) ? item.a[0] + "_ _ _" : "COMPLETE THE SENTENCE";
-        }
+        document.getElementById('ansInput').focus();
     }
 
     async function checkAns() {
-        let val = document.getElementById('ansInput').value.trim().toUpperCase();
-        if (val === currentAns.toUpperCase()) {
-            if (!needsCorrection) {
-                activeP.score += 10;
-                syncScore(); // ሴቭ ይገብር
-                if (activeP.score >= 1000) { showWin(); return; }
-            }
-            updateStats(); next();
+        const val = document.getElementById('ansInput').value.trim().toUpperCase();
+        if(val === currentAns) {
+            activeP.score += 10;
+            document.getElementById('sVal').innerText = activeP.score;
+            
+            // ነጥቢ ናብ Google Sheet ይልእኽ
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(activeP)
+            });
+
+            alert("Correct! Keep going! 🎉");
+            next();
         } else {
-            document.getElementById('cor-box').style.display = 'block';
-            document.getElementById('cor-word').innerText = currentAns;
-            needsCorrection = true;
+            alert("Oops! Try again. The answer is " + currentAns);
         }
     }
 
-    function syncScore() {
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({name: activeP.name, score: activeP.score})
-        });
-    }
-
-    function updateStats() { document.getElementById('sVal').innerText = activeP.score; }
-    function showWin() { 
-        document.getElementById('winner-name-msg').innerText = activeP.name;
-        document.getElementById('winner-screen').style.display = 'flex'; 
-    }
-
+    // ምስ ተኸፍተ ነጥብታት ይምጻእ
     fetchScores();
 </script>
+
 </body>
 </html>
