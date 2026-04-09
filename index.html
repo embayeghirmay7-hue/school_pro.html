@@ -8,8 +8,6 @@
         :root { --gold: #D4AF37; --silver: #C0C0C0; --bronze: #CD7F32; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
         body { font-family: sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
         .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; }
-        
-        /* Ranking Rows */
         .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; transition: 0.3s; }
         .p-row:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .p-left { display: flex; align-items: center; gap: 10px; }
@@ -18,14 +16,8 @@
         .p-info { text-align: left; }
         .p-name { font-weight: bold; font-size: 17px; display: block; }
         .p-level { font-size: 12px; color: #888; font-weight: bold; text-transform: uppercase; }
-        
         .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; min-width: 40px; }
-        
-        /* Rank Colors */
         .rank-1 { border-color: var(--gold); background: #fffdf0; }
-        .rank-2 { border-color: var(--silver); }
-        .rank-3 { border-color: var(--bronze); }
-
         #game-view, #setup-view { display: none; }
         .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 20px; margin: 20px 0; }
         .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
@@ -70,7 +62,9 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
+    // እታ ሓዳስ ሊንክ እዚኣ እያ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1rDVmkG3hITa_q-E8OQWbadTNiEN-PpsNBvho2zP7brA8cxYyZWeLa30lf7YAoC2OZQ/exec"; 
+    
     let activeP, currentAns, currentMode;
 
     const playersConfig = [
@@ -81,10 +75,10 @@
     ];
 
     const questions = {
-        math: [{q:"15 + 5", a:"20", h:"🔢"}, {q:"25 - 10", a:"15", h:"🔢"}],
-        english: [{q:"I love my ___", a:"I love my family", h:"👨‍👩‍👧‍👦"}],
-        tigrinya: [{q:"እዚ ___ እዩ", a:"እዚ ገዛ እዩ", h:"🏠"}],
-        german: [{q:"Das ist ein ___", a:"Das ist ein Tisch", h:"🪑"}]
+        math: [{q:"15 + 5", a:"20", h:"🔢"}, {q:"25 - 10", a:"15", h:"🔢"}, {q:"4 * 2", a:"8", h:"🔢"}],
+        english: [{q:"This is an ___", a:"This is an apple", h:"🍎"}, {q:"I live in a ___", a:"I live in a house", h:"🏠"}],
+        tigrinya: [{q:"እዚ ___ እዩ", a:"እዚ ገዛ እዩ", h:"🏠"}, {q:"እታ ___ ትጎዪ ኣላ", a:"እታ መኪና ትጎዪ ኣላ", h:"🚗"}],
+        german: [{q:"Das ist ein ___", a:"Das ist ein Apfel", h:"🍎"}, {q:"Ich wohne in einem ___", a:"Ich wohne in einem Haus", h:"🏠"}]
     };
 
     async function fetchScores() {
@@ -98,31 +92,23 @@
     function getLevel(score) {
         if (score < 100) return "Level 1: Beginner";
         if (score < 300) return "Level 2: Smarty";
-        if (score < 600) return "Level 3: Master";
-        return "Level 4: Genius 👑";
+        return "Level 3: Master 👑";
     }
 
     function renderDashboard(onlineData) {
         const list = document.getElementById('players-list');
         list.innerHTML = '';
-
-        // 1. መጀመርታ ኩሎም ተጻወቲ ምስ ነጥቦም ንኣክቦም
         let sortedPlayers = playersConfig.map(p => {
             const score = (onlineData.find(d => d.name === p.name) || {score: 0}).score;
             return { ...p, score: score };
         });
-
-        // 2. በቲ ዝለዓለ ነጥቢ "Sort" (Ranking) ንገብሮም
         sortedPlayers.sort((a, b) => b.score - a.score);
 
-        // 3. ኣብቲ ስክሪን ንዘርግባሉ
         sortedPlayers.forEach((p, index) => {
             const rank = index + 1;
             let rankIcon = rank === 1 ? "🏆" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
-            let rankClass = rank <= 3 ? `rank-${rank}` : '';
-            
             const div = document.createElement('div');
-            div.className = `p-row ${rankClass}`;
+            div.className = `p-row ${rank === 1 ? 'rank-1' : ''}`;
             div.innerHTML = `
                 <div class="p-left">
                     <span class="rank-num">${rankIcon}</span>
@@ -141,7 +127,6 @@
 
     function showSetup() {
         document.getElementById('dashboard-view').style.display = 'none';
-        document.getElementById('game-view').style.display = 'none';
         document.getElementById('setup-view').style.display = 'block';
     }
 
@@ -169,8 +154,8 @@
             activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
-            alert("Correct! 🎉"); next();
-        } else { alert("Answer: " + currentAns); }
+            alert("✅ Correct!"); next();
+        } else { alert("❌ Correct answer: " + currentAns); }
     }
     fetchScores();
 </script>
