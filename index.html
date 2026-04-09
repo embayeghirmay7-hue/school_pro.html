@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
@@ -9,16 +9,34 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; display: flex; justify-content: center; }
         .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 25px; min-height: 85vh; margin-top: 20px; }
         h1 { color: var(--gold); font-size: 28px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
-        .p-row { background: #fff; border: 2px solid #eee; border-radius: 18px; margin: 12px 0; padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
-        .p-row:hover { transform: scale(1.02); border-color: var(--gold); }
-        .p-name { font-size: 20px; font-weight: bold; color: #333; }
-        .score-box { background: var(--gold); color: white; padding: 6px 18px; border-radius: 25px; font-weight: bold; font-size: 18px; }
+        
+        /* ቅጥዒ ናይቲ ተጻዋታይ ዝርዝር */
+        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 12px 0; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; background: white; }
+        .p-row:hover { transform: scale(1.02); }
+        .p-left { display: flex; align-items: center; gap: 15px; }
+        
+        /* ቅጥዒ ናይቲ ነጥቢ ቦክስ */
+        .score-box { color: white; padding: 6px 18px; border-radius: 25px; font-weight: bold; font-size: 18px; }
+
+        /* --- ሕብርታት ተጻወቲ --- */
+        /* ERKABEL ብሰማያዊ */
+        .erkabel-bg { border-color: #007bff; }
+        .erkabel-bg:hover { background-color: #e6f2ff; }
+        .erkabel-score { background-color: #007bff; }
+
+        /* እቶም ካልኦት (HERMELA, PEGGY, MARANATA) ብPink */
+        .pink-bg { border-color: #e83e8c; }
+        .pink-bg:hover { background-color: #fcebf2; }
+        .pink-score { background-color: #e83e8c; }
+
+        /* ቅጥዒ ናይቲ ስእሊ (Photo) */
+        .p-photo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background-color: #eee; border: 1px solid #ddd; }
+
         #game-view { display: none; }
         .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 25px; margin: 25px 0; font-size: 35px; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
         input { width: 90%; padding: 15px; font-size: 22px; border-radius: 12px; border: 2px solid #ddd; margin: 15px 0; text-align: center; outline: none; }
         input:focus { border-color: var(--gold); }
         .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 100%; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
         .home-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
@@ -49,11 +67,19 @@
 </div>
 
 <script>
-    // እታ ካብ Google Apps Script ዝረኸብካያ URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
 
     let activeP, currentAns;
-    const players = ["HERMELA", "ERKABEL", "PEGGY", "MARANATA"];
+
+    // --- ኣዝዩ ኣገዳሲ: እቲ ናይ ስእሊ ሊንክ (URL) ኣብዚኣ ተካእዮ ---
+    // ሕጂ ንኩሎም ተመሳሳሊ ስእሊ ጌረልካ ኣለኹ (ሓደ ሕጻን ዘርኢ)
+    const playersConfig = [
+        { name: "HERMELA", photo: "https://www.w3schools.com/w3images/avatar2.png" },
+        { name: "ERKABEL", photo: "https://www.w3schools.com/w3images/avatar2.png" },
+        { name: "PEGGY", photo: "https://www.w3schools.com/w3images/avatar2.png" },
+        { name: "MARANATA", photo: "https://www.w3schools.com/w3images/avatar2.png" }
+    ];
+
     const db = [
         {q:"🍎", a:"APPLE"}, {q:"🏠", a:"HOUSE"}, {q:"🦁", a:"LION"}, 
         {q:"🚗", a:"CAR"}, {q:"🌞", a:"SUN"}, {q:"🐶", a:"DOG"},
@@ -66,7 +92,6 @@
             const data = await res.json();
             renderDashboard(data);
         } catch (e) {
-            console.error("Error fetching scores:", e);
             renderDashboard([]);
         }
     }
@@ -74,22 +99,32 @@
     function renderDashboard(onlineData) {
         const list = document.getElementById('players-list');
         list.innerHTML = '';
-        players.forEach(pName => {
-            const pData = onlineData.find(d => d.name === pName) || {score: 0};
+        playersConfig.forEach(p => {
+            const pOnlineData = onlineData.find(d => d.name === p.name) || {score: 0};
+            
+            // ምውሳን ሕብርታት
+            const isErkabel = p.name === "ERKABEL";
+            const rowClass = isErkabel ? 'erkabel-bg' : 'pink-bg';
+            const scoreClass = isErkabel ? 'erkabel-score' : 'pink-score';
+
             const div = document.createElement('div');
-            div.className = 'p-row';
+            div.className = `p-row ${rowClass}`;
             div.innerHTML = `
-                <span class="p-name">${pName}</span>
-                <span class="score-box">${pData.score}</span>
+                <div class="p-left">
+                    <img src="${p.photo}" alt="${p.name}" class="p-photo">
+                    <span class="p-name" style="font-size: 20px; font-weight: bold; color: #333;">${p.name}</span>
+                </div>
+                <span class="score-box ${scoreClass}">${pOnlineData.score}</span>
             `;
             div.onclick = () => { 
-                activeP = {name: pName, score: pData.score}; 
+                activeP = {name: p.name, score: pOnlineData.score}; 
                 startGame(); 
             };
             list.appendChild(div);
         });
     }
 
+    // --- እቲ ጸወታን ነጥብን ዘርኢ ክፋል (ከም ቀደሙ) ---
     function startGame() {
         document.getElementById('dashboard-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
@@ -113,21 +148,19 @@
             activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
             
-            // ነጥቢ ናብ Google Sheet ይልእኽ
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(activeP)
             });
 
-            alert("Correct! Keep going! 🎉");
+            alert("Correct! +10 💰🎉");
             next();
         } else {
             alert("Oops! Try again. The answer is " + currentAns);
         }
     }
 
-    // ምስ ተኸፍተ ነጥብታት ይምጻእ
     fetchScores();
 </script>
 
