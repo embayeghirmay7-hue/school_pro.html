@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
@@ -7,27 +7,31 @@
     <style>
         :root { --gold: #D4AF37; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
         body { font-family: sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 80vh; }
+        .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; }
         
-        /* ቅጥዒ ዝርዝር ተጻወቲ */
-        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        /* Dashboard Styling */
+        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; }
         .p-left { display: flex; align-items: center; gap: 12px; }
-        .p-photo { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #ddd; background: #eee; }
+        .p-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ddd; object-fit: cover; }
         .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
 
-        /* ሕብርታት */
+        /* Colors */
         .erkabel-bg { border-color: var(--blue); }
         .erkabel-score { background: var(--blue); }
         .pink-bg { border-color: var(--pink); }
         .pink-score { background: var(--pink); }
 
-        #game-view { display: none; }
-        .black-book { background: var(--dark); color: white; padding: 30px; border-radius: 20px; margin: 20px 0; }
-        .mode-tabs { display: flex; gap: 5px; justify-content: center; margin-bottom: 15px; }
-        .tab { padding: 8px 15px; border-radius: 10px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; }
-        .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
-        input { width: 85%; padding: 15px; font-size: 20px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
-        .btn { background: var(--gold); color: white; padding: 15px; border: none; border-radius: 12px; width: 90%; font-size: 18px; cursor: pointer; font-weight: bold; }
+        #game-view, #setup-view { display: none; }
+        .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 20px; margin: 20px 0; }
+        
+        /* Language/Subject Tabs */
+        .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .mode-btn { padding: 20px; border-radius: 15px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; font-size: 16px; }
+        .mode-btn:hover { border-color: var(--gold); background: #fffdf5; }
+        
+        input { width: 85%; padding: 15px; font-size: 22px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
+        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 90%; font-size: 20px; cursor: pointer; font-weight: bold; }
+        .home-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -39,45 +43,52 @@
         <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:8px 15px; border-radius:10px; cursor:pointer;">🔄 Refresh</button>
     </div>
 
-    <div id="game-view">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <button onclick="location.reload()">🏠 Home</button>
-            <h2 id="activePName" style="margin:0;"></h2>
-            <div style="font-weight:bold; color:var(--gold);">💰 <span id="sVal">0</span></div>
+    <div id="setup-view">
+        <button class="home-btn" onclick="location.reload()">🏠 Back</button>
+        <h2 id="setupTitle">Choose Subject</h2>
+        <div class="mode-grid">
+            <div class="mode-btn" onclick="startGame('math')">🔢 MATH</div>
+            <div class="mode-btn" onclick="startGame('english')">🇬🇧 ENGLISH</div>
+            <div class="mode-btn" onclick="startGame('tigrinya')">🇪🇷 TIGRINYA</div>
+            <div class="mode-btn" onclick="startGame('german')">🇩🇪 GERMAN</div>
         </div>
+    </div>
 
-        <div class="mode-tabs">
-            <div class="tab active" id="t-math" onclick="setMode('math')">🔢 MATH</div>
-            <div class="tab" id="t-eng" onclick="setMode('eng')">ABC ENG</div>
+    <div id="game-view">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <button class="home-btn" onclick="showSetup()">⬅️ Menu</button>
+            <div style="font-weight:bold; color:var(--gold); font-size: 20px;">💰 <span id="sVal">0</span></div>
         </div>
+        <h2 id="activePName" style="margin:5px 0;"></h2>
+        <p id="currentSubject" style="color:#666; font-weight:bold;"></p>
 
         <div class="black-book">
-            <div id="qHint" style="font-size: 50px;"></div>
-            <div id="qMain" style="font-size: 30px; margin-top: 10px; font-weight: bold;"></div>
+            <div id="qHint" style="font-size: 60px;"></div>
+            <div id="qMain" style="font-size: 30px; margin-top: 10px; font-weight: bold; letter-spacing: 2px;"></div>
         </div>
-        <input type="text" id="ansInput" placeholder="Answer...">
-        <button class="btn" onclick="checkAns()">SUBMIT</button>
+        <input type="text" id="ansInput" placeholder="Answer here...">
+        <button class="btn" onclick="checkAns()">CHECK</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
     
-    let activeP, currentAns, mode = 'math';
-    const players = [
+    let activeP, currentAns, currentMode;
+
+    // --- ስእሊ ክትቅይር እንተደሊኻ ነዞም ሊንክታት ቀይሮም ---
+    const playersConfig = [
         {name: "HERMELA", img: "https://www.w3schools.com/w3images/avatar6.png"},
         {name: "ERKABEL", img: "https://www.w3schools.com/w3images/avatar2.png"},
-        {name: "PEGGY", img: "https://www.w3schools.com/w3images/avatar6.png"},
-        {name: "MARANATA", img: "https://www.w3schools.com/w3images/avatar6.png"}
+        {name: "PEGGY", img: "https://www.w3schools.com/w3images/avatar5.png"},
+        {name: "MARANATA", img: "https://www.w3schools.com/w3images/avatar3.png"}
     ];
 
     const questions = {
-        math: [
-            {q: "5 + 5", a: "10", h: "🔢"}, {q: "10 + 2", a: "12", h: "🔢"}, {q: "3 + 4", a: "7", h: "🔢"}, {q: "8 - 2", a: "6", h: "🔢"}
-        ],
-        eng: [
-            {q: "🍎", a: "APPLE", h: "A _ _ _ _"}, {q: "🏠", a: "HOUSE", h: "H _ _ _ _"}, {q: "🦁", a: "LION", h: "L _ _ _"}
-        ]
+        math: [ {q: "5 + 5", a: "10", h: "🔢"}, {q: "12 + 8", a: "20", h: "🔢"}, {q: "7 - 3", a: "4", h: "🔢"} ],
+        english: [ {q: "🍎", a: "APPLE", h: "A _ _ _ _"}, {q: "🐶", a: "DOG", h: "D _ _"}, {q: "🏠", a: "HOUSE", h: "H _ _ _ _"} ],
+        tigrinya: [ {q: "🍎", a: "ቱፋሕ", h: "ቱ _ _"}, {q: "🐱", a: "ድሙ", h: "ድ _"}, {q: "🥛", a: "ጸባ", h: "ጸ _"} ],
+        german: [ {q: "🍎", a: "APFEL", h: "A _ _ _ _"}, {q: "🏠", a: "HAUS", h: "H _ _ _"}, {q: "🐶", a: "HUND", h: "H _ _ _"} ]
     };
 
     async function fetchScores() {
@@ -91,7 +102,7 @@
     function renderDashboard(onlineData) {
         const list = document.getElementById('players-list');
         list.innerHTML = '';
-        players.forEach(p => {
+        playersConfig.forEach(p => {
             const score = (onlineData.find(d => d.name === p.name) || {score: 0}).score;
             const isErkabel = p.name === "ERKABEL";
             const div = document.createElement('div');
@@ -103,43 +114,45 @@
                 </div>
                 <span class="score-box ${isErkabel ? 'erkabel-score' : 'pink-score'}">${score}</span>
             `;
-            div.onclick = () => { activeP = {name: p.name, score: score}; startGame(); };
+            div.onclick = () => { activeP = {name: p.name, score: score}; showSetup(); };
             list.appendChild(div);
         });
     }
 
-    function startGame() {
+    function showSetup() {
         document.getElementById('dashboard-view').style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
+        document.getElementById('setup-view').style.display = 'block';
+        document.getElementById('setupTitle').innerText = activeP.name + ", choose a subject!";
+    }
+
+    function startGame(mode) {
+        currentMode = mode;
+        document.getElementById('setup-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
+        document.getElementById('currentSubject').innerText = "Mode: " + mode.toUpperCase();
         document.getElementById('sVal').innerText = activeP.score;
         next();
     }
 
-    function setMode(m) {
-        mode = m;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('t-' + m).classList.add('active');
-        next();
-    }
-
     function next() {
-        const list = questions[mode];
+        const list = questions[currentMode];
         const item = list[Math.floor(Math.random()*list.length)];
         currentAns = item.a;
-        document.getElementById('qHint').innerText = item.h;
-        document.getElementById('qMain').innerText = item.q;
+        document.getElementById('qHint').innerText = item.q;
+        document.getElementById('qMain').innerText = item.h;
         document.getElementById('ansInput').value = '';
     }
 
     function checkAns() {
         const val = document.getElementById('ansInput').value.trim().toUpperCase();
-        if(val === currentAns.toString().toUpperCase()) {
+        if(val === currentAns.toUpperCase()) {
             activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
-            alert("Great Job! +10 💰"); next();
-        } else { alert("Try again! Answer was: " + currentAns); }
+            alert("Correct! 🎉 +10 Coins"); next();
+        } else { alert("Try again! The answer is: " + currentAns); }
     }
     fetchScores();
 </script>
