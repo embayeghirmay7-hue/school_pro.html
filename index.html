@@ -3,49 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM ACADEMY</title>
+    <title>HEPM ACADEMY - RANKING</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
+        :root { --gold: #D4AF37; --silver: #C0C0C0; --bronze: #CD7F32; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
         body { font-family: sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
         .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; }
         
-        /* Dashboard Styling */
-        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; }
-        .p-left { display: flex; align-items: center; gap: 12px; }
+        /* Ranking Rows */
+        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; transition: 0.3s; }
+        .p-row:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .p-left { display: flex; align-items: center; gap: 10px; }
+        .rank-num { font-weight: bold; font-size: 18px; width: 25px; color: #666; }
         .p-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ddd; object-fit: cover; }
-        .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
-
-        /* Colors */
-        .erkabel-bg { border-color: var(--blue); }
-        .erkabel-score { background: var(--blue); }
-        .pink-bg { border-color: var(--pink); }
-        .pink-score { background: var(--pink); }
+        .p-info { text-align: left; }
+        .p-name { font-weight: bold; font-size: 17px; display: block; }
+        .p-level { font-size: 12px; color: #888; font-weight: bold; text-transform: uppercase; }
+        
+        .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; min-width: 40px; }
+        
+        /* Rank Colors */
+        .rank-1 { border-color: var(--gold); background: #fffdf0; }
+        .rank-2 { border-color: var(--silver); }
+        .rank-3 { border-color: var(--bronze); }
 
         #game-view, #setup-view { display: none; }
         .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 20px; margin: 20px 0; }
-        
-        /* Language/Subject Tabs */
         .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .mode-btn { padding: 20px; border-radius: 15px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; font-size: 16px; }
-        .mode-btn:hover { border-color: var(--gold); background: #fffdf5; }
-        
-        input { width: 85%; padding: 15px; font-size: 22px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
-        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 90%; font-size: 20px; cursor: pointer; font-weight: bold; }
-        .home-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; margin-bottom: 10px; }
+        .mode-btn { padding: 20px; border-radius: 15px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; }
+        input { width: 85%; padding: 15px; font-size: 18px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
+        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 95%; font-size: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div id="dashboard-view">
-        <h1 style="color: var(--gold);">HEPM ACADEMY</h1>
-        <div id="players-list">Loading...</div>
-        <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:8px 15px; border-radius:10px; cursor:pointer;">🔄 Refresh</button>
+        <h1 style="color: var(--gold);">🏆 LEADERBOARD</h1>
+        <div id="players-list">Loading Rankings...</div>
+        <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:8px 15px; border-radius:10px; cursor:pointer;">🔄 Refresh Scores</button>
     </div>
 
     <div id="setup-view">
-        <button class="home-btn" onclick="location.reload()">🏠 Back</button>
-        <h2 id="setupTitle">Choose Subject</h2>
+        <button onclick="location.reload()" style="float:left; background:none; border:none; cursor:pointer; font-size:20px;">🏠</button>
+        <h2 id="setupTitle">Subject</h2>
         <div class="mode-grid">
             <div class="mode-btn" onclick="startGame('math')">🔢 MATH</div>
             <div class="mode-btn" onclick="startGame('english')">🇬🇧 ENGLISH</div>
@@ -56,27 +56,23 @@
 
     <div id="game-view">
         <div style="display:flex; justify-content: space-between; align-items: center;">
-            <button class="home-btn" onclick="showSetup()">⬅️ Menu</button>
-            <div style="font-weight:bold; color:var(--gold); font-size: 20px;">💰 <span id="sVal">0</span></div>
+            <button onclick="showSetup()" style="background:none; border:none; cursor:pointer; font-size:20px;">⬅️</button>
+            <div style="font-weight:bold; color:var(--gold); font-size: 22px;">💰 <span id="sVal">0</span></div>
         </div>
         <h2 id="activePName" style="margin:5px 0;"></h2>
-        <p id="currentSubject" style="color:#666; font-weight:bold;"></p>
-
         <div class="black-book">
-            <div id="qHint" style="font-size: 60px;"></div>
-            <div id="qMain" style="font-size: 30px; margin-top: 10px; font-weight: bold; letter-spacing: 2px;"></div>
+            <div id="qHint" style="font-size: 50px;"></div>
+            <div id="qMain" style="font-size: 22px; margin-top: 10px; font-weight: bold;"></div>
         </div>
-        <input type="text" id="ansInput" placeholder="Answer here...">
+        <input type="text" id="ansInput" placeholder="Your answer...">
         <button class="btn" onclick="checkAns()">CHECK</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
-    
     let activeP, currentAns, currentMode;
 
-    // --- ስእሊ ክትቅይር እንተደሊኻ ነዞም ሊንክታት ቀይሮም ---
     const playersConfig = [
         {name: "HERMELA", img: "https://www.w3schools.com/w3images/avatar6.png"},
         {name: "ERKABEL", img: "https://www.w3schools.com/w3images/avatar2.png"},
@@ -85,10 +81,10 @@
     ];
 
     const questions = {
-        math: [ {q: "5 + 5", a: "10", h: "🔢"}, {q: "12 + 8", a: "20", h: "🔢"}, {q: "7 - 3", a: "4", h: "🔢"} ],
-        english: [ {q: "🍎", a: "APPLE", h: "A _ _ _ _"}, {q: "🐶", a: "DOG", h: "D _ _"}, {q: "🏠", a: "HOUSE", h: "H _ _ _ _"} ],
-        tigrinya: [ {q: "🍎", a: "ቱፋሕ", h: "ቱ _ _"}, {q: "🐱", a: "ድሙ", h: "ድ _"}, {q: "🥛", a: "ጸባ", h: "ጸ _"} ],
-        german: [ {q: "🍎", a: "APFEL", h: "A _ _ _ _"}, {q: "🏠", a: "HAUS", h: "H _ _ _"}, {q: "🐶", a: "HUND", h: "H _ _ _"} ]
+        math: [{q:"15 + 5", a:"20", h:"🔢"}, {q:"25 - 10", a:"15", h:"🔢"}],
+        english: [{q:"I love my ___", a:"I love my family", h:"👨‍👩‍👧‍👦"}],
+        tigrinya: [{q:"እዚ ___ እዩ", a:"እዚ ገዛ እዩ", h:"🏠"}],
+        german: [{q:"Das ist ein ___", a:"Das ist ein Tisch", h:"🪑"}]
     };
 
     async function fetchScores() {
@@ -99,22 +95,46 @@
         } catch (e) { renderDashboard([]); }
     }
 
+    function getLevel(score) {
+        if (score < 100) return "Level 1: Beginner";
+        if (score < 300) return "Level 2: Smarty";
+        if (score < 600) return "Level 3: Master";
+        return "Level 4: Genius 👑";
+    }
+
     function renderDashboard(onlineData) {
         const list = document.getElementById('players-list');
         list.innerHTML = '';
-        playersConfig.forEach(p => {
+
+        // 1. መጀመርታ ኩሎም ተጻወቲ ምስ ነጥቦም ንኣክቦም
+        let sortedPlayers = playersConfig.map(p => {
             const score = (onlineData.find(d => d.name === p.name) || {score: 0}).score;
-            const isErkabel = p.name === "ERKABEL";
+            return { ...p, score: score };
+        });
+
+        // 2. በቲ ዝለዓለ ነጥቢ "Sort" (Ranking) ንገብሮም
+        sortedPlayers.sort((a, b) => b.score - a.score);
+
+        // 3. ኣብቲ ስክሪን ንዘርግባሉ
+        sortedPlayers.forEach((p, index) => {
+            const rank = index + 1;
+            let rankIcon = rank === 1 ? "🏆" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
+            let rankClass = rank <= 3 ? `rank-${rank}` : '';
+            
             const div = document.createElement('div');
-            div.className = `p-row ${isErkabel ? 'erkabel-bg' : 'pink-bg'}`;
+            div.className = `p-row ${rankClass}`;
             div.innerHTML = `
                 <div class="p-left">
+                    <span class="rank-num">${rankIcon}</span>
                     <img src="${p.img}" class="p-photo">
-                    <span style="font-weight:bold; font-size:18px;">${p.name}</span>
+                    <div class="p-info">
+                        <span class="p-name">${p.name}</span>
+                        <span class="p-level">${getLevel(p.score)}</span>
+                    </div>
                 </div>
-                <span class="score-box ${isErkabel ? 'erkabel-score' : 'pink-score'}">${score}</span>
+                <span class="score-box" style="background:${p.name==='ERKABEL'?'var(--blue)':'var(--pink)'}">${p.score}</span>
             `;
-            div.onclick = () => { activeP = {name: p.name, score: score}; showSetup(); };
+            div.onclick = () => { activeP = p; showSetup(); };
             list.appendChild(div);
         });
     }
@@ -123,7 +143,6 @@
         document.getElementById('dashboard-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'none';
         document.getElementById('setup-view').style.display = 'block';
-        document.getElementById('setupTitle').innerText = activeP.name + ", choose a subject!";
     }
 
     function startGame(mode) {
@@ -131,7 +150,6 @@
         document.getElementById('setup-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
-        document.getElementById('currentSubject').innerText = "Mode: " + mode.toUpperCase();
         document.getElementById('sVal').innerText = activeP.score;
         next();
     }
@@ -140,19 +158,19 @@
         const list = questions[currentMode];
         const item = list[Math.floor(Math.random()*list.length)];
         currentAns = item.a;
-        document.getElementById('qHint').innerText = item.q;
-        document.getElementById('qMain').innerText = item.h;
+        document.getElementById('qHint').innerText = item.h;
+        document.getElementById('qMain').innerText = item.q;
         document.getElementById('ansInput').value = '';
     }
 
     function checkAns() {
-        const val = document.getElementById('ansInput').value.trim().toUpperCase();
-        if(val === currentAns.toUpperCase()) {
+        const val = document.getElementById('ansInput').value.trim().toLowerCase();
+        if(val === currentAns.toLowerCase()) {
             activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
-            alert("Correct! 🎉 +10 Coins"); next();
-        } else { alert("Try again! The answer is: " + currentAns); }
+            alert("Correct! 🎉"); next();
+        } else { alert("Answer: " + currentAns); }
     }
     fetchScores();
 </script>
