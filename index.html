@@ -1,130 +1,113 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HEPM ACADEMY</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --white: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .card { background: var(--white); width: 100%; max-width: 450px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 25px; min-height: 85vh; margin-top: 20px; }
-        h1 { color: var(--gold); font-size: 28px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+        :root { --gold: #D4AF37; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
+        body { font-family: sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
+        .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 80vh; }
         
-        /* ቅጥዒ ናይቲ ተጻዋታይ ዝርዝር */
-        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 12px 0; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; background: white; }
-        .p-row:hover { transform: scale(1.02); }
-        .p-left { display: flex; align-items: center; gap: 15px; }
-        
-        /* ቅጥዒ ናይቲ ነጥቢ ቦክስ */
-        .score-box { color: white; padding: 6px 18px; border-radius: 25px; font-weight: bold; font-size: 18px; }
+        /* ቅጥዒ ዝርዝር ተጻወቲ */
+        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .p-left { display: flex; align-items: center; gap: 12px; }
+        .p-photo { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #ddd; background: #eee; }
+        .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
 
-        /* --- ሕብርታት ተጻወቲ --- */
-        /* ERKABEL ብሰማያዊ */
-        .erkabel-bg { border-color: #007bff; }
-        .erkabel-bg:hover { background-color: #e6f2ff; }
-        .erkabel-score { background-color: #007bff; }
-
-        /* እቶም ካልኦት (HERMELA, PEGGY, MARANATA) ብPink */
-        .pink-bg { border-color: #e83e8c; }
-        .pink-bg:hover { background-color: #fcebf2; }
-        .pink-score { background-color: #e83e8c; }
-
-        /* ቅጥዒ ናይቲ ስእሊ (Photo) */
-        .p-photo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background-color: #eee; border: 1px solid #ddd; }
+        /* ሕብርታት */
+        .erkabel-bg { border-color: var(--blue); }
+        .erkabel-score { background: var(--blue); }
+        .pink-bg { border-color: var(--pink); }
+        .pink-score { background: var(--pink); }
 
         #game-view { display: none; }
-        .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 25px; margin: 25px 0; font-size: 35px; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
-        input { width: 90%; padding: 15px; font-size: 22px; border-radius: 12px; border: 2px solid #ddd; margin: 15px 0; text-align: center; outline: none; }
-        input:focus { border-color: var(--gold); }
-        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 100%; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .home-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
+        .black-book { background: var(--dark); color: white; padding: 30px; border-radius: 20px; margin: 20px 0; }
+        .mode-tabs { display: flex; gap: 5px; justify-content: center; margin-bottom: 15px; }
+        .tab { padding: 8px 15px; border-radius: 10px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; }
+        .tab.active { background: var(--gold); color: white; border-color: var(--gold); }
+        input { width: 85%; padding: 15px; font-size: 20px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
+        .btn { background: var(--gold); color: white; padding: 15px; border: none; border-radius: 12px; width: 90%; font-size: 18px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div id="dashboard-view">
-        <h1>HEPM ACADEMY</h1>
-        <div id="players-list">
-            <p style="color: #666;">Loading scores...</p>
-        </div>
-        <button onclick="fetchScores()" style="margin-top:25px; background:none; border:1px solid #ccc; padding:10px 20px; border-radius:10px; cursor:pointer; color: #666;">🔄 Refresh Dashboard</button>
+        <h1 style="color: var(--gold);">HEPM ACADEMY</h1>
+        <div id="players-list">Loading...</div>
+        <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:8px 15px; border-radius:10px; cursor:pointer;">🔄 Refresh</button>
     </div>
 
     <div id="game-view">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <button class="home-btn" onclick="location.reload()">🏠 Home</button>
-            <h2 id="activePName" style="margin:0; color:#333;"></h2>
-            <div style="font-weight:bold; color:var(--gold); font-size: 22px;">💰 <span id="sVal">0</span></div>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <button onclick="location.reload()">🏠 Home</button>
+            <h2 id="activePName" style="margin:0;"></h2>
+            <div style="font-weight:bold; color:var(--gold);">💰 <span id="sVal">0</span></div>
         </div>
+
+        <div class="mode-tabs">
+            <div class="tab active" id="t-math" onclick="setMode('math')">🔢 MATH</div>
+            <div class="tab" id="t-eng" onclick="setMode('eng')">ABC ENG</div>
+        </div>
+
         <div class="black-book">
-            <div id="qHint" style="font-size: 70px; margin-bottom: 10px;"></div>
-            <div id="qMain" style="letter-spacing: 5px; font-weight: bold;"></div>
+            <div id="qHint" style="font-size: 50px;"></div>
+            <div id="qMain" style="font-size: 30px; margin-top: 10px; font-weight: bold;"></div>
         </div>
-        <input type="text" id="ansInput" placeholder="Type answer here..." autocomplete="off">
-        <button class="btn" onclick="checkAns()">CHECK ANSWER</button>
+        <input type="text" id="ansInput" placeholder="Answer...">
+        <button class="btn" onclick="checkAns()">SUBMIT</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCAzQHgrTnZD8r3kDdmP8wdVoPjGOiK8q9JB-kQCFSZaMPl40sVlRTa6NELTb3pKqd/exec"; 
-
-    let activeP, currentAns;
-
-    // --- ኣዝዩ ኣገዳሲ: እቲ ናይ ስእሊ ሊንክ (URL) ኣብዚኣ ተካእዮ ---
-    // ሕጂ ንኩሎም ተመሳሳሊ ስእሊ ጌረልካ ኣለኹ (ሓደ ሕጻን ዘርኢ)
-    const playersConfig = [
-        { name: "HERMELA", photo: "https://www.w3schools.com/w3images/avatar2.png" },
-        { name: "ERKABEL", photo: "https://www.w3schools.com/w3images/avatar2.png" },
-        { name: "PEGGY", photo: "https://www.w3schools.com/w3images/avatar2.png" },
-        { name: "MARANATA", photo: "https://www.w3schools.com/w3images/avatar2.png" }
+    
+    let activeP, currentAns, mode = 'math';
+    const players = [
+        {name: "HERMELA", img: "https://www.w3schools.com/w3images/avatar6.png"},
+        {name: "ERKABEL", img: "https://www.w3schools.com/w3images/avatar2.png"},
+        {name: "PEGGY", img: "https://www.w3schools.com/w3images/avatar6.png"},
+        {name: "MARANATA", img: "https://www.w3schools.com/w3images/avatar6.png"}
     ];
 
-    const db = [
-        {q:"🍎", a:"APPLE"}, {q:"🏠", a:"HOUSE"}, {q:"🦁", a:"LION"}, 
-        {q:"🚗", a:"CAR"}, {q:"🌞", a:"SUN"}, {q:"🐶", a:"DOG"},
-        {q:"🐱", a:"CAT"}, {q:"🌳", a:"TREE"}, {q:"🐘", a:"ELEPHANT"}
-    ];
+    const questions = {
+        math: [
+            {q: "5 + 5", a: "10", h: "🔢"}, {q: "10 + 2", a: "12", h: "🔢"}, {q: "3 + 4", a: "7", h: "🔢"}, {q: "8 - 2", a: "6", h: "🔢"}
+        ],
+        eng: [
+            {q: "🍎", a: "APPLE", h: "A _ _ _ _"}, {q: "🏠", a: "HOUSE", h: "H _ _ _ _"}, {q: "🦁", a: "LION", h: "L _ _ _"}
+        ]
+    };
 
     async function fetchScores() {
         try {
             const res = await fetch(SCRIPT_URL);
             const data = await res.json();
             renderDashboard(data);
-        } catch (e) {
-            renderDashboard([]);
-        }
+        } catch (e) { renderDashboard([]); }
     }
 
     function renderDashboard(onlineData) {
         const list = document.getElementById('players-list');
         list.innerHTML = '';
-        playersConfig.forEach(p => {
-            const pOnlineData = onlineData.find(d => d.name === p.name) || {score: 0};
-            
-            // ምውሳን ሕብርታት
+        players.forEach(p => {
+            const score = (onlineData.find(d => d.name === p.name) || {score: 0}).score;
             const isErkabel = p.name === "ERKABEL";
-            const rowClass = isErkabel ? 'erkabel-bg' : 'pink-bg';
-            const scoreClass = isErkabel ? 'erkabel-score' : 'pink-score';
-
             const div = document.createElement('div');
-            div.className = `p-row ${rowClass}`;
+            div.className = `p-row ${isErkabel ? 'erkabel-bg' : 'pink-bg'}`;
             div.innerHTML = `
                 <div class="p-left">
-                    <img src="${p.photo}" alt="${p.name}" class="p-photo">
-                    <span class="p-name" style="font-size: 20px; font-weight: bold; color: #333;">${p.name}</span>
+                    <img src="${p.img}" class="p-photo">
+                    <span style="font-weight:bold; font-size:18px;">${p.name}</span>
                 </div>
-                <span class="score-box ${scoreClass}">${pOnlineData.score}</span>
+                <span class="score-box ${isErkabel ? 'erkabel-score' : 'pink-score'}">${score}</span>
             `;
-            div.onclick = () => { 
-                activeP = {name: p.name, score: pOnlineData.score}; 
-                startGame(); 
-            };
+            div.onclick = () => { activeP = {name: p.name, score: score}; startGame(); };
             list.appendChild(div);
         });
     }
 
-    // --- እቲ ጸወታን ነጥብን ዘርኢ ክፋል (ከም ቀደሙ) ---
     function startGame() {
         document.getElementById('dashboard-view').style.display = 'none';
         document.getElementById('game-view').style.display = 'block';
@@ -133,36 +116,32 @@
         next();
     }
 
-    function next() {
-        const item = db[Math.floor(Math.random()*db.length)];
-        currentAns = item.a;
-        document.getElementById('qHint').innerText = item.q;
-        document.getElementById('qMain').innerText = item.a[0] + "_".repeat(item.a.length - 1);
-        document.getElementById('ansInput').value = '';
-        document.getElementById('ansInput').focus();
+    function setMode(m) {
+        mode = m;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('t-' + m).classList.add('active');
+        next();
     }
 
-    async function checkAns() {
+    function next() {
+        const list = questions[mode];
+        const item = list[Math.floor(Math.random()*list.length)];
+        currentAns = item.a;
+        document.getElementById('qHint').innerText = item.h;
+        document.getElementById('qMain').innerText = item.q;
+        document.getElementById('ansInput').value = '';
+    }
+
+    function checkAns() {
         const val = document.getElementById('ansInput').value.trim().toUpperCase();
-        if(val === currentAns) {
+        if(val === currentAns.toString().toUpperCase()) {
             activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(activeP)
-            });
-
-            alert("Correct! +10 💰🎉");
-            next();
-        } else {
-            alert("Oops! Try again. The answer is " + currentAns);
-        }
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
+            alert("Great Job! +10 💰"); next();
+        } else { alert("Try again! Answer was: " + currentAns); }
     }
-
     fetchScores();
 </script>
-
 </body>
 </html>
