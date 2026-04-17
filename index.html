@@ -3,71 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM SCHOOL - LEARNING</title>
+    <title>HEPM SCHOOL - FINAL VERSION</title>
     <style>
-        :root { --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32; --dark: #2c3e50; --pink: #ff4081; --blue: #00bcd4; --green: #4caf50; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f9ff; text-align: center; margin: 0; padding: 10px; }
+        :root { --gold: #FFD700; --dark: #2c3e50; --pink: #ff4081; --blue: #00bcd4; --green: #4caf50; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f9ff; text-align: center; margin: 0; padding: 10px; }
         .card { background: white; max-width: 450px; margin: auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; border: 5px solid #fff; }
         .p-row { border: 2px solid #f0f0f0; border-radius: 20px; margin: 10px 0; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; transition: 0.2s; }
-        .p-row:hover { transform: scale(1.02); background: #fafafa; }
-        .p-left { display: flex; align-items: center; gap: 12px; }
-        .rank-num { font-weight: bold; font-size: 20px; width: 30px; color: #999; }
         .p-photo { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #eee; object-fit: cover; }
-        .p-info { text-align: left; }
-        .p-name { font-weight: bold; font-size: 18px; color: #333; }
-        .p-level { font-size: 12px; color: #aaa; font-weight: bold; }
         .score-box { color: white; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 16px; }
-        .rank-1 { border-color: var(--gold); background: #fffdf0; }
         #game-view, #setup-view { display: none; }
         .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 25px; margin: 20px 0; border-bottom: 8px solid #1a252f; }
         .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .mode-btn { padding: 25px 10px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid #eee; }
-        .mode-btn:active { transform: translateY(2px); }
-        input { width: 80%; padding: 15px; font-size: 22px; border-radius: 15px; border: 3px solid #eee; margin: 15px 0; text-align: center; outline: none; color: var(--dark); }
+        .mode-btn { padding: 25px 10px; border-radius: 20px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; }
+        input { width: 80%; padding: 15px; font-size: 22px; border-radius: 15px; border: 3px solid #eee; margin: 15px 0; text-align: center; }
         .btn { background: var(--green); color: white; padding: 20px; border: none; border-radius: 15px; width: 95%; font-size: 22px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 0 #388e3c; }
-        .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #388e3c; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div id="dashboard-view">
-        <h1 style="color: var(--dark); font-size: 28px;">🏫 HEPM SCHOOL</h1>
+        <h1 style="color: var(--dark);">🏫 HEPM SCHOOL</h1>
         <div id="players-list">Loading Students...</div>
-        <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ddd; padding:10px 20px; border-radius:15px; cursor:pointer; font-weight:bold; color:#666;">🔄 Refresh</button>
+        <button onclick="fetchScores()" style="margin-top:20px; padding:10px; border-radius:10px; cursor:pointer;">🔄 Refresh</button>
     </div>
 
     <div id="setup-view">
-        <button onclick="location.reload()" style="float:left; background:none; border:none; cursor:pointer; font-size:25px;">🏠</button>
-        <h2 id="setupTitle" style="color: var(--dark);">Choose a Lesson</h2>
+        <button onclick="location.reload()" style="float:left; background:none; border:none; font-size:25px;">🏠</button>
+        <h2 style="color: var(--dark);">ትምህርቲ ምረጽ</h2>
         <div class="mode-grid">
-            <div class="mode-btn" onclick="startGame('math')" style="color: #e91e63;">🔢 MATH</div>
+            <div class="mode-btn" onclick="startGame('math')" style="color: #e91e63;">🔢 MATH (1-100)</div>
             <div class="mode-btn" onclick="startGame('english')" style="color: #2196f3;">🇬🇧 ENGLISH</div>
-            <div class="mode-btn" onclick="startGame('tigrinya')" style="color: #ff9800;">🇪🇷 TIGRINYA</div>
+            <div class="mode-btn" onclick="startGame('tigrinya')" style="color: #ff9800;">🇪🇷 ትግርኛ</div>
             <div class="mode-btn" onclick="startGame('german')" style="color: #673ab7;">🇩🇪 GERMAN</div>
-            <div class="mode-btn" onclick="startGame('shopping')" style="grid-column: span 2; background: #f1f8e9; color: #4caf50; border: 2px solid #4caf50;">🛒 SHOPPING & MONEY</div>
+            <div class="mode-btn" onclick="startGame('shopping')" style="grid-column: span 2; background: #f1f8e9; color: #4caf50;">🛒 ዕዳጋን ገንዘብን</div>
         </div>
     </div>
 
     <div id="game-view">
         <div style="display:flex; justify-content: space-between; align-items: center;">
-            <button onclick="showSetup()" style="background:none; border:none; cursor:pointer; font-size:25px;">⬅️</button>
+            <button onclick="showSetup()" style="background:none; border:none; font-size:25px;">⬅️</button>
             <div style="font-weight:bold; color:var(--gold); font-size: 26px;">⭐ <span id="sVal">0</span></div>
         </div>
-        <h2 id="activePName" style="margin:10px 0; color: var(--dark);"></h2>
+        <h2 id="activePName"></h2>
         <div class="black-book">
             <div id="qHint" style="font-size: 60px;"></div>
-            <div id="qMain" style="font-size: 24px; margin-top: 15px; font-weight: bold; line-height: 1.4;"></div>
+            <div id="qMain" style="font-size: 22px; margin-top: 15px; font-weight: bold;"></div>
         </div>
-        <input type="text" id="ansInput" placeholder="Write here...">
-        <button class="btn" onclick="checkAns()">CHECK ANSWER</button>
+        <input type="text" id="ansInput" placeholder="መልሲ ኣብዚ ጸሓፍ...">
+        <button class="btn" onclick="checkAns()">መልሲ ኣረጋግጽ</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1rDVmkG3hITa_q-E8OQWbadTNiEN-PpsNBvho2zP7brA8cxYyZWeLa30lf7YAoC2OZQ/exec"; 
     
-    let activeP, currentAns, currentMode;
+    let activeP, currentAns, currentMode, startTime;
 
     const playersConfig = [
         {name: "HERMELA", img: "https://www.w3schools.com/w3images/avatar6.png"},
@@ -78,20 +69,19 @@
 
     const questions = {
         math: [
-            {q:"5 * 5", a:"25", h:"🔢"}, {q:"10 * 2", a:"20", h:"🔢"}, {q:"3 * 4", a:"12", h:"🔢"}, {q:"8 * 2", a:"16", h:"🔢"}, {q:"6 * 5", a:"30", h:"🔢"}, {q:"9 * 3", a:"27", h:"🔢"}, {q:"4 * 10", a:"40", h:"🔢"}, {q:"7 * 3", a:"21", h:"🔢"}, {q:"2 * 25", a:"50", h:"🔢"}, {q:"100 / 2", a:"50", h:"🔢"}, {q:"20 / 4", a:"5", h:"🔢"}, {q:"15 / 3", a:"5", h:"🔢"}, {q:"50 / 5", a:"10", h:"🔢"}, {q:"80 / 2", a:"40", h:"🔢"}, {q:"36 / 6", a:"6", h:"🔢"}, {q:"45 / 5", a:"9", h:"🔢"}, {q:"10 * 10", a:"100", h:"🔢"}, {q:"12 / 2", a:"6", h:"🔢"}
-            // ... (ዝተረፉ ሕቶታት ኣብዚ ይቕጽሉ)
-        ],
-        shopping: [
-            {q:"ምዕዳግ (English?)", a:"buy", h:"🛒"}, {q:"ምሻጥ (English?)", a:"sell", h:"💰"}, {q:"ዋጋ (English?)", a:"price", h:"🏷️"}, {q:"ገንዘብ (English?)", a:"money", h:"💵"}, {q:"ልውውጥ (English?)", a:"change", h:"🪙"}, {q:"You have £10, buy bread for £2. How much left?", a:"8", h:"🍞"}, {q:"Ice cream costs £3. You want 2. Total?", a:"6", h:"🍦"}, {q:"ርካሽ (English?)", a:"cheap", h:"📉"}, {q:"ክቡር (English?)", a:"expensive", h:"📈"}, {q:"How many cents in £1?", a:"100", h:"🪙"}, {q:"ድኳን (English?)", a:"shop", h:"🏪"}, {q:"ባኒ (English?)", a:"bread", h:"🍞"}, {q:"ጸባ (English?)", a:"milk", h:"🥛"}, {q:"ቱፋሕ (English?)", a:"apple", h:"🍎"}, {q:"If you save £5 every week, how much in 2 weeks?", a:"10", h:"🐷"}
+            {q:"2 * 8", a:"16", h:"🔢"}, {q:"3 * 9", a:"27", h:"🔢"}, {q:"4 * 7", a:"28", h:"🔢"}, {q:"5 * 6", a:"30", h:"🔢"}, {q:"6 * 6", a:"36", h:"🔢"}, {q:"7 * 7", a:"49", h:"🔢"}, {q:"8 * 8", a:"64", h:"🔢"}, {q:"9 * 9", a:"81", h:"🔢"}, {q:"10 * 10", a:"100", h:"🔢"}, {q:"12 * 5", a:"60", h:"🔢"}, {q:"15 * 4", a:"60", h:"🔢"}, {q:"25 * 4", a:"100", h:"🔢"}, {q:"11 * 8", a:"88", h:"🔢"}, {q:"13 * 3", a:"39", h:"🔢"}, {q:"5 * 20", a:"100", h:"🔢"}, {q:"9 * 4", a:"36", h:"🔢"}, {q:"7 * 8", a:"56", h:"🔢"}, {q:"6 * 9", a:"54", h:"🔢"}, {q:"100 / 2", a:"50", h:"➗"}, {q:"80 / 4", a:"20", h:"➗"}, {q:"25 / 5", a:"5", h:"➗"}, {q:"36 / 6", a:"6", h:"➗"}, {q:"50 / 5", a:"10", h:"➗"}, {q:"40 / 8", a:"5", h:"➗"}, {q:"90 / 3", a:"30", h:"➗"}, {q:"12 / 4", a:"3", h:"➗"}, {q:"60 / 10", a:"6", h:"➗"}, {q:"100 / 4", a:"25", h:"➗"}, {q:"72 / 8", a:"9", h:"➗"}, {q:"63 / 9", a:"7", h:"➗"}, {q:"56 / 7", a:"8", h:"➗"}, {q:"45 / 5", a:"9", h:"➗"}, {q:"32 / 4", a:"8", h:"➗"}, {q:"21 / 3", a:"7", h:"➗"}, {q:"18 / 2", a:"9", h:"➗"}, {q:"100 / 5", a:"20", h:"➗"}, {q:"9 * 7", a:"63", h:"🔢"}, {q:"8 * 3", a:"24", h:"🔢"}, {q:"14 * 2", a:"28", h:"🔢"}, {q:"50 / 2", a:"25", h:"➗"}, {q:"16 * 3", a:"48", h:"🔢"}, {q:"48 / 6", a:"8", h:"➗"}, {q:"11 * 5", a:"55", h:"🔢"}, {q:"99 / 9", a:"11", h:"➗"}, {q:"7 * 6", a:"42", h:"🔢"}, {q:"81 / 9", a:"9", h:"➗"}, {q:"13 * 2", a:"26", h:"🔢"}, {q:"60 / 4", a:"15", h:"➗"}, {q:"4 * 12", a:"48", h:"🔢"}, {q:"100 / 10", a:"10", h:"➗"}
         ],
         english: [
-            {q:"Opposite of Big?", a:"small", h:"🐘"}, {q:"Color of Banana?", a:"yellow", h:"🍌"}, {q:"I write with a ___", a:"pen", h:"🖋️"}, {q:"Where do we study?", a:"school", h:"🏫"}, {q:"Who teaches us?", a:"teacher", h:"👨‍🏫"}
+            {q:"Translate: 'ባኒ'", a:"bread", h:"🍞"}, {q:"Translate: 'ማይ'", a:"water", h:"💧"}, {q:"Translate: 'ቤት ትምህርቲ'", a:"school", h:"🏫"}, {q:"Translate: 'መምህር'", a:"teacher", h:"👨‍🏫"}, {q:"Opposite of Hot?", a:"cold", h:"❄️"}
         ],
         tigrinya: [
-            {q:"መጽሓፍ (English?)", a:"book", h:"📚"}, {q:"ገዛ (English?)", a:"house", h:"🏠"}, {q:"ወለዲ (English?)", a:"parents", h:"👪"}, {q:"መኪና (English?)", a:"car", h:"🚗"}
+            {q:"'Book' ብትግርኛ?", a:"መጽሓፍ", h:"📚"}, {q:"'House' ብትግርኛ?", a:"ገዛ", h:"🏠"}, {q:"'Car' ብትግርኛ?", a:"መኪና", h:"🚗"}, {q:"'Family' ብትግርኛ?", a:"ስድራ", h:"👪"}
         ],
         german: [
-            {q:"Haus (English?)", a:"house", h:"🏠"}, {q:"Wasser (English?)", a:"water", h:"💧"}, {q:"Schule (English?)", a:"school", h:"🏫"}, {q:"Brot (English?)", a:"bread", h:"🍞"}
+            {q:"'Haus' (English?)", a:"house", h:"🏠"}, {q:"'Milch' (English?)", a:"milk", h:"🥛"}, {q:"'Danke' (English?)", a:"thanks", h:"🙏"}
+        ],
+        shopping: [
+            {q:"You have £20, buy a shirt for £12. Change?", a:"8", h:"👕"}, {q:"Price is £5, you want 3. Total?", a:"15", h:"💰"}, {q:"ምዕዳግ (English?)", a:"buy", h:"🛒"}
         ]
     };
 
@@ -101,12 +91,6 @@
             const data = await res.json();
             renderDashboard(data);
         } catch (e) { renderDashboard([]); }
-    }
-
-    function getLevel(score) {
-        if (score < 100) return "Beginner 🌱";
-        if (score < 500) return "Smart Student ⭐";
-        return "Super Scholar 👑";
     }
 
     function renderDashboard(onlineData) {
@@ -119,17 +103,13 @@
         sortedPlayers.sort((a, b) => b.score - a.score);
 
         sortedPlayers.forEach((p, index) => {
-            const rank = index + 1;
-            let rankIcon = rank === 1 ? "🏆" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
             const div = document.createElement('div');
-            div.className = `p-row ${rank === 1 ? 'rank-1' : ''}`;
+            div.className = `p-row`;
             div.innerHTML = `
                 <div class="p-left">
-                    <span class="rank-num">${rankIcon}</span>
                     <img src="${p.img}" class="p-photo">
                     <div class="p-info">
                         <span class="p-name">${p.name}</span>
-                        <span class="p-level">${getLevel(p.score)}</span>
                     </div>
                 </div>
                 <span class="score-box" style="background:${p.name==='ERKABEL'?'var(--blue)':'var(--pink)'}">${p.score}</span>
@@ -150,6 +130,7 @@
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
         document.getElementById('sVal').innerText = activeP.score;
+        startTime = Date.now(); 
         next();
     }
 
@@ -164,12 +145,33 @@
 
     function checkAns() {
         const val = document.getElementById('ansInput').value.trim().toLowerCase();
+        const endTime = Date.now();
+        const timeTaken = Math.round((endTime - startTime) / 1000); 
+
         if(val === currentAns.toLowerCase()) {
-            activeP.score += 10;
+            // ትኽክለኛ ኣደማምራ (Fixing the 100010 error)
+            let currentScore = Number(activeP.score) || 0;
+            activeP.score = currentScore + 10;
+            
             document.getElementById('sVal').innerText = activeP.score;
-            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
-            alert("🌟 WELL DONE!"); next();
-        } else { alert("💡 Keep trying! Answer: " + currentAns); }
+            
+            fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify({
+                    name: activeP.name,
+                    score: activeP.score,
+                    time: timeTaken + "s",
+                    subject: currentMode
+                }) 
+            });
+
+            alert(`🌟 ጽቡቕ ስራሕ! (${timeTaken} ሰከንድ ወሲዱልካ)`);
+            startTime = Date.now(); 
+            next();
+        } else {
+            alert("💡 እንደገና ፈትን! መልሲ: " + currentAns);
+        }
     }
     fetchScores();
 </script>
