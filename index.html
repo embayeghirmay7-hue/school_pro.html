@@ -1,64 +1,70 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPM SCHOOL - FINAL VERSION</title>
+    <title>HEPM ACADEMY - RANKING</title>
     <style>
-        :root { --gold: #FFD700; --dark: #2c3e50; --pink: #ff4081; --blue: #00bcd4; --green: #4caf50; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f9ff; text-align: center; margin: 0; padding: 10px; }
-        .card { background: white; max-width: 450px; margin: auto; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; border: 5px solid #fff; }
-        .p-row { border: 2px solid #f0f0f0; border-radius: 20px; margin: 10px 0; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; transition: 0.2s; }
-        .p-photo { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #eee; object-fit: cover; }
-        .score-box { color: white; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 16px; }
+        :root { --gold: #D4AF37; --silver: #C0C0C0; --bronze: #CD7F32; --dark: #111; --pink: #e83e8c; --blue: #007bff; }
+        body { font-family: sans-serif; background: #f0f2f5; text-align: center; margin: 0; padding: 10px; }
+        .card { background: white; max-width: 450px; margin: auto; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 20px; min-height: 85vh; }
+        .p-row { border: 2px solid #eee; border-radius: 18px; margin: 10px 0; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; transition: 0.3s; }
+        .p-row:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .p-left { display: flex; align-items: center; gap: 10px; }
+        .rank-num { font-weight: bold; font-size: 18px; width: 25px; color: #666; }
+        .p-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ddd; object-fit: cover; }
+        .p-info { text-align: left; }
+        .p-name { font-weight: bold; font-size: 17px; display: block; }
+        .p-level { font-size: 12px; color: #888; font-weight: bold; text-transform: uppercase; }
+        .score-box { color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; min-width: 40px; }
+        .rank-1 { border-color: var(--gold); background: #fffdf0; }
         #game-view, #setup-view { display: none; }
-        .black-book { background: var(--dark); color: white; padding: 40px 20px; border-radius: 25px; margin: 20px 0; border-bottom: 8px solid #1a252f; }
-        .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .mode-btn { padding: 25px 10px; border-radius: 20px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; }
-        input { width: 80%; padding: 15px; font-size: 22px; border-radius: 15px; border: 3px solid #eee; margin: 15px 0; text-align: center; }
-        .btn { background: var(--green); color: white; padding: 20px; border: none; border-radius: 15px; width: 95%; font-size: 22px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 0 #388e3c; }
+        .black-book { background: var(--dark); color: white; padding: 30px 15px; border-radius: 20px; margin: 20px 0; }
+        .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .mode-btn { padding: 20px; border-radius: 15px; border: 2px solid #eee; cursor: pointer; font-weight: bold; background: #fff; font-size: 15px; }
+        input { width: 85%; padding: 15px; font-size: 18px; border-radius: 12px; border: 2px solid #ddd; margin: 10px 0; text-align: center; }
+        .btn { background: var(--gold); color: white; padding: 18px; border: none; border-radius: 12px; width: 95%; font-size: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div id="dashboard-view">
-        <h1 style="color: var(--dark);">🏫 HEPM SCHOOL</h1>
-        <div id="players-list">Loading Students...</div>
-        <button onclick="fetchScores()" style="margin-top:20px; padding:10px; border-radius:10px; cursor:pointer;">🔄 Refresh</button>
+        <h1 style="color: var(--gold);">🏆 LEADERBOARD</h1>
+        <div id="players-list">Loading Rankings...</div>
+        <button onclick="fetchScores()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:8px 15px; border-radius:10px; cursor:pointer;">🔄 Refresh Scores</button>
     </div>
 
     <div id="setup-view">
-        <button onclick="location.reload()" style="float:left; background:none; border:none; font-size:25px;">🏠</button>
-        <h2 style="color: var(--dark);">ትምህርቲ ምረጽ</h2>
+        <button onclick="location.reload()" style="float:left; background:none; border:none; cursor:pointer; font-size:20px;">🏠</button>
+        <h2 id="setupTitle">Subject</h2>
         <div class="mode-grid">
-            <div class="mode-btn" onclick="startGame('math')" style="color: #e91e63;">🔢 MATH (1-100)</div>
-            <div class="mode-btn" onclick="startGame('english')" style="color: #2196f3;">🇬🇧 ENGLISH</div>
-            <div class="mode-btn" onclick="startGame('tigrinya')" style="color: #ff9800;">🇪🇷 ትግርኛ</div>
-            <div class="mode-btn" onclick="startGame('german')" style="color: #673ab7;">🇩🇪 GERMAN</div>
-            <div class="mode-btn" onclick="startGame('shopping')" style="grid-column: span 2; background: #f1f8e9; color: #4caf50;">🛒 ዕዳጋን ገንዘብን</div>
+            <div class="mode-btn" onclick="startGame('math')">🔢 MATH</div>
+            <div class="mode-btn" onclick="startGame('english')">🇬🇧 ENGLISH</div>
+            <div class="mode-btn" onclick="startGame('tigrinya')">🇪🇷 TIGRINYA</div>
+            <div class="mode-btn" onclick="startGame('german')">🇩🇪 GERMAN</div>
         </div>
     </div>
 
     <div id="game-view">
         <div style="display:flex; justify-content: space-between; align-items: center;">
-            <button onclick="showSetup()" style="background:none; border:none; font-size:25px;">⬅️</button>
-            <div style="font-weight:bold; color:var(--gold); font-size: 26px;">⭐ <span id="sVal">0</span></div>
+            <button onclick="showSetup()" style="background:none; border:none; cursor:pointer; font-size:20px;">⬅️</button>
+            <div style="font-weight:bold; color:var(--gold); font-size: 22px;">💰 <span id="sVal">0</span></div>
         </div>
-        <h2 id="activePName"></h2>
+        <h2 id="activePName" style="margin:5px 0;"></h2>
         <div class="black-book">
-            <div id="qHint" style="font-size: 60px;"></div>
-            <div id="qMain" style="font-size: 22px; margin-top: 15px; font-weight: bold;"></div>
+            <div id="qHint" style="font-size: 20px; color: #A0A0A0; margin-bottom: 10px;"></div>
+            <div id="qMain" style="font-size: 24px; font-weight: bold; line-height: 1.4;"></div>
         </div>
-        <input type="text" id="ansInput" placeholder="መልሲ ኣብዚ ጸሓፍ...">
-        <button class="btn" onclick="checkAns()">መልሲ ኣረጋግጽ</button>
+        <input type="text" id="ansInput" placeholder="Your answer...">
+        <button class="btn" onclick="checkAns()">CHECK</button>
     </div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1rDVmkG3hITa_q-E8OQWbadTNiEN-PpsNBvho2zP7brA8cxYyZWeLa30lf7YAoC2OZQ/exec"; 
     
-    let activeP, currentAns, currentMode, startTime;
+    let activeP, currentAns, currentMode;
 
     const playersConfig = [
         {name: "HERMELA", img: "https://www.w3schools.com/w3images/avatar6.png"},
@@ -69,19 +75,71 @@
 
     const questions = {
         math: [
-            {q:"2 * 8", a:"16", h:"🔢"}, {q:"3 * 9", a:"27", h:"🔢"}, {q:"4 * 7", a:"28", h:"🔢"}, {q:"5 * 6", a:"30", h:"🔢"}, {q:"6 * 6", a:"36", h:"🔢"}, {q:"7 * 7", a:"49", h:"🔢"}, {q:"8 * 8", a:"64", h:"🔢"}, {q:"9 * 9", a:"81", h:"🔢"}, {q:"10 * 10", a:"100", h:"🔢"}, {q:"12 * 5", a:"60", h:"🔢"}, {q:"15 * 4", a:"60", h:"🔢"}, {q:"25 * 4", a:"100", h:"🔢"}, {q:"11 * 8", a:"88", h:"🔢"}, {q:"13 * 3", a:"39", h:"🔢"}, {q:"5 * 20", a:"100", h:"🔢"}, {q:"9 * 4", a:"36", h:"🔢"}, {q:"7 * 8", a:"56", h:"🔢"}, {q:"6 * 9", a:"54", h:"🔢"}, {q:"100 / 2", a:"50", h:"➗"}, {q:"80 / 4", a:"20", h:"➗"}, {q:"25 / 5", a:"5", h:"➗"}, {q:"36 / 6", a:"6", h:"➗"}, {q:"50 / 5", a:"10", h:"➗"}, {q:"40 / 8", a:"5", h:"➗"}, {q:"90 / 3", a:"30", h:"➗"}, {q:"12 / 4", a:"3", h:"➗"}, {q:"60 / 10", a:"6", h:"➗"}, {q:"100 / 4", a:"25", h:"➗"}, {q:"72 / 8", a:"9", h:"➗"}, {q:"63 / 9", a:"7", h:"➗"}, {q:"56 / 7", a:"8", h:"➗"}, {q:"45 / 5", a:"9", h:"➗"}, {q:"32 / 4", a:"8", h:"➗"}, {q:"21 / 3", a:"7", h:"➗"}, {q:"18 / 2", a:"9", h:"➗"}, {q:"100 / 5", a:"20", h:"➗"}, {q:"9 * 7", a:"63", h:"🔢"}, {q:"8 * 3", a:"24", h:"🔢"}, {q:"14 * 2", a:"28", h:"🔢"}, {q:"50 / 2", a:"25", h:"➗"}, {q:"16 * 3", a:"48", h:"🔢"}, {q:"48 / 6", a:"8", h:"➗"}, {q:"11 * 5", a:"55", h:"🔢"}, {q:"99 / 9", a:"11", h:"➗"}, {q:"7 * 6", a:"42", h:"🔢"}, {q:"81 / 9", a:"9", h:"➗"}, {q:"13 * 2", a:"26", h:"🔢"}, {q:"60 / 4", a:"15", h:"➗"}, {q:"4 * 12", a:"48", h:"🔢"}, {q:"100 / 10", a:"10", h:"➗"}
+            {q:"15 + 5", a:"20", h:"🔢"}, {q:"25 - 10", a:"15", h:"🔢"}, {q:"4 * 2", a:"8", h:"🔢"},
+            {q:"50 + 50", a:"100", h:"🔢"}, {q:"30 - 15", a:"15", h:"🔢"}, {q:"10 * 3", a:"30", h:"🔢"}
         ],
         english: [
-            {q:"Translate: 'ባኒ'", a:"bread", h:"🍞"}, {q:"Translate: 'ማይ'", a:"water", h:"💧"}, {q:"Translate: 'ቤት ትምህርቲ'", a:"school", h:"🏫"}, {q:"Translate: 'መምህር'", a:"teacher", h:"👨‍🏫"}, {q:"Opposite of Hot?", a:"cold", h:"❄️"}
+            {q:"My ___ is to speak English well.", a:"ambition", h:"ትርጉም: ባህጊ / ዕላማ (Am-bi-shun)"},
+            {q:"Listen to the bus ___.", a:"announcement", h:"ትርጉም: ምልክታ ብድምጺ (A-nowns-ment)"},
+            {q:"I want to ___ for this job.", a:"apply", h:"ትርጉም: ምምልካት ንስራሕ (A-play)"},
+            {q:"I have an ___ today.", a:"appointment", h:"ትርጉም: ቆጸራ (Ap-poynt-ment)"},
+            {q:"I will call you ___.", a:"ASAP", h:"ትርጉም: ብዝተኻእለ ፍጥነት (Ay-sap)"},
+            {q:"When is my English ___?", a:"assessment", h:"ትርጉም: መርመራ / ገምጋም (A-ses-ment)"},
+            {q:"Please see the ___ file.", a:"attached", h:"ትርጉም: ተተሓሒዙ ዘሎ (A-tacht)"},
+            {q:"I am ___ for work.", a:"available", h:"ትርጉም: ድሉው / ዘሎ (A-vey-le-bl)"},
+            {q:"I have a ___ from lifting boxes.", a:"backache", h:"ትርጉም: ሕማም ሕቆ (Bak-eyk)"},
+            {q:"I want a job to avoid ___.", a:"boredom", h:"ትርጉም: ምስልካይ (Bor-dom)"},
+            {q:"What time is my ___?", a:"break", h:"ትርጉም: ዕረፍቲ (Brey-k)"},
+            {q:"The SL8 bus is ___.", a:"cancelled", h:"ትርጉም: ተሰሪዙ (Kan-seld)"},
+            {q:"I go to ___ on Sunday.", a:"church", h:"ትርጉም: ቤተ-ክርስትያን (Cher-ch)"},
+            {q:"This is my ___, John.", a:"colleague", h:"ትርጉም: ብጻይ ስራሕ (Ko-leeg)"},
+            {q:"My ___ is 30 minutes.", a:"commute", h:"ትርጉም: ናይ ስራሕ መገዲ (Ko-myoot)"},
+            {q:"The bus is very ___.", a:"crowded", h:"ትርጉም: ምልእቲ / ጽቕጥቕጥ (Krow-ded)"},
+            {q:"Here is my ___.", a:"CV", h:"ትርጉም: ናይ ስራሕ ተመክሮ ጽሑፍ (See-Vee)"},
+            {q:"The bus was ___.", a:"delayed", h:"ትርጉም: ዝደንጎየ (Di-leyd)"},
+            {q:"When is the ___?", a:"delivery", h:"ትርጉም: ኣቑሑት ምብጻሕ (De-li-ve-ree)"},
+            {q:"Is Uxbridge the final ___?", a:"destination", h:"ትርጉም: መወዳእታ መዕረፊ (Des-ti-ney-shun)"},
+            {q:"What is the ___ of the meeting?", a:"duration", h:"ትርጉም: ዝወስዶ ግዜ (Dyu-rey-shn)"},
+            {q:"My child has an ___.", a:"earache", h:"ትርጉም: ሕማም እዝኒ (Ir-eyk)"},
+            {q:"I arrived 10 minutes ___.", a:"early", h:"ትርጉም: ኣቀዲምካ (Er-lee)"},
+            {q:"I want to meet the ___.", a:"employer", h:"ትርጉም: ኣስራሒ (Em-ploy-er)"},
+            {q:"Wear your safety ___.", a:"equipment", h:"ትርጉም: መሳርሒታት (I-kwip-ment)"},
+            {q:"I have work ___.", a:"experience", h:"ትርጉም: ተመክሮ (Ex-pee-ri-ens)"},
+            {q:"Who can drive the ___?", a:"forklift", h:"ትርጉም: ፎርክሊፍት (Fork-lift)"},
+            {q:"I need new ___ for work.", a:"gloves", h:"ትርጉም: ጓንቲ (Glav-z)"},
+            {q:"I need to buy ___.", a:"groceries", h:"ትርጉም: ቀለብ / ሽመት ገዛ (Gro-ser-eez)"},
+            {q:"I have a ___ today.", a:"headache", h:"ትርጉም: ሕማም ርእሲ (Hed-eyk)"},
+            {q:"This box is very ___.", a:"heavy", h:"ትርጉም: ከቢድ (He-vee)"},
+            {q:"You must wear a ___ vest.", a:"hi-vis", h:"ትርጉም: ጃኬት ድሕንነት (Hay-viz)"},
+            {q:"Follow the ___.", a:"instruction", h:"ትርጉም: መምርሒ (In-strak-shun)"},
+            {q:"My ___ takes 20 minutes.", a:"journey", h:"ትርጉም: ጉዕዞ (Jer-nee)"},
+            {q:"I need a driving ___.", a:"license", h:"ትርጉም: ፍቓድ (Lay-sens)"},
+            {q:"I need to speak to the ___.", a:"manager", h:"ትርጉም: ሓላፊ / ማነጀር (Ma-ni-jer)"},
+            {q:"Can I work ___ tomorrow?", a:"overtime", h:"ትርጉም: ትርፊ ሰዓት (O-ver-taym)"},
+            {q:"Do you have any ___?", a:"painkillers", h:"ትርጉም: መቐንዘይ መድሃኒት (Payn-kil-erz)"},
+            {q:"Move that ___, please.", a:"pallet", h:"ትርጉም: ፓሌት (Pa-let)"},
+            {q:"Where is the nearest ___?", a:"pharmacy", h:"ትርጉም: ቤት መድሃኒት (Far-ma-see)"},
+            {q:"Follow the safety ___.", a:"procedure", h:"ትርጉም: ኣገባብ ስራሕ (Pro-see-jer)"},
+            {q:"I am always ___.", a:"punctual", h:"ትርጉም: ሰዓት ዘኽብር (Pank-chu-wal)"},
+            {q:"Can you provide a ___?", a:"reference", h:"ትርጉም: መወከሲ / መረጋገጺ (Ri-f-rens)"},
+            {q:"I am a ___ worker.", a:"reliable", h:"ትርጉም: እሙን / ዝእመነሉ (Ri-lay-abl)"},
+            {q:"Follow the safety ___.", a:"rules", h:"ትርጉም: ድሕንነት (Seyf-tee)"},
+            {q:"I can work the night ___.", a:"shift", h:"ትርጉም: ሽፍት / ናይ ስራሕ ግዜ (Shif-t)"},
+            {q:"I work in a ___.", a:"warehouse", h:"ትርጉም: መኽዘን (Wer-haws)"},
+            {q:"This email is very ___.", a:"urgent", h:"ትርጉም: ህጹጽ (Er-jent)"},
+            {q:"The ___ is waiting.", a:"customer", h:"ትርጉም: ዓሚል (kas-to-mer)"},
+            {q:"Check the work ___.", a:"schedule", h:"ትርጉም: መደብ ግዜ (s-ケ-ጁል)"},
+            {q:"It is my ___.", a:"responsibility", h:"ትርጉም: ሓላፊነት (ሪ-ስፖን-ሲ-ቢ-ሊ-ቲ)"},
+            {q:"Please sign the ___.", a:"contract", h:"ትርጉም: ውዕል (ኮን-ትራክት)"},
+            {q:"This is a great ___.", a:"opportunity", h:"ትርጉም: ዕድል (ኦ-ፖር-ቱ-ኒ-ቲ)"}
         ],
         tigrinya: [
-            {q:"'Book' ብትግርኛ?", a:"መጽሓፍ", h:"📚"}, {q:"'House' ብትግርኛ?", a:"ገዛ", h:"🏠"}, {q:"'Car' ብትግርኛ?", a:"መኪና", h:"🚗"}, {q:"'Family' ብትግርኛ?", a:"ስድራ", h:"👪"}
+            {q:"እዚ ___ እዩ", a:"ገዛ", h:"🏠 (House)"}, {q:"እታ ___ ትጎዪ ኣላ", a:"መኪና", h:"🚗 (Car)"},
+            {q:"እዚ ___ እዩ", a:"ቱፋሕ", h:"🍎 (Apple)"}, {q:"እዚ ___ እዩ", a:"ከልቢ", h:"🐶 (Dog)"}
         ],
         german: [
-            {q:"'Haus' (English?)", a:"house", h:"🏠"}, {q:"'Milch' (English?)", a:"milk", h:"🥛"}, {q:"'Danke' (English?)", a:"thanks", h:"🙏"}
-        ],
-        shopping: [
-            {q:"You have £20, buy a shirt for £12. Change?", a:"8", h:"👕"}, {q:"Price is £5, you want 3. Total?", a:"15", h:"💰"}, {q:"ምዕዳግ (English?)", a:"buy", h:"🛒"}
+            {q:"Das ist ein ___", a:"Haus", h:"🏠 (House)"}, {q:"Das ist ein ___", a:"Apfel", h:"🍎 (Apple)"},
+            {q:"Das ist ein ___", a:"Auto", h:"🚗 (Car)"}, {q:"Das ist ein ___", a:"Hund", h:"🐶 (Dog)"}
         ]
     };
 
@@ -91,6 +149,12 @@
             const data = await res.json();
             renderDashboard(data);
         } catch (e) { renderDashboard([]); }
+    }
+
+    function getLevel(score) {
+        if (score < 100) return "Level 1: Beginner";
+        if (score < 300) return "Level 2: Smarty";
+        return "Level 3: Master 👑";
     }
 
     function renderDashboard(onlineData) {
@@ -103,13 +167,17 @@
         sortedPlayers.sort((a, b) => b.score - a.score);
 
         sortedPlayers.forEach((p, index) => {
+            const rank = index + 1;
+            let rankIcon = rank === 1 ? "🏆" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : rank));
             const div = document.createElement('div');
-            div.className = `p-row`;
+            div.className = `p-row ${rank === 1 ? 'rank-1' : ''}`;
             div.innerHTML = `
                 <div class="p-left">
+                    <span class="rank-num">${rankIcon}</span>
                     <img src="${p.img}" class="p-photo">
                     <div class="p-info">
                         <span class="p-name">${p.name}</span>
+                        <span class="p-level">${getLevel(p.score)}</span>
                     </div>
                 </div>
                 <span class="score-box" style="background:${p.name==='ERKABEL'?'var(--blue)':'var(--pink)'}">${p.score}</span>
@@ -121,6 +189,7 @@
 
     function showSetup() {
         document.getElementById('dashboard-view').style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
         document.getElementById('setup-view').style.display = 'block';
     }
 
@@ -130,7 +199,6 @@
         document.getElementById('game-view').style.display = 'block';
         document.getElementById('activePName').innerText = activeP.name;
         document.getElementById('sVal').innerText = activeP.score;
-        startTime = Date.now(); 
         next();
     }
 
@@ -145,33 +213,12 @@
 
     function checkAns() {
         const val = document.getElementById('ansInput').value.trim().toLowerCase();
-        const endTime = Date.now();
-        const timeTaken = Math.round((endTime - startTime) / 1000); 
-
         if(val === currentAns.toLowerCase()) {
-            // ትኽክለኛ ኣደማምራ (Fixing the 100010 error)
-            let currentScore = Number(activeP.score) || 0;
-            activeP.score = currentScore + 10;
-            
+            activeP.score += 10;
             document.getElementById('sVal').innerText = activeP.score;
-            
-            fetch(SCRIPT_URL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({
-                    name: activeP.name,
-                    score: activeP.score,
-                    time: timeTaken + "s",
-                    subject: currentMode
-                }) 
-            });
-
-            alert(`🌟 ጽቡቕ ስራሕ! (${timeTaken} ሰከንድ ወሲዱልካ)`);
-            startTime = Date.now(); 
-            next();
-        } else {
-            alert("💡 እንደገና ፈትን! መልሲ: " + currentAns);
-        }
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(activeP) });
+            alert("✅ Correct! +10 Coins"); next();
+        } else { alert("❌ Try again! Correct word is: " + currentAns); }
     }
     fetchScores();
 </script>
